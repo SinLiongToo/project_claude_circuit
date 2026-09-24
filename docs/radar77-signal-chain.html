@@ -1,0 +1,656 @@
+<title>77 GHz Radar Signal Chain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F2F4F2; --surface:#FFFFFF; --sunk:#E7EBE8; --ink:#16201D; --muted:#56635E; --line:#CDD5D1;
+  --rf:#0A776D; --lo:#9A5A00; --if:#4B47A8; --dig:#3B4B5C;
+  --rf-soft:#DDEFEC; --lo-soft:#F5E8D3; --if-soft:#E4E3F5; --dig-soft:#E1E6EC;
+  --ok:#1D7A3E; --warn:#A5500A; --bad:#B3261E;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E1513; --surface:#151E1B; --sunk:#1C2723; --ink:#DCE5E1; --muted:#95A49E; --line:#2D3A35;
+    --rf:#4CC3B5; --lo:#E0A650; --if:#9C98F0; --dig:#9FB2C6;
+    --rf-soft:#16332F; --lo-soft:#33280F; --if-soft:#24223F; --dig-soft:#1F2A35;
+    --ok:#5CC98A; --warn:#E59A52; --bad:#F08A80;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E1513; --surface:#151E1B; --sunk:#1C2723; --ink:#DCE5E1; --muted:#95A49E; --line:#2D3A35;
+  --rf:#4CC3B5; --lo:#E0A650; --if:#9C98F0; --dig:#9FB2C6;
+  --rf-soft:#16332F; --lo-soft:#33280F; --if-soft:#24223F; --dig-soft:#1F2A35;
+  --ok:#5CC98A; --warn:#E59A52; --bad:#F08A80;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);padding-inline:20px;padding-block:0 64px}
+a{color:var(--rf)}
+a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto}
+header.top{padding-block:40px 24px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 clamp(30px,5vw,46px)/1.05 var(--cond);letter-spacing:-.01em;margin:10px 0 12px;text-wrap:balance}
+.lede{max-width:70ch;color:var(--muted);margin:0}
+.bands{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font:500 12px/1 var(--mono);padding:6px 9px;border-radius:4px;border:1px solid var(--line);background:var(--surface);white-space:nowrap}
+.chip b{font-weight:500}
+.chip.rf{border-color:var(--rf);color:var(--rf)} .chip.lo{border-color:var(--lo);color:var(--lo)}
+.chip.if{border-color:var(--if);color:var(--if)} .chip.dig{border-color:var(--dig);color:var(--dig)}
+
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;align-items:start}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);font-size:13px}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:s -1}
+nav.toc li{counter-increment:s}
+nav.toc a{display:flex;gap:8px;text-decoration:none;color:var(--muted);padding:4px 8px;border-radius:4px}
+nav.toc a::before{content:counter(s,decimal-leading-zero);font:500 11px/1.9 var(--mono);color:var(--line)}
+nav.toc a:hover{background:var(--sunk);color:var(--ink)}
+@media (max-width:860px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  nav.toc{position:static;overflow-x:auto}
+  nav.toc ol{display:flex;gap:6px;padding-bottom:6px}
+  nav.toc a{white-space:nowrap;border:1px solid var(--line);background:var(--surface)}
+}
+
+main{min-width:0}
+section{padding-block:8px 36px;border-bottom:1px solid var(--line);margin-bottom:32px;scroll-margin-top:16px}
+section:last-child{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.num{font:500 13px/1 var(--mono);color:var(--muted)}
+h2{font:600 28px/1.15 var(--cond);margin:0;text-wrap:balance}
+.domain{font:500 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:3px}
+.domain.rf{background:var(--rf-soft);color:var(--rf)} .domain.lo{background:var(--lo-soft);color:var(--lo)}
+.domain.if{background:var(--if-soft);color:var(--if)} .domain.dig{background:var(--dig-soft);color:var(--dig)}
+h3{font:600 17px/1.3 var(--cond);margin:26px 0 8px;letter-spacing:.01em}
+p,ul,ol.steps{max-width:72ch}
+p{margin:10px 0}
+ul{padding-left:20px;margin:8px 0} li{margin:4px 0}
+code,.m{font-family:var(--mono);font-size:.9em}
+.eq{font:14px/1.7 var(--mono);background:var(--sunk);padding:10px 14px;border-radius:4px;max-width:72ch;overflow-x:auto;white-space:pre}
+
+.tbl{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:600 12px/1.3 var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--sunk)}
+td.v{font-family:var(--mono);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+td:first-child{font-weight:500}
+
+figure{margin:18px 0}
+.fig{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px}
+.fig svg{display:block;max-width:100%;height:auto;color:var(--ink)}
+.fig.wide svg{min-width:860px;max-width:none;width:100%}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;max-width:80ch}
+svg text{font-family:var(--sans);fill:currentColor}
+svg .t{font:600 12.5px var(--sans)} svg .s{font:11px var(--mono);fill:var(--muted)}
+svg .lbl{font:11px var(--mono);fill:var(--muted)}
+svg .blk{fill:var(--surface);stroke-width:1.6}
+svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} svg .dig{stroke:var(--dig)}
+svg .frf{fill:var(--rf)} svg .flo{fill:var(--lo)} svg .fif{fill:var(--if)} svg .fdig{fill:var(--dig)}
+svg a:hover .blk{fill:var(--sunk)}
+svg a:focus-visible .blk{stroke-width:3}
+svg .w{fill:none;stroke-width:1.5}
+svg .mon{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-dasharray:4 3}
+
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin:14px 0}
+.note{border-left:3px solid var(--lo);background:var(--lo-soft);padding:10px 14px;border-radius:0 4px 4px 0;font-size:14px;max-width:72ch}
+.note b{color:var(--lo)}
+
+/* calculator */
+.calc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:20px;margin-top:14px}
+@media (max-width:760px){.calc{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px}
+.panel h3{margin-top:0}
+.fields{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 14px}
+.fields label{display:grid;gap:3px;font-size:12px;color:var(--muted)}
+.fields input,.fields select{font:14px var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%}
+.grp{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);grid-column:1/-1;margin-top:8px;padding-top:10px;border-top:1px solid var(--line)}
+.grp:first-child{margin-top:0;padding-top:0;border-top:0}
+.out{display:grid;gap:0}
+.row{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:14px}
+.row:last-child{border-bottom:0}
+.row span:last-child{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+.status{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.pill{font:500 12px/1 var(--mono);padding:5px 8px;border-radius:999px;border:1px solid currentColor}
+.pill.ok{color:var(--ok)} .pill.warn{color:var(--warn)} .pill.bad{color:var(--bad)}
+.snr{font:700 40px/1 var(--cond);margin:4px 0 2px}
+footer{font-size:12.5px;color:var(--muted);padding-top:12px;max-width:80ch}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">Automotive FMCW radar · design reference</div>
+  <h1>77 GHz radar, from antenna to object list</h1>
+  <p class="lede">This page walks the full signal chain of a single-chip or cascaded 76–81 GHz FMCW radar: the antenna and package transition, transmitter, chirp synthesis (upconversion), receiver and I/Q downconversion, IF conditioning, ADC, digital front end and radar processing. It ends with self-test and a chirp and link-budget calculator. The numbers are typical of current RFCMOS radar MMICs. Check them against your chosen part's datasheet and the regulations that apply to you.</p>
+  <div class="bands">
+    <span class="chip rf"><b>RF</b> 76–81 GHz</span>
+    <span class="chip lo"><b>LO</b> ≈19–20.25 GHz ×4</span>
+    <span class="chip if"><b>IF</b> DC–20 MHz</span>
+    <span class="chip dig"><b>Digital</b> ADC → CAN-FD / Ethernet</span>
+  </div>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sections">
+  <ol>
+    <li><a href="#chain">Signal chain</a></li>
+    <li><a href="#spec">System spec</a></li>
+    <li><a href="#antenna">Antenna &amp; transition</a></li>
+    <li><a href="#tx">Transmitter</a></li>
+    <li><a href="#lo">Chirp synthesis (LO)</a></li>
+    <li><a href="#rx">Receiver &amp; downconversion</a></li>
+    <li><a href="#if">IF conditioning</a></li>
+    <li><a href="#adc">ADC</a></li>
+    <li><a href="#dfe">Digital front end</a></li>
+    <li><a href="#dsp">Radar processing</a></li>
+    <li><a href="#bist">Monitoring &amp; BIST</a></li>
+    <li><a href="#infra">Power, clock, package</a></li>
+    <li><a href="#calc">Calculator</a></li>
+    <li><a href="#verify">Verification</a></li>
+  </ol>
+</nav>
+
+<main>
+<!-- 00 -->
+<section id="chain">
+  <div class="sec-head"><span class="num">00</span><h2>Signal chain at a glance</h2></div>
+  <p>The transmit and receive paths share one LO. A fractional-N PLL generates a linear frequency ramp at about 20 GHz. A ×4 multiplier brings it up to 77 GHz, and the result drives both the PA and the Rx mixers. Because each Rx mixer multiplies the echo by the chirp being transmitted at that moment, a target shows up as a low beat frequency (a few MHz). That is why a modest ADC can digitise a signal with GHz of bandwidth. Click a block to jump to its section.</p>
+  <figure>
+    <div class="fig wide">
+    <svg viewBox="0 0 1080 380" role="img" aria-label="Block diagram: a PLL and VCO at 20 GHz, multiplied by 4, feed the Tx phase shifters and PAs and the Rx I/Q mixers. The Rx path runs LNA, mixer, IF filter and VGA, ADC, digital front end, FFT accelerator, DSP and MCU, then vehicle interfaces. Dashed monitor lines take PA detector and sensor readings to an auxiliary ADC.">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+      </defs>
+      <!-- row labels -->
+      <text class="lbl" x="20" y="28">TRANSMIT</text>
+      <text class="lbl" x="20" y="158">LO / CHIRP SYNTHESIS</text>
+      <text class="lbl" x="20" y="288">RECEIVE → PROCESS</text>
+
+      <!-- Tx row -->
+      <a href="#antenna"><rect class="blk rf" x="20" y="40" width="70" height="46" rx="6"/>
+        <rect class="frf" x="32" y="56" width="10" height="14" opacity=".8"/><rect class="frf" x="50" y="56" width="10" height="14" opacity=".8"/><rect class="frf" x="68" y="56" width="10" height="14" opacity=".8"/>
+        <text class="s" x="55" y="100" text-anchor="middle">Tx ant ×3</text></a>
+      <a href="#tx"><rect class="blk rf" x="120" y="40" width="100" height="46" rx="6"/><text class="t" x="170" y="60" text-anchor="middle">PA + detector</text><text class="s" x="170" y="76" text-anchor="middle">12–14 dBm</text></a>
+      <a href="#tx"><rect class="blk rf" x="240" y="40" width="100" height="46" rx="6"/><text class="t" x="290" y="60" text-anchor="middle">Phase shifter</text><text class="s" x="290" y="76" text-anchor="middle">6-bit · BPM</text></a>
+      <a href="#infra"><rect class="blk lo" x="480" y="40" width="100" height="46" rx="6"/><text class="t" x="530" y="60" text-anchor="middle">Ref XTAL</text><text class="s" x="530" y="76" text-anchor="middle">40 MHz</text></a>
+      <a href="#bist"><rect class="blk dig" x="720" y="40" width="100" height="46" rx="6"/><text class="t" x="770" y="60" text-anchor="middle">Aux ADC</text><text class="s" x="770" y="76" text-anchor="middle">PD · temp · V</text></a>
+
+      <line class="w rf" x1="240" y1="63" x2="222" y2="63" stroke="var(--rf)" color="var(--rf)" marker-end="url(#ah)"/>
+      <line class="w rf" x1="120" y1="63" x2="92" y2="63" stroke="var(--rf)" color="var(--rf)" marker-end="url(#ah)"/>
+      <line class="w lo" x1="530" y1="86" x2="530" y2="168" stroke="var(--lo)" color="var(--lo)" marker-end="url(#ah)"/>
+      <text class="lbl" x="538" y="130">ref</text>
+      <!-- monitor -->
+      <path class="mon" d="M170,40 V20 H770 V38" color="var(--muted)" marker-end="url(#ah)"/>
+      <text class="lbl" x="420" y="15" text-anchor="middle">power-detector tap (monitoring)</text>
+      <path class="mon" d="M820,63 H890 V168" color="var(--muted)" marker-end="url(#ah)"/>
+      <text class="lbl" x="896" y="120">readings</text>
+
+      <!-- LO row -->
+      <a href="#lo"><rect class="blk lo" x="240" y="170" width="100" height="46" rx="6"/><text class="t" x="290" y="190" text-anchor="middle">×4 mult + buf</text><text class="s" x="290" y="206" text-anchor="middle">→ 76–81 GHz</text></a>
+      <a href="#lo"><rect class="blk lo" x="360" y="170" width="100" height="46" rx="6"/><text class="t" x="410" y="190" text-anchor="middle">VCO</text><text class="s" x="410" y="206" text-anchor="middle">19–20.25 GHz</text></a>
+      <a href="#lo"><rect class="blk lo" x="480" y="170" width="100" height="46" rx="6"/><text class="t" x="530" y="190" text-anchor="middle">Frac-N PLL</text><text class="s" x="530" y="206" text-anchor="middle">ramp gen</text></a>
+      <a href="#lo"><rect class="blk dig" x="840" y="170" width="120" height="46" rx="6"/><text class="t" x="900" y="190" text-anchor="middle">Timing engine</text><text class="s" x="900" y="206" text-anchor="middle">RF ctrl CPU</text></a>
+
+      <line class="w" x1="480" y1="193" x2="462" y2="193" stroke="var(--lo)" color="var(--lo)" marker-end="url(#ah)"/>
+      <line class="w" x1="360" y1="193" x2="342" y2="193" stroke="var(--lo)" color="var(--lo)" marker-end="url(#ah)"/>
+      <line class="w" x1="840" y1="193" x2="582" y2="193" stroke="var(--dig)" color="var(--dig)" marker-end="url(#ah)"/>
+      <text class="lbl" x="710" y="186" text-anchor="middle">chirp profile · frame trigger</text>
+      <!-- LO distribution -->
+      <line class="w" x1="290" y1="170" x2="290" y2="88" stroke="var(--lo)" color="var(--lo)" marker-end="url(#ah)"/>
+      <line class="w" x1="290" y1="216" x2="290" y2="278" stroke="var(--lo)" color="var(--lo)" marker-end="url(#ah)"/>
+      <text class="lbl" x="298" y="134">LO → Tx</text>
+      <text class="lbl" x="298" y="252">LO → Rx</text>
+
+      <!-- Rx row -->
+      <a href="#antenna"><rect class="blk rf" x="20" y="280" width="70" height="46" rx="6"/>
+        <rect class="frf" x="30" y="296" width="8" height="14" opacity=".8"/><rect class="frf" x="44" y="296" width="8" height="14" opacity=".8"/><rect class="frf" x="58" y="296" width="8" height="14" opacity=".8"/><rect class="frf" x="72" y="296" width="8" height="14" opacity=".8"/>
+        <text class="s" x="55" y="340" text-anchor="middle">Rx ant ×4</text></a>
+      <a href="#rx"><rect class="blk rf" x="120" y="280" width="100" height="46" rx="6"/><text class="t" x="170" y="300" text-anchor="middle">LNA</text><text class="s" x="170" y="316" text-anchor="middle">NF 10–14 dB</text></a>
+      <a href="#rx"><rect class="blk rf" x="240" y="280" width="100" height="46" rx="6"/><text class="t" x="290" y="300" text-anchor="middle">I/Q mixer</text><text class="s" x="290" y="316" text-anchor="middle">RF → IF</text></a>
+      <a href="#if"><rect class="blk if" x="360" y="280" width="100" height="46" rx="6"/><text class="t" x="410" y="300" text-anchor="middle">HPF·VGA·AAF</text><text class="s" x="410" y="316" text-anchor="middle">24–48 dB gain</text></a>
+      <a href="#adc"><rect class="blk if" x="480" y="280" width="100" height="46" rx="6"/><text class="t" x="530" y="300" text-anchor="middle">ΣΔ ADC</text><text class="s" x="530" y="316" text-anchor="middle">12–16 bit</text></a>
+      <a href="#dfe"><rect class="blk dig" x="600" y="280" width="100" height="46" rx="6"/><text class="t" x="650" y="300" text-anchor="middle">DFE</text><text class="s" x="650" y="316" text-anchor="middle">decim · DC</text></a>
+      <a href="#dsp"><rect class="blk dig" x="720" y="280" width="100" height="46" rx="6"/><text class="t" x="770" y="300" text-anchor="middle">FFT HWA</text><text class="s" x="770" y="316" text-anchor="middle">range · Doppler</text></a>
+      <a href="#dsp"><rect class="blk dig" x="840" y="280" width="120" height="46" rx="6"/><text class="t" x="900" y="300" text-anchor="middle">DSP + MCU</text><text class="s" x="900" y="316" text-anchor="middle">CFAR · DoA · track</text></a>
+      <a href="#dsp"><rect class="blk dig" x="980" y="280" width="84" height="46" rx="6"/><text class="t" x="1022" y="300" text-anchor="middle">I/F</text><text class="s" x="1022" y="316" text-anchor="middle">CAN-FD · ETH</text></a>
+
+      <g color="var(--rf)"><line class="w" x1="90" y1="303" x2="118" y2="303" stroke="var(--rf)" marker-end="url(#ah)"/><line class="w" x1="220" y1="303" x2="238" y2="303" stroke="var(--rf)" marker-end="url(#ah)"/></g>
+      <g color="var(--if)"><line class="w" x1="340" y1="303" x2="358" y2="303" stroke="var(--if)" marker-end="url(#ah)"/><line class="w" x1="460" y1="303" x2="478" y2="303" stroke="var(--if)" marker-end="url(#ah)"/><line class="w" x1="580" y1="303" x2="598" y2="303" stroke="var(--if)" marker-end="url(#ah)"/></g>
+      <g color="var(--dig)"><line class="w" x1="700" y1="303" x2="718" y2="303" stroke="var(--dig)" marker-end="url(#ah)"/><line class="w" x1="820" y1="303" x2="838" y2="303" stroke="var(--dig)" marker-end="url(#ah)"/><line class="w" x1="960" y1="303" x2="978" y2="303" stroke="var(--dig)" marker-end="url(#ah)"/></g>
+      <line class="w" x1="900" y1="278" x2="900" y2="218" stroke="var(--dig)" color="var(--dig)" marker-end="url(#ah)"/>
+      <text class="lbl" x="908" y="252">config</text>
+      <text class="lbl" x="104" y="360">77 GHz echo</text>
+      <text class="lbl" x="350" y="360">beat f_b = S·2R/c (MHz)</text>
+      <text class="lbl" x="700" y="360">radar cube → detections → objects</text>
+    </svg>
+    </div>
+    <figcaption>Stroke colour marks the frequency domain: teal is 77 GHz RF, amber is the 20 GHz LO and reference, indigo is IF and analog baseband, slate is digital. Dashed lines are monitoring paths. The Rx lane repeats per channel (×4), the Tx lane per transmitter (×3). A 4-chip cascade shares the 20 GHz LO from one master chip.</figcaption>
+  </figure>
+</section>
+
+<!-- 01 -->
+<section id="spec">
+  <div class="sec-head"><span class="num">01</span><h2>System specification: start here</h2></div>
+  <p>Everything downstream comes from a few top-level numbers: maximum range, range resolution, maximum and resolvable velocity, field of view and angular resolution, update rate, and the smallest target that must be detected at that range. Pick the sensor class first.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Parameter</th><th>Long-range (front)</th><th>Corner / short-range</th><th>4D imaging</th></tr></thead>
+    <tbody>
+      <tr><td>Functions</td><td>ACC, AEB</td><td>BSD, LCA, RCTA, AEB-side</td><td>L2+/L3 perception</td></tr>
+      <tr><td>Band</td><td class="v">76–77 GHz</td><td class="v">77–81 GHz</td><td class="v">76–81 GHz</td></tr>
+      <tr><td>Max range (car, 10 dBsm)</td><td class="v">200–300 m</td><td class="v">80–120 m</td><td class="v">250–350 m</td></tr>
+      <tr><td>Sweep bandwidth / ΔR</td><td class="v">0.3–1 GHz / 0.5–0.15 m</td><td class="v">1–4 GHz / 15–3.75 cm</td><td class="v">0.5–2 GHz</td></tr>
+      <tr><td>Velocity range</td><td class="v">±70 m/s (after unfolding)</td><td class="v">±40 m/s</td><td class="v">±70 m/s</td></tr>
+      <tr><td>Azimuth FoV</td><td class="v">±10–20° (±60° near)</td><td class="v">±60–75°</td><td class="v">±60°</td></tr>
+      <tr><td>Elevation</td><td class="v">±5–10°, often none</td><td class="v">±10–15°</td><td class="v">±15°, measured</td></tr>
+      <tr><td>Angle resolution</td><td class="v">≈2–4°</td><td class="v">≈8–15°</td><td class="v">≈1° az / 2° el</td></tr>
+      <tr><td>Tx × Rx (virtual)</td><td class="v">3×4 (12)</td><td class="v">2–3×4 (8–12)</td><td class="v">12×16 (192) cascade</td></tr>
+      <tr><td>Update rate</td><td class="v">15–25 Hz</td><td class="v">20–30 Hz</td><td class="v">15–20 Hz</td></tr>
+      <tr><td>Power (module)</td><td class="v">3–5 W</td><td class="v">2–4 W</td><td class="v">10–20 W</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Relations that tie spec to hardware</h3>
+<div class="eq">ΔR    = c / (2·B)                      B  = S·T_adc
+R_max = f_IF,max · c / (2·S)           f_IF,max ≈ F_s (complex) or F_s/2 (real)
+v_max = λ / (4·T_c·N_tx)   (TDM-MIMO)  Δv = λ / (2·N_loops·N_tx·T_c)
+Δθ    ≈ 2 / N_virt  [rad] at boresight, λ/2 virtual spacing
+SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
+        − (−174 + NF + 10log(1/T_adc)) + 10log(N_loops·N_virt) − L</div>
+  <p>Plug your own numbers into these with the <a href="#calc">calculator</a>.</p>
+</section>
+
+<!-- 02 -->
+<section id="antenna">
+  <div class="sec-head"><span class="num">02</span><h2>Antenna, MIMO array and chip-to-antenna transition</h2><span class="domain rf">RF · 77 GHz</span></div>
+  <p>At 77 GHz, λ₀ = 3.9 mm, so λ/2 is about 1.95 mm. That makes a 12- to 192-element virtual array fit in a palm-sized module. The antenna sets gain, beamwidth, sidelobes and, through the MIMO layout, angular resolution. For long-range designs it is usually the biggest factor in the link budget.</p>
+  <h3>Antenna options</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Type</th><th>Gain / element</th><th>Pros</th><th>Cons</th></tr></thead>
+    <tbody>
+      <tr><td>Series-fed patch array (PCB)</td><td class="v">10–16 dBi</td><td>Cheap, one RF layer, narrow elevation beam from the series length</td><td>Dielectric/conductor loss (~1–2 dB), beam squint with frequency, narrowband</td></tr>
+      <tr><td>SIW slot / comb-line</td><td class="v">12–18 dBi</td><td>Lower loss, good for large arrays</td><td>Via-fence fabrication tolerance</td></tr>
+      <tr><td>3D waveguide antenna (plastic, metallised)</td><td class="v">12–20 dBi</td><td>Lowest loss (&gt;90% efficiency), wide bandwidth, standard FR4 PCB underneath</td><td>Cost, assembly, waveguide transition from the chip</td></tr>
+      <tr><td>Antenna-on-package (AoP)</td><td class="v">5–8 dBi</td><td>No RF PCB, small module; suits short-range and in-cabin</td><td>Low gain, limited array size</td></tr>
+    </tbody>
+  </table></div>
+  <h3>PCB and transition spec (patch array case)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Item</th><th>Typical choice / target</th></tr></thead>
+    <tbody>
+      <tr><td>RF laminate</td><td class="v">RO3003 / RO4830 / Astra MT77, εr ≈ 3.0, tanδ ≈ 0.001, 127 µm</td></tr>
+      <tr><td>Stack-up</td><td class="v">Hybrid: 1 RF layer + FR4 for power and digital, 6–8 layers</td></tr>
+      <tr><td>Copper finish</td><td class="v">Low-profile foil (surface roughness adds loss); ENEPIG/ImAg, no HASL</td></tr>
+      <tr><td>Microstrip loss</td><td class="v">≈0.8–1.2 dB/cm at 77 GHz, so keep feed lines short</td></tr>
+      <tr><td>Package → PCB launch</td><td class="v">BGA/eWLB ball → GCPW, return loss &lt; −15 dB over 76–81 GHz</td></tr>
+      <tr><td>Tx/Tx, Rx/Rx isolation</td><td class="v">&gt; 30 dB; Tx→Rx &gt; 35 dB (leakage sets the close-range floor)</td></tr>
+      <tr><td>Etch tolerance</td><td class="v">±15–20 µm; matters for patch resonance and phase matching</td></tr>
+      <tr><td>Radome</td><td class="v">Thickness ≈ n·λ_eff/2 (PBT/PC, ~1.3–2.6 mm); 1–3 dB two-way loss incl. bumper</td></tr>
+    </tbody>
+  </table></div>
+  <h3>MIMO virtual array</h3>
+  <p>With TDM, DDMA or BPM, each Tx/Rx pair acts as an element at position (x_tx + x_rx). Spacing the Tx elements N_rx·λ/2 apart fills a contiguous virtual array of N_tx·N_rx elements with λ/2 spacing. The aperture grows without adding Rx channels.</p>
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 640 200" role="img" aria-label="Three Tx antennas spaced 2 lambda and four Rx antennas spaced half lambda combine into a 12-element virtual array at half-lambda spacing.">
+      <text class="lbl" x="10" y="44">Tx (2λ)</text>
+      <text class="lbl" x="10" y="94">Rx (λ/2)</text>
+      <text class="lbl" x="10" y="164">Virtual</text>
+      <g class="flo"><circle cx="120" cy="40" r="7"/><circle cx="200" cy="40" r="7"/><circle cx="280" cy="40" r="7"/></g>
+      <text class="s" x="120" y="24" text-anchor="middle">Tx1</text><text class="s" x="200" y="24" text-anchor="middle">Tx2</text><text class="s" x="280" y="24" text-anchor="middle">Tx3</text>
+      <g class="frf"><circle cx="120" cy="90" r="6"/><circle cx="140" cy="90" r="6"/><circle cx="160" cy="90" r="6"/><circle cx="180" cy="90" r="6"/></g>
+      <g class="flo"><circle cx="240" cy="160" r="6"/><circle cx="260" cy="160" r="6"/><circle cx="280" cy="160" r="6"/><circle cx="300" cy="160" r="6"/></g>
+      <g class="frf" opacity=".55"><circle cx="320" cy="160" r="6"/><circle cx="340" cy="160" r="6"/><circle cx="360" cy="160" r="6"/><circle cx="380" cy="160" r="6"/></g>
+      <g class="fif"><circle cx="400" cy="160" r="6"/><circle cx="420" cy="160" r="6"/><circle cx="440" cy="160" r="6"/><circle cx="460" cy="160" r="6"/></g>
+      <line x1="240" y1="180" x2="460" y2="180" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="350" y="196" text-anchor="middle">12 × λ/2 aperture → Δθ ≈ 9.5°</text>
+      <text class="s" x="270" y="140" text-anchor="middle">from Tx1</text><text class="s" x="350" y="140" text-anchor="middle">from Tx2</text><text class="s" x="430" y="140" text-anchor="middle">from Tx3</text>
+      <text class="s" x="500" y="94">4 physical Rx</text>
+      <text class="s" x="500" y="44">3 physical Tx</text>
+    </svg>
+    </div>
+    <figcaption>The 3 Tx × 4 Rx layout makes 12 virtual elements. Imaging radars also offset some Tx vertically for elevation, and use sparse (minimum-redundancy) arrays to get a larger aperture from the same channel count. The trade-off is higher sidelobes, which the DoA algorithm has to handle.</figcaption>
+  </figure>
+  <div class="note"><b>Design tip.</b> The PCB patch array's centre frequency moves with εr and etch tolerance. Simulate over the ±tolerance corners in HFSS or CST, and use the on-chip Rx gain/phase calibration to absorb the channel mismatch that remains.</div>
+</section>
+
+<!-- 03 -->
+<section id="tx">
+  <div class="sec-head"><span class="num">03</span><h2>Transmitter: phase shifter, PA, power control</h2><span class="domain rf">RF · 77 GHz</span></div>
+  <p>Each Tx channel takes the 77 GHz LO, applies a programmable phase (for BPM/DDMA MIMO coding and beam steering), amplifies it, and sends it to the antenna. The coupler and power detector at the output feed the monitoring ADC.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Block</th><th>Parameter</th><th>Typical target</th></tr></thead>
+    <tbody>
+      <tr><td>PA</td><td>Output power per channel</td><td class="v">12–14 dBm (CMOS), up to 16 dBm (SiGe)</td></tr>
+      <tr><td></td><td>Power control range / step</td><td class="v">0 to −26 dB back-off / 1 dB (temperature compensation, EIRP limit)</td></tr>
+      <tr><td></td><td>Output match</td><td class="v">RL &lt; −10 dB over 76–81 GHz</td></tr>
+      <tr><td></td><td>Drift over −40…+125 °C Tj</td><td class="v">≈ ±1.5–2 dB uncompensated</td></tr>
+      <tr><td>Phase shifter</td><td>Resolution</td><td class="v">6 bit (5.625°) vector-modulator type</td></tr>
+      <tr><td></td><td>Switching speed</td><td class="v">Chirp-to-chirp (&lt; 1 µs) for DDMA/BPM</td></tr>
+      <tr><td></td><td>RMS phase / amplitude error</td><td class="v">&lt; 3° / &lt; 0.5 dB after calibration</td></tr>
+      <tr><td>Binary phase modulation</td><td>0/180° per chirp</td><td class="v">For BPM-MIMO (Tx separation without losing SNR)</td></tr>
+      <tr><td>Tx on/off</td><td>Isolation when off</td><td class="v">&gt; 30 dB (TDM-MIMO leakage)</td></tr>
+      <tr><td>Power detector</td><td>Accuracy after trim</td><td class="v">±0.5–1 dB; also detects the reflected wave (ball break)</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Tx multiplexing options</h3>
+  <ul>
+    <li><b>TDM:</b> one Tx per chirp. Simple, with perfect separation, but v_max falls by a factor of N_tx and Doppler must be compensated before angle FFT.</li>
+    <li><b>BPM:</b> all Tx on, with Hadamard phase codes across chirps. It gains SNR (a factor of N_tx in power) but needs the target to stay coherent over the code length.</li>
+    <li><b>DDMA:</b> each Tx gets a slow-time phase ramp, so the Tx signals separate in the Doppler spectrum. Keeps full SNR, and is the choice for most imaging radars. Needs empty Doppler bands, or non-uniform offsets to resolve ambiguity.</li>
+  </ul>
+  <div class="note"><b>Regulatory ceiling.</b> ETSI EN 301 091 / EN 303 396 and FCC Part 95M limit peak EIRP to about 55 dBm, and also set mean-EIRP and out-of-band limits. With several Tx beamforming, P_t + G_ant + 20log N_tx can reach that limit, so check it with all Tx on.</div>
+</section>
+
+<!-- 04 -->
+<section id="lo">
+  <div class="sec-head"><span class="num">04</span><h2>Chirp synthesis: the upconversion path</h2><span class="domain lo">LO · 20 → 77 GHz</span></div>
+  <p>FMCW radar has no separate upconversion mixer. The transmitted signal is the LO. A fractional-N PLL with a ramp generator (sigma-delta modulated divider) sweeps a VCO at about 19–20.25 GHz, and a frequency multiplier (×4, or ×2 from a ~38 GHz VCO) brings it up to 76–81 GHz. The same LO then drives every Rx mixer. This sharing is why close-in phase noise largely cancels at short range (range correlation).</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Block</th><th>Parameter</th><th>Typical target</th></tr></thead>
+    <tbody>
+      <tr><td>Reference</td><td>Crystal / clock</td><td class="v">40 or 50 MHz, ±50 ppm (AEC-Q200), low jitter</td></tr>
+      <tr><td>VCO</td><td>Tuning range</td><td class="v">≥ 5 GHz at 77 GHz after ×4, with margin for PVT</td></tr>
+      <tr><td>PLL</td><td>Loop bandwidth</td><td class="v">1–3 MHz (wide, so it can track fast chirps)</td></tr>
+      <tr><td></td><td>Phase noise @ 1 MHz (at 77 GHz)</td><td class="v">≈ −90 to −95 dBc/Hz</td></tr>
+      <tr><td>Ramp generator</td><td>Chirp slope</td><td class="v">≈ 1 – 250 MHz/µs, programmable</td></tr>
+      <tr><td></td><td>Ramp linearity (RMS freq error)</td><td class="v">&lt; 0.1% of B during ADC window; settled before sampling</td></tr>
+      <tr><td></td><td>Reset / idle time</td><td class="v">2–10 µs (PLL settling between chirps)</td></tr>
+      <tr><td></td><td>Profiles</td><td class="v">Several chirp profiles and advanced frame sequencing</td></tr>
+      <tr><td>Multiplier + LO buffers</td><td>LO power at mixer / PA drive</td><td class="v">≈ 0–5 dBm; harmonic suppression &gt; 30 dBc</td></tr>
+      <tr><td>Cascade LO out/in</td><td>For multi-chip imaging</td><td class="v">20 GHz LO shared from the master; matched trace lengths; sync pulse for frame start</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Why the key specs matter</h3>
+  <ul>
+    <li><b>Ramp nonlinearity</b> spreads a target's beat tone over several range bins, which blurs range and raises sidelobes around strong targets. Its effect grows with range, because the error builds up over the delay τ.</li>
+    <li><b>Phase noise</b> is suppressed by the range-correlation term 2·sin(π·f_off·τ). It cancels for nearby clutter such as the bumper and radome, but at long range the phase-noise skirt of a strong reflector can hide a weak target nearby (a pedestrian next to a truck).</li>
+    <li><b>Spurs</b> from the fractional-N divider show up as ghost targets. Keep them below about −70 dBc, or place them outside the IF band you use.</li>
+  </ul>
+</section>
+
+<!-- 05 -->
+<section id="rx">
+  <div class="sec-head"><span class="num">05</span><h2>Receiver front end and I/Q downconversion</h2><span class="domain rf">RF → IF</span></div>
+  <p>The echo, delayed by τ = 2R/c, mixes with the chirp being transmitted at that moment. Their difference is a constant beat frequency f_b = S·τ, plus a Doppler term f_d = 2v/λ. This "stretch processing" turns a 1–4 GHz sweep into a DC–20 MHz IF signal.</p>
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 560 230" role="img" aria-label="Frequency versus time: the transmitted chirp ramps linearly, the received chirp is the same ramp delayed by tau, and the vertical gap between them is the constant beat frequency.">
+      <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <line x1="60" y1="200" x2="540" y2="200" stroke="currentColor" stroke-width="1.2" marker-end="url(#ah2)"/>
+      <line x1="60" y1="200" x2="60" y2="16" stroke="currentColor" stroke-width="1.2" marker-end="url(#ah2)"/>
+      <text class="lbl" x="530" y="218" text-anchor="end">time</text>
+      <text class="lbl" x="54" y="26" text-anchor="end">f</text>
+      <text class="lbl" x="54" y="184" text-anchor="end">f₀</text>
+      <text class="lbl" x="54" y="54" text-anchor="end">f₀+B</text>
+      <polyline fill="none" stroke="var(--rf)" stroke-width="2" points="80,180 280,50 300,180 500,50"/>
+      <polyline fill="none" stroke="var(--if)" stroke-width="2" stroke-dasharray="6 4" points="120,180 320,50 340,180 540,50"/>
+      <line x1="200" y1="102" x2="200" y2="128" stroke="currentColor" stroke-width="1.2" marker-start="url(#ah2)" marker-end="url(#ah2)"/>
+      <text class="s" x="206" y="120">f_b = S·τ</text>
+      <line x1="80" y1="192" x2="120" y2="192" stroke="currentColor" stroke-width="1.2" marker-start="url(#ah2)" marker-end="url(#ah2)"/>
+      <text class="s" x="100" y="214" text-anchor="middle">τ = 2R/c</text>
+      <rect x="150" y="42" width="120" height="146" fill="var(--if)" opacity=".08"/>
+      <text class="s" x="210" y="36" text-anchor="middle">ADC window T_adc</text>
+      <text class="s" x="330" y="66" fill="var(--rf)">Tx chirp</text>
+      <text class="s" x="330" y="160">Rx echo (delayed)</text>
+    </svg>
+    </div>
+    <figcaption>Tx chirp (solid) and received echo (dashed). During the ADC window the gap between them stays constant, so each target produces a single tone. The range FFT turns those tones into range bins.</figcaption>
+  </figure>
+  <div class="tbl"><table>
+    <thead><tr><th>Block</th><th>Parameter</th><th>Typical target</th></tr></thead>
+    <tbody>
+      <tr><td>LNA</td><td>Gain</td><td class="v">15–20 dB</td></tr>
+      <tr><td></td><td>Noise figure (whole Rx)</td><td class="v">10–14 dB (76–77 GHz), +1 dB at 81 GHz</td></tr>
+      <tr><td>Rx chain</td><td>Input P1dB</td><td class="v">−10 to −5 dBm (Tx leakage and close targets must not compress it)</td></tr>
+      <tr><td>Mixer</td><td>Type</td><td class="v">Complex I/Q (or real-only for cost)</td></tr>
+      <tr><td></td><td>I/Q imbalance</td><td class="v">&lt; 0.5 dB / &lt; 3° → image rejection &gt; 30 dB</td></tr>
+      <tr><td></td><td>Flicker corner</td><td class="v">&lt; 200 kHz (close-range targets sit at low IF)</td></tr>
+      <tr><td>Channel matching</td><td>Rx-to-Rx gain / phase</td><td class="v">± 1 dB / ± 10° raw, calibrated to &lt; 0.3 dB / 2°</td></tr>
+      <tr><td>Rx input</td><td>Return loss</td><td class="v">&lt; −10 dB, 76–81 GHz</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Real vs complex (I/Q) baseband</h3>
+  <p>A real mixer folds positive and negative IF on top of each other, so noise from the image band adds about 3 dB. It also cannot tell interference or folded spurs apart from real targets. A complex I/Q baseband keeps the full F_s as usable IF bandwidth, rejects that noise, and makes it much easier to detect radar-to-radar interference. The cost is twice the IF and ADC hardware per channel.</p>
+</section>
+
+<!-- 06 -->
+<section id="if">
+  <div class="sec-head"><span class="num">06</span><h2>IF conditioning: HPF, VGA, anti-alias filter</h2><span class="domain if">IF · DC–20 MHz</span></div>
+  <p>Echo power falls as R⁻⁴, and range maps linearly to beat frequency. A second-order high-pass filter (+40 dB/decade) therefore flattens the IF spectrum: it attenuates the strong close-in clutter and leakage, so distant echoes use more of the ADC's dynamic range. The VGA then sets the level, and the anti-alias filter bounds noise and aliasing.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Block</th><th>Parameter</th><th>Typical target</th></tr></thead>
+    <tbody>
+      <tr><td>HPF</td><td>Corner (programmable)</td><td class="v">≈ 100 kHz – 1 MHz, 1st/2nd order, fast-settle reset at chirp start</td></tr>
+      <tr><td>VGA / TIA</td><td>Gain range / step</td><td class="v">24–48 dB / 2 dB</td></tr>
+      <tr><td></td><td>Input-referred noise</td><td class="v">Low enough that the RF chain sets NF (≤ 0.5 dB degradation)</td></tr>
+      <tr><td>AAF (LPF)</td><td>Bandwidth</td><td class="v">5–20 MHz, 4th–6th order (or relaxed by an oversampling ΣΔ ADC)</td></tr>
+      <tr><td></td><td>Group-delay ripple</td><td class="v">Small, because it maps to range error</td></tr>
+      <tr><td>Saturation detector</td><td>Per chirp</td><td class="v">Flags clipped chirps so the processing can drop or repair them</td></tr>
+      <tr><td>IF linearity</td><td>HD2/HD3 at full scale</td><td class="v">&lt; −50 dBc (harmonics create ghost targets at 2×, 3× range)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 07 -->
+<section id="adc">
+  <div class="sec-head"><span class="num">07</span><h2>ADC</h2><span class="domain if">Analog → Digital</span></div>
+  <p>Most radar MMICs use continuous-time sigma-delta (CT-ΣΔ) ADCs. Their input is resistive, the anti-aliasing is inherent, and they reach high dynamic range at a modest output rate. Time-interleaved or pipelined SAR ADCs appear where high IF bandwidth matters more (very fast chirps, short range).</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Parameter</th><th>Typical target</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Channels</td><td class="v">1 per Rx (×2 for I/Q)</td><td>Simultaneous sampling of all Rx is required for DoA</td></tr>
+      <tr><td>Output rate</td><td class="v">5–40 Msps (complex)</td><td>Sets f_IF,max and so R_max for a given slope</td></tr>
+      <tr><td>Resolution / DR</td><td class="v">12–16 bit, DR 65–80 dB in band</td><td>A strong close car and a weak far pedestrian must both fit</td></tr>
+      <tr><td>SFDR</td><td class="v">&gt; 70 dBc</td><td>Spurs become ghost targets</td></tr>
+      <tr><td>Channel skew</td><td class="v">&lt; 10 ps</td><td>Mismatch adds angle error</td></tr>
+      <tr><td>Clock</td><td class="v">Derived from the ref; jitter &lt; 1 ps rms</td><td>Jitter × input slope adds noise</td></tr>
+      <tr><td>Samples per chirp</td><td class="v">128–1024</td><td>Range-FFT length</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 08 -->
+<section id="dfe">
+  <div class="sec-head"><span class="num">08</span><h2>Digital front end (DFE)</h2><span class="domain dig">Digital</span></div>
+  <ul>
+    <li><b>Decimation chain:</b> the ΣΔ modulator runs at a few hundred MHz. CIC and half-band FIR stages bring it down to the programmed output rate and add the final channel filtering.</li>
+    <li><b>DC and I/Q correction:</b> remove static DC offset and apply the gain/phase imbalance coefficients from calibration.</li>
+    <li><b>Interference detection:</b> other radars cross your IF band as short, high-amplitude chirps. Detect them by amplitude or statistics in the time domain, then zero or interpolate the affected samples before the FFT. The alternative is a noise floor raised across the whole chirp.</li>
+    <li><b>Chirp quality flags:</b> saturation, interference and monitor status are written into chirp headers.</li>
+    <li><b>Data path:</b> packed samples go into the on-chip radar cube memory over DMA, or out through CSI-2 / LVDS for raw-data (satellite) architectures that process in a central ECU.</li>
+  </ul>
+</section>
+
+<!-- 09 -->
+<section id="dsp">
+  <div class="sec-head"><span class="num">09</span><h2>Radar processing: radar cube to object list</h2><span class="domain dig">Digital</span></div>
+  <ol class="steps">
+    <li><b>Range FFT</b> (per chirp, per Rx, windowed): runs on the fly in the hardware accelerator while the next chirp is being sampled.</li>
+    <li><b>Doppler FFT</b> (per range bin, across chirps): runs after the frame. Add TDM Doppler compensation or DDMA demultiplexing here.</li>
+    <li><b>Non-coherent integration and CFAR</b> on the range-Doppler map: CA-CFAR along range, OS-CFAR along Doppler, P_fa ≈ 10⁻⁶. Threshold SNR is about 12–15 dB.</li>
+    <li><b>Angle estimation</b> for each detected cell: FFT/DBF over the virtual array, or super-resolution (MUSIC, ESPRIT, IAA) for imaging radars. Apply the calibration matrix first.</li>
+    <li><b>Velocity disambiguation</b> by multi-profile Chinese-remainder methods or by tracking.</li>
+    <li><b>Point cloud → clustering</b> (DBSCAN) <b>→ tracking</b> (EKF/UKF, IMM motion models) <b>→ classification</b>. Also ego-motion estimation, and multipath and guardrail suppression.</li>
+    <li><b>Output:</b> objects and point cloud over CAN-FD (2–5 Mbit/s) or 100/1000BASE-T1 Ethernet.</li>
+  </ol>
+  <h3>Compute and memory sizing</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Resource</th><th>Typical single-chip</th><th>Imaging (4-chip + SoC)</th></tr></thead>
+    <tbody>
+      <tr><td>Radar cube (16-bit I/Q)</td><td class="v">512 × 128 × 12 × 4 B ≈ 3.1 MB</td><td class="v">tens of MB → external or on-SoC RAM</td></tr>
+      <tr><td>FFT accelerator</td><td class="v">≥ 1 GFLOP-equivalent, 1K-point per µs</td><td class="v">dedicated radar processing SoC</td></tr>
+      <tr><td>DSP / cores</td><td class="v">C66x/C7x DSP or vector DSP + Cortex-R5F lockstep</td><td class="v">multi-core ARM-A + DSP clusters</td></tr>
+      <tr><td>Safety MCU</td><td class="v">Lockstep R5F, ECC on all RAM</td><td class="v">same</td></tr>
+    </tbody>
+  </table></div>
+  <p>The on-chip memory often limits the chirp configuration before the RF does. Compression (block floating point) or processing range bins as they arrive keeps the cube small enough.</p>
+</section>
+
+<!-- 10 -->
+<section id="bist">
+  <div class="sec-head"><span class="num">10</span><h2>Monitoring and built-in self-test</h2><span class="domain dig">Safety · ASIL-B</span></div>
+  <p>A slow SAR auxiliary ADC (10–12 bit, behind an analog mux) reads the power detectors, temperature sensors and supply dividers. Loopback paths inject known signals through the real Rx chain and main ADCs. The RF control CPU runs these monitors in the idle time between frames. The total must fit in the FTTI from the system safety concept.</p>
+  <p><b>Deep dive:</b> <a href="radar77-bist-loopback.html">Radar BIST &amp; Loopback</a> covers stimulus generation, loopback routing, on-chip measurement, trim feedback and instrument-free production test.</p>
+  <div class="cols">
+    <div>
+      <h3>Analog and RF monitors</h3>
+      <ul>
+        <li>Tx output power and reflected power (ball break)</li>
+        <li>Tx phase via Tx→Rx loopback</li>
+        <li>Rx gain, phase and noise figure via test-tone injection</li>
+        <li>IF filter response (swept IF test tone)</li>
+        <li>PLL lock, chirp start frequency and slope (counter against the reference)</li>
+        <li>LO distribution power (cascade)</li>
+        <li>Supplies and multiple die-temperature sensors</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Design must-haves</h3>
+      <ul>
+        <li>Monitor ADC reference independent of the monitored bandgap (avoids a common-cause fault)</li>
+        <li>Detector trim stored in eFuse/OTP, plus temperature compensation</li>
+        <li>Weak output couplers (−15…−20 dB) so detection costs little PA power</li>
+        <li>Loopbacks fully isolated when off (no ghost targets)</li>
+        <li>Startup latent-fault tests: logic BIST, memory BIST, ADC self-check</li>
+        <li>FMEDA mapping from each monitor to the SPFM/LFM coverage it provides</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section id="infra">
+  <div class="sec-head"><span class="num">11</span><h2>Power, clocking, package, thermal</h2></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Area</th><th>Guideline</th></tr></thead>
+    <tbody>
+      <tr><td>Supply rails</td><td class="v">≈ 1.0/1.2 V RF and digital, 1.8 V IO/analog, 3.3 V IO; PMIC with safety monitors (ASIL-B)</td></tr>
+      <tr><td>Supply noise</td><td class="v">RF rails LDO-filtered; DC-DC switching harmonics become IF spurs, so place switching frequencies outside the IF band or sync them to the chirp</td></tr>
+      <tr><td>Supply ripple on PLL/VCO</td><td class="v">&lt; 50 µV rms in the loop band (it causes FM and ramp error)</td></tr>
+      <tr><td>Reference clock</td><td class="v">One crystal for PLL, ADC and digital; cascades use one master reference plus a frame sync</td></tr>
+      <tr><td>Package</td><td class="v">FC-BGA or eWLB, RF balls on the edge, GND-shielded; AoP/LoP variants</td></tr>
+      <tr><td>Thermal</td><td class="v">Tj ≤ 125–140 °C at 105 °C ambient; 1–3 W per chip; PA output drops ≈ 0.02–0.04 dB/°C</td></tr>
+      <tr><td>Qualification</td><td class="v">AEC-Q100 Grade 1/2, ISO 26262 ASIL-B, EMC CISPR 25, ISO 11452</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- 12 -->
+<section id="calc">
+  <div class="sec-head"><span class="num">12</span><h2>Chirp and link-budget calculator</h2></div>
+  <p>The defaults are a long-range-ish TDM-MIMO configuration. Change a field and every output updates. SNR is after coherent range, Doppler and MIMO integration, minus the lumped losses L (radome, windowing, implementation).</p>
+  <div class="calc">
+    <div class="panel">
+      <form class="fields" id="f" autocomplete="off">
+        <div class="grp">Waveform</div>
+        <label for="f0">Start freq (GHz)<input id="f0" type="number" step="0.1" value="76"></label>
+        <label for="S">Slope (MHz/µs)<input id="S" type="number" step="0.5" value="12"></label>
+        <label for="Fs">ADC rate (Msps)<input id="Fs" type="number" step="0.5" value="12.5"></label>
+        <label for="N">Samples / chirp<input id="N" type="number" step="1" value="512"></label>
+        <label for="Tc">Chirp period (µs)<input id="Tc" type="number" step="1" value="55"></label>
+        <label for="L">Loops / frame<input id="L" type="number" step="1" value="128"></label>
+        <label for="iq">Baseband<select id="iq"><option value="c">Complex I/Q</option><option value="r">Real</option></select></label>
+        <div class="grp">Array</div>
+        <label for="Ntx">Tx (TDM)<input id="Ntx" type="number" step="1" value="3"></label>
+        <label for="Nrx">Rx<input id="Nrx" type="number" step="1" value="4"></label>
+        <div class="grp">Link</div>
+        <label for="Pt">Tx power (dBm)<input id="Pt" type="number" step="0.5" value="12"></label>
+        <label for="Gt">Tx ant gain (dBi)<input id="Gt" type="number" step="0.5" value="12"></label>
+        <label for="Gr">Rx ant gain (dBi)<input id="Gr" type="number" step="0.5" value="12"></label>
+        <label for="NF">Rx NF (dB)<input id="NF" type="number" step="0.5" value="12"></label>
+        <label for="rcs">Target RCS (dBsm)<input id="rcs" type="number" step="1" value="10"></label>
+        <label for="R">Target range (m)<input id="R" type="number" step="5" value="150"></label>
+        <label for="Ls">Losses L (dB)<input id="Ls" type="number" step="0.5" value="6"></label>
+      </form>
+    </div>
+    <div class="panel">
+      <h3>Result</h3>
+      <div class="eyebrow">SNR at target after integration</div>
+      <div class="snr" id="o_snr">–</div>
+      <div class="status" id="o_stat"></div>
+      <div class="out" style="margin-top:14px">
+        <div class="row"><span>ADC window / sweep B</span><span id="o_B"></span></div>
+        <div class="row"><span>Range resolution</span><span id="o_dR"></span></div>
+        <div class="row"><span>Max range (IF limit)</span><span id="o_Rmax"></span></div>
+        <div class="row"><span>Beat freq at target</span><span id="o_fb"></span></div>
+        <div class="row"><span>Max unambiguous velocity</span><span id="o_vmax"></span></div>
+        <div class="row"><span>Velocity resolution</span><span id="o_dv"></span></div>
+        <div class="row"><span>Virtual channels / Δθ</span><span id="o_ang"></span></div>
+        <div class="row"><span>Active frame time</span><span id="o_ft"></span></div>
+        <div class="row"><span>Radar cube (16-bit I/Q)</span><span id="o_cube"></span></div>
+        <div class="row"><span>Received power / noise per bin</span><span id="o_pr"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section id="verify">
+  <div class="sec-head"><span class="num">13</span><h2>Calibration, verification, compliance</h2></div>
+  <p>These steps run in order, from the first silicon to the vehicle.</p>
+  <ol class="steps">
+    <li><b>Wafer and final test:</b> ATE with a 77 GHz loopback or probe; trim the power detectors, temperature sensors and bandgaps; screen NF, Pout and phase noise.</li>
+    <li><b>Module EOL:</b> anechoic chamber with a corner reflector (or target simulator) at several angles. Measure Rx/Tx gain and phase mismatch and store the calibration matrix in flash. Measure the antenna pattern and verify EIRP.</li>
+    <li><b>Runtime calibration:</b> temperature-indexed LUTs for Tx power and phase, and monitor-driven recalibration.</li>
+    <li><b>Mounting alignment:</b> EOL alignment on the vehicle, plus online auto-alignment from stationary targets and ego-motion.</li>
+    <li><b>Radar target simulator (RTS) HIL:</b> scenario and interference tests, ghost and multipath checks.</li>
+    <li><b>Compliance:</b> ETSI EN 301 091 / EN 303 396 or FCC Part 95M (EIRP, OOB, spurious); EMC; ISO 26262 safety case; cybersecurity (ISO/SAE 21434) for the SW and interfaces.</li>
+  </ol>
+  <footer>The figures are typical engineering ranges for current RFCMOS and SiGe automotive radar and are meant for early trade-offs. Always design against your chosen MMIC's datasheet and the current versions of the regulations.</footer>
+</section>
+</main>
+</div>
+</div>
+
+<script>
+(function(){
+  const c=3e8, ids=["f0","S","Fs","N","Tc","L","iq","Ntx","Nrx","Pt","Gt","Gr","NF","rcs","R","Ls"];
+  const $=id=>document.getElementById(id);
+  const fx=(v,d)=>Number.isFinite(v)?v.toFixed(d):"–";
+  function run(){
+    const g={}; ids.forEach(k=>{g[k]=k==="iq"?$(k).value:parseFloat($(k).value)});
+    const Tadc=g.N/g.Fs;                  // µs
+    const B=g.S*Tadc;                     // MHz
+    const fc=g.f0*1e9+B*1e6/2, lam=c/fc;
+    const dR=c/(2*B*1e6);
+    const fif=g.iq==="c"?g.Fs:g.Fs/2;     // MHz
+    const Rmax=fif*1e6*c/(2*g.S*1e12);
+    const fb=2*g.S*1e12*g.R/c/1e6;        // MHz
+    const Tc=g.Tc*1e-6;
+    const vmax=lam/(4*Tc*g.Ntx), dv=lam/(2*g.L*g.Ntx*Tc);
+    const Nv=g.Ntx*g.Nrx, dth=2/Nv*180/Math.PI;
+    const ft=g.L*g.Ntx*g.Tc/1000;         // ms
+    const cube=g.N*g.L*Nv*4/1048576;      // MiB
+    const Pr=g.Pt+g.Gt+g.Gr+20*Math.log10(lam)+g.rcs-30*Math.log10(4*Math.PI)-40*Math.log10(g.R);
+    const Nn=-174+g.NF+10*Math.log10(1/(Tadc*1e-6));
+    const snr=Pr-Nn+10*Math.log10(g.L*Nv)-g.Ls;
+    $("o_snr").textContent=fx(snr,1)+" dB";
+    $("o_B").textContent=fx(Tadc,1)+" µs / "+fx(B,0)+" MHz";
+    $("o_dR").textContent=fx(dR*100,1)+" cm";
+    $("o_Rmax").textContent=fx(Rmax,0)+" m";
+    $("o_fb").textContent=fx(fb,2)+" MHz";
+    $("o_vmax").textContent="±"+fx(vmax,2)+" m/s ("+fx(vmax*3.6,0)+" km/h)";
+    $("o_dv").textContent=fx(dv,3)+" m/s";
+    $("o_ang").textContent=Nv+" / ≈"+fx(dth,1)+"°";
+    $("o_ft").textContent=fx(ft,2)+" ms";
+    $("o_cube").textContent=fx(cube,2)+" MiB";
+    $("o_pr").textContent=fx(Pr,1)+" / "+fx(Nn,1)+" dBm";
+    const st=[];
+    st.push(snr>=13?["ok","detectable (≥13 dB)"]:snr>=10?["warn","marginal SNR"]:["bad","below CFAR threshold"]);
+    st.push(g.R<=Rmax*0.9?["ok","range within IF band"]:g.R<=Rmax?["warn","near IF filter edge"]:["bad","target beyond R_max"]);
+    st.push(g.Tc>=Tadc+5?["ok","chirp timing OK"]:["bad","chirp period < ADC window + idle"]);
+    if(B>(g.f0<77?1000:4000)) st.push(["warn","sweep exceeds band"]);
+    if(cube>4) st.push(["warn","cube > 4 MiB on-chip"]);
+    $("o_stat").innerHTML=st.map(s=>'<span class="pill '+s[0]+'">'+s[1]+'</span>').join("");
+  }
+  $("f").addEventListener("input",run);
+  $("f").addEventListener("submit",e=>e.preventDefault());
+  run();
+})();
+</script>

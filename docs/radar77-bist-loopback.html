@@ -1,0 +1,503 @@
+<title>Radar BIST &amp; Loopback</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F2F4F2; --surface:#FFFFFF; --sunk:#E7EBE8; --ink:#16201D; --muted:#56635E; --line:#CDD5D1;
+  --rf:#0A776D; --lo:#9A5A00; --if:#4B47A8; --dig:#3B4B5C; --test:#B0306A;
+  --rf-soft:#DDEFEC; --lo-soft:#F5E8D3; --if-soft:#E4E3F5; --dig-soft:#E1E6EC; --test-soft:#F7E1EB;
+  --ok:#1D7A3E; --warn:#A5500A; --bad:#B3261E;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --cond:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#0E1513; --surface:#151E1B; --sunk:#1C2723; --ink:#DCE5E1; --muted:#95A49E; --line:#2D3A35;
+    --rf:#4CC3B5; --lo:#E0A650; --if:#9C98F0; --dig:#9FB2C6; --test:#F07FB0;
+    --rf-soft:#16332F; --lo-soft:#33280F; --if-soft:#24223F; --dig-soft:#1F2A35; --test-soft:#3A1B29;
+    --ok:#5CC98A; --warn:#E59A52; --bad:#F08A80;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#0E1513; --surface:#151E1B; --sunk:#1C2723; --ink:#DCE5E1; --muted:#95A49E; --line:#2D3A35;
+  --rf:#4CC3B5; --lo:#E0A650; --if:#9C98F0; --dig:#9FB2C6; --test:#F07FB0;
+  --rf-soft:#16332F; --lo-soft:#33280F; --if-soft:#24223F; --dig-soft:#1F2A35; --test-soft:#3A1B29;
+  --ok:#5CC98A; --warn:#E59A52; --bad:#F08A80;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--bg);color:var(--ink);font:15px/1.6 var(--sans);padding-inline:20px;padding-block:0 64px}
+a{color:var(--rf)}
+a:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto}
+header.top{padding-block:40px 24px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font:700 clamp(30px,5vw,46px)/1.05 var(--cond);letter-spacing:-.01em;margin:10px 0 12px;text-wrap:balance}
+.lede{max-width:72ch;color:var(--muted);margin:0}
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:40px;align-items:start}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px);font-size:13px}
+nav.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px;counter-reset:s -1}
+nav.toc li{counter-increment:s}
+nav.toc a{display:flex;gap:8px;text-decoration:none;color:var(--muted);padding:4px 8px;border-radius:4px}
+nav.toc a::before{content:counter(s,decimal-leading-zero);font:500 11px/1.9 var(--mono);color:var(--line)}
+nav.toc a:hover{background:var(--sunk);color:var(--ink)}
+nav.toc .back{margin-top:14px;display:block;font-size:12.5px}
+@media (max-width:860px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  nav.toc{position:static;overflow-x:auto}
+  nav.toc ol{display:flex;gap:6px;padding-bottom:6px}
+  nav.toc a{white-space:nowrap;border:1px solid var(--line);background:var(--surface)}
+}
+main{min-width:0}
+section{padding-block:8px 36px;border-bottom:1px solid var(--line);margin-bottom:32px;scroll-margin-top:16px}
+section:last-child{border-bottom:0}
+.sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.num{font:500 13px/1 var(--mono);color:var(--muted)}
+h2{font:600 28px/1.15 var(--cond);margin:0;text-wrap:balance}
+h3{font:600 17px/1.3 var(--cond);margin:26px 0 8px;letter-spacing:.01em}
+p,ul,ol.steps{max-width:72ch}
+p{margin:10px 0}
+ul,ol.steps{padding-left:20px;margin:8px 0} li{margin:4px 0}
+code,.m{font-family:var(--mono);font-size:.9em}
+.eq{font:13.5px/1.7 var(--mono);background:var(--sunk);padding:10px 14px;border-radius:4px;max-width:78ch;overflow-x:auto;white-space:pre;margin:10px 0}
+.tbl{overflow-x:auto;margin:14px 0;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+th{font:600 12px/1.3 var(--sans);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--sunk);white-space:nowrap}
+td.v{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums}
+td:first-child{font-weight:500}
+.tag{display:inline-block;font:600 11px/1 var(--mono);width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;background:var(--test);color:var(--surface);margin-right:6px;vertical-align:1px}
+figure{margin:18px 0}
+.fig{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px}
+.fig svg{display:block;max-width:100%;height:auto;color:var(--ink)}
+.fig.wide svg{min-width:880px;max-width:none;width:100%}
+figcaption{font-size:13px;color:var(--muted);margin-top:8px;max-width:80ch}
+svg text{font-family:var(--sans);fill:currentColor}
+svg .t{font:600 12.5px var(--sans)} svg .s{font:11px var(--mono);fill:var(--muted)}
+svg .lbl{font:11px var(--mono);fill:var(--muted)}
+svg .blk{fill:var(--surface);stroke-width:1.6}
+svg .tb{fill:var(--test-soft);stroke:var(--test);stroke-width:1.6}
+svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} svg .dig{stroke:var(--dig)}
+svg .w{fill:none;stroke-width:1.5}
+svg .tp{fill:none;stroke:var(--test);stroke-width:2}
+svg .tpd{fill:none;stroke:var(--test);stroke-width:1.6;stroke-dasharray:5 3}
+svg .tagc{fill:var(--test)} svg .tagt{font:600 11px var(--mono);fill:var(--surface)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin:16px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.card h3{margin:0 0 6px}
+.card .eq{font-size:12.5px;max-width:none}
+.card ol{padding-left:18px;margin:6px 0;font-size:14px}
+.card p{font-size:14px}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:3px 12px;font-size:13px;margin:8px 0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-family:var(--mono);font-size:12.5px}
+.note{border-left:3px solid var(--lo);background:var(--lo-soft);padding:10px 14px;border-radius:0 4px 4px 0;font-size:14px;max-width:78ch;margin:14px 0}
+.note b{color:var(--lo)}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0}
+@media (max-width:760px){.split{grid-template-columns:1fr}}
+.split > div{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.split h3{margin-top:0}
+.split ul{font-size:14px}
+footer{font-size:12.5px;color:var(--muted);padding-top:12px;max-width:80ch}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">77 GHz radar MMIC · design for test</div>
+  <h1>On-chip BIST and loopback: testing a 77 GHz radar without 77 GHz instruments</h1>
+  <p class="lede">How a radar MMIC generates its own test stimulus, routes it through loopback paths, measures the result with its own ADCs and counters, and feeds the numbers back as pass/fail results, eFuse trims and calibration tables. The aim is to move production test from an RF ATE with mmWave instruments to a low-cost digital/DC tester running many sites in parallel, and to reuse the same hardware as ISO 26262 safety monitors in the field.</p>
+</header>
+
+<div class="layout">
+<nav class="toc" aria-label="Sections">
+  <ol>
+    <li><a href="#why">Why BIST</a></li>
+    <li><a href="#arch">Test architecture</a></li>
+    <li><a href="#stim">Generating stimulus</a></li>
+    <li><a href="#meas">Measuring on-chip</a></li>
+    <li><a href="#recipes">Test recipes</a></li>
+    <li><a href="#feedback">Feeding results back</a></li>
+    <li><a href="#flow">Production flow</a></li>
+    <li><a href="#accuracy">Accuracy &amp; coverage</a></li>
+    <li><a href="#checklist">Design checklist</a></li>
+  </ol>
+  <a class="back" href="radar77-signal-chain.html">← 77 GHz Radar Signal Chain</a>
+</nav>
+
+<main>
+<section id="why">
+  <div class="sec-head"><span class="num">00</span><h2>Why BIST: what it replaces</h2></div>
+  <p>Testing a 77 GHz transceiver the conventional way needs mmWave power meters or spectrum analysers per Tx, a calibrated 77 GHz source and noise source for the Rx, frequency-extension heads, and an RF-capable load board. Each channel is measured one after another, with instrument settling and switching in between. The equipment is expensive, needs calibration, is hard to run multi-site, and in practice takes up most of the test time.</p>
+  <p>With BIST the chip is its own instrument. The ATE only supplies power, a reference clock and a digital interface (SPI/I²C, GPIOs). It loads a test firmware, starts a test list, and reads back results the chip has already computed.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>What the ATE used to provide</th><th>On-chip replacement</th></tr></thead>
+    <tbody>
+      <tr><td>77 GHz power meter (Tx Pout)</td><td>Output coupler + square-law power detector → aux ADC</td></tr>
+      <tr><td>77 GHz signal generator (Rx gain)</td><td>Tx signal coupled into Rx via loopback, offset in frequency by an on-chip modulator</td></tr>
+      <tr><td>Noise source (NF)</td><td>On-chip hot/cold noise source, or "cold" method using known gain</td></tr>
+      <tr><td>Spectrum analyser / frequency counter (LO)</td><td>÷N prescaler + counter referenced to the crystal; PLL phase-error monitor</td></tr>
+      <tr><td>Phase-calibrated VNA (Tx/Rx phase)</td><td>Loopback phase read from the Rx FFT bin, relative between channels and codes</td></tr>
+      <tr><td>Baseband AWG + digitiser (IF chain, ADC)</td><td>IF test-tone DAC/DDS injected before the IF chain; the main ADC + FFT measure it</td></tr>
+      <tr><td>DMM on supplies and temperature</td><td>Aux SAR ADC with analog mux, temperature sensors, bandgap cross-check</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="arch">
+  <div class="sec-head"><span class="num">01</span><h2>Test architecture: where the signals go</h2></div>
+  <p>Six test paths (A–F) sit next to the normal signal chain. Every test is one of them, or a combination: a stimulus enters at one point, and a measurement block reads it out at another.</p>
+  <figure>
+    <div class="fig wide">
+    <svg viewBox="0 0 1080 420" role="img" aria-label="BIST architecture. A: Tx coupler to power detector to aux ADC. B: Tx coupler through loopback attenuator and modulator into the Rx coupler, then through the Rx chain to the main ADC and FFT. C: IF test-tone DAC into the IF chain. D: LO to a frequency counter and PLL monitor. E: noise source at the LNA input. F: temperature and supply sensors to the aux ADC. All results go to the on-chip test sequencer, which the ATE controls over SPI.">
+      <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <!-- top strip -->
+      <rect class="tb" x="100" y="16" width="80" height="46" rx="6"/><text class="t" x="140" y="36" text-anchor="middle">Power det</text><text class="s" x="140" y="52" text-anchor="middle">fwd / rev</text>
+      <rect class="tb" x="560" y="16" width="100" height="46" rx="6"/><text class="t" x="610" y="36" text-anchor="middle">Temp · V mux</text><text class="s" x="610" y="52" text-anchor="middle">PTAT · dividers</text>
+      <rect class="tb" x="680" y="16" width="100" height="46" rx="6"/><text class="t" x="730" y="36" text-anchor="middle">Aux SAR ADC</text><text class="s" x="730" y="52" text-anchor="middle">10–12 bit</text>
+      <!-- Tx row -->
+      <text class="lbl" x="20" y="100">TX</text>
+      <rect class="blk rf" x="20" y="110" width="70" height="46" rx="6"/><text class="s" x="55" y="137" text-anchor="middle">Tx ball</text>
+      <rect class="blk rf" x="110" y="110" width="60" height="46" rx="6"/><text class="t" x="140" y="137" text-anchor="middle">Cpl</text>
+      <rect class="blk rf" x="200" y="110" width="100" height="46" rx="6"/><text class="t" x="250" y="130" text-anchor="middle">PA</text><text class="s" x="250" y="146" text-anchor="middle">gain codes</text>
+      <rect class="blk rf" x="320" y="110" width="100" height="46" rx="6"/><text class="t" x="370" y="130" text-anchor="middle">Phase shifter</text><text class="s" x="370" y="146" text-anchor="middle">6-bit I/Q VM</text>
+      <!-- mid row -->
+      <rect class="tb" x="80" y="220" width="120" height="46" rx="6"/><text class="t" x="140" y="240" text-anchor="middle">Loopback</text><text class="s" x="140" y="256" text-anchor="middle">atten + mod f_m</text>
+      <rect class="tb" x="210" y="220" width="90" height="46" rx="6"/><text class="t" x="255" y="240" text-anchor="middle">Noise src</text><text class="s" x="255" y="256" text-anchor="middle">hot / cold</text>
+      <rect class="blk lo" x="320" y="220" width="100" height="46" rx="6"/><text class="t" x="370" y="240" text-anchor="middle">PLL·VCO·×4</text><text class="s" x="370" y="256" text-anchor="middle">+ ÷N counter</text>
+      <rect class="tb" x="440" y="220" width="100" height="46" rx="6"/><text class="t" x="490" y="240" text-anchor="middle">IF tone DAC</text><text class="s" x="490" y="256" text-anchor="middle">DDS, 0.1–20 MHz</text>
+      <rect class="blk dig" x="800" y="210" width="140" height="66" rx="6"/><text class="t" x="870" y="232" text-anchor="middle">Test sequencer</text><text class="s" x="870" y="248" text-anchor="middle">RF ctrl CPU + FW</text><text class="s" x="870" y="263" text-anchor="middle">result regs · eFuse</text>
+      <rect class="blk dig" x="960" y="210" width="104" height="66" rx="6"/><text class="t" x="1012" y="232" text-anchor="middle">Digital ATE</text><text class="s" x="1012" y="248" text-anchor="middle">SPI · DC · ref</text><text class="s" x="1012" y="263" text-anchor="middle">no RF</text>
+      <!-- Rx row -->
+      <text class="lbl" x="20" y="320">RX</text>
+      <rect class="blk rf" x="20" y="330" width="70" height="46" rx="6"/><text class="s" x="55" y="357" text-anchor="middle">Rx ball</text>
+      <rect class="blk rf" x="110" y="330" width="60" height="46" rx="6"/><text class="t" x="140" y="357" text-anchor="middle">Cpl</text>
+      <rect class="blk rf" x="200" y="330" width="100" height="46" rx="6"/><text class="t" x="250" y="357" text-anchor="middle">LNA</text>
+      <rect class="blk rf" x="320" y="330" width="100" height="46" rx="6"/><text class="t" x="370" y="357" text-anchor="middle">I/Q mixer</text>
+      <rect class="blk if" x="440" y="330" width="100" height="46" rx="6"/><text class="t" x="490" y="350" text-anchor="middle">HPF·VGA·AAF</text><text class="s" x="490" y="366" text-anchor="middle">IF chain</text>
+      <rect class="blk if" x="560" y="330" width="100" height="46" rx="6"/><text class="t" x="610" y="350" text-anchor="middle">ΣΔ ADC</text><text class="s" x="610" y="366" text-anchor="middle">main Rx ADC</text>
+      <rect class="blk dig" x="680" y="330" width="100" height="46" rx="6"/><text class="t" x="730" y="350" text-anchor="middle">FFT / DSP</text><text class="s" x="730" y="366" text-anchor="middle">bin amp · phase</text>
+
+      <!-- normal chain -->
+      <g color="var(--rf)"><line class="w rf" x1="320" y1="133" x2="302" y2="133" marker-end="url(#a1)"/><line class="w rf" x1="200" y1="133" x2="172" y2="133" marker-end="url(#a1)"/><line class="w rf" x1="110" y1="133" x2="92" y2="133" marker-end="url(#a1)"/>
+      <line class="w rf" x1="90" y1="353" x2="108" y2="353" marker-end="url(#a1)"/><line class="w rf" x1="170" y1="353" x2="198" y2="353" marker-end="url(#a1)"/><line class="w rf" x1="300" y1="353" x2="318" y2="353" marker-end="url(#a1)"/></g>
+      <g color="var(--if)"><line class="w if" x1="420" y1="353" x2="438" y2="353" marker-end="url(#a1)"/><line class="w if" x1="540" y1="353" x2="558" y2="353" marker-end="url(#a1)"/><line class="w if" x1="660" y1="353" x2="678" y2="353" marker-end="url(#a1)"/></g>
+      <g color="var(--lo)"><line class="w lo" x1="370" y1="220" x2="370" y2="158" marker-end="url(#a1)"/><line class="w lo" x1="370" y1="266" x2="370" y2="328" marker-end="url(#a1)"/></g>
+
+      <!-- test paths -->
+      <g color="var(--test)">
+        <line class="tp" x1="140" y1="110" x2="140" y2="64" marker-end="url(#a1)"/>
+        <line class="tp" x1="180" y1="39" x2="678" y2="39" marker-end="url(#a1)"/>
+        <line class="tp" x1="660" y1="47" x2="678" y2="47" />
+        <line class="tp" x1="140" y1="156" x2="140" y2="218" marker-end="url(#a1)"/>
+        <line class="tp" x1="140" y1="266" x2="140" y2="328" marker-end="url(#a1)"/>
+        <line class="tp" x1="255" y1="266" x2="255" y2="328" marker-end="url(#a1)"/>
+        <line class="tp" x1="490" y1="266" x2="490" y2="328" marker-end="url(#a1)"/>
+        <path class="tp" d="M410,220 V196 H850 V208" marker-end="url(#a1)"/>
+        <path class="tp" d="M780,39 H890 V208" marker-end="url(#a1)"/>
+        <path class="tp" d="M780,353 H870 V278" marker-end="url(#a1)"/>
+        <path class="tpd" d="M800,243 H542" marker-end="url(#a1)"/>
+        <path class="tpd" d="M870,210 V178 H185 V218" marker-end="url(#a1)"/>
+        <line class="tp" x1="942" y1="243" x2="958" y2="243" marker-start="url(#a1)" marker-end="url(#a1)"/>
+      </g>
+      <text class="lbl" x="680" y="238" text-anchor="end">tone freq/amp</text>
+      <text class="lbl" x="600" y="172">mod clock f_m · atten · on/off</text>
+      <text class="lbl" x="600" y="191">f_VCO/N count · PLL error</text>
+      <!-- tags -->
+      <g><circle class="tagc" cx="160" cy="88" r="10"/><text class="tagt" x="160" y="92" text-anchor="middle">A</text></g>
+      <g><circle class="tagc" cx="120" cy="190" r="10"/><text class="tagt" x="120" y="194" text-anchor="middle">B</text></g>
+      <g><circle class="tagc" cx="510" cy="298" r="10"/><text class="tagt" x="510" y="302" text-anchor="middle">C</text></g>
+      <g><circle class="tagc" cx="430" cy="208" r="10"/><text class="tagt" x="430" y="212" text-anchor="middle">D</text></g>
+      <g><circle class="tagc" cx="275" cy="298" r="10"/><text class="tagt" x="275" y="302" text-anchor="middle">E</text></g>
+      <g><circle class="tagc" cx="610" cy="82" r="10"/><text class="tagt" x="610" y="86" text-anchor="middle">F</text></g>
+    </svg>
+    </div>
+    <figcaption>Pink marks test-only hardware and paths; the solid lines carry signal, the dashed lines control. The loopback (B) couples a small, frequency-shifted copy of the Tx signal into the Rx input, so the whole Tx → Rx → ADC → FFT chain is exercised with no external source. The sequencer runs everything; the ATE only talks SPI.</figcaption>
+  </figure>
+  <div class="tbl"><table>
+    <thead><tr><th>Path</th><th>Stimulus</th><th>Route</th><th>Read by</th><th>Main use</th></tr></thead>
+    <tbody>
+      <tr><td><span class="tag">A</span>Power detect</td><td>Tx itself</td><td>PA → coupler → forward/reverse detector</td><td>Aux ADC</td><td>Tx Pout, PA gain codes, ball/antenna open (reflected)</td></tr>
+      <tr><td><span class="tag">B</span>RF loopback</td><td>Tx + modulator offset f_m</td><td>Tx coupler → atten → mod → Rx coupler → LNA → mixer → IF → ADC</td><td>Main ADC + FFT</td><td>Rx gain/phase, Tx phase shifter, Tx-to-Tx phase, I/Q, linearity, end-to-end</td></tr>
+      <tr><td><span class="tag">C</span>IF loopback</td><td>DDS tone</td><td>IF DAC → IF chain input</td><td>Main ADC + FFT</td><td>HPF/LPF response, VGA steps, ADC SNR/SFDR, channel matching in baseband</td></tr>
+      <tr><td><span class="tag">D</span>LO monitor</td><td>VCO itself</td><td>VCO ÷N → counter (gated by ref); PLL phase-error tap</td><td>Counter / digital</td><td>Start frequency, slope, ramp linearity, lock, VCO range</td></tr>
+      <tr><td><span class="tag">E</span>Noise source</td><td>Hot/cold noise</td><td>Noise source → LNA input</td><td>Main ADC + FFT (noise floor)</td><td>Rx noise figure (Y-factor)</td></tr>
+      <tr><td><span class="tag">F</span>Sensors</td><td>DC nodes</td><td>Mux → aux ADC</td><td>Aux ADC</td><td>Supplies, temperatures, bandgap cross-check, detector offsets</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="stim">
+  <div class="sec-head"><span class="num">02</span><h2>Generating stimulus on-chip</h2></div>
+  <h3>The FMCW loopback problem, and the fix</h3>
+  <p>In FMCW, Tx and Rx use the same chirping LO. A straight Tx → Rx loopback has almost zero delay, so its beat frequency is about S·τ ≈ 0 Hz: it lands at DC and the HPF removes it. A useful loopback therefore has to be <b>offset in frequency</b> by a known f_m (typically 0.5–5 MHz), so that it appears as a clean tone in a chosen IF bin. The same fact is also useful: loopback leakage when the path is "off" also lands at DC, where it is harmless.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Offset method</th><th>How</th><th>Spectrum at IF</th><th>Trade-off</th></tr></thead>
+    <tbody>
+      <tr><td>BPSK modulator</td><td>0/180° switch in the loopback, toggled by a square wave at f_m (ref ÷ M)</td><td class="v">±f_m, ±3f_m (−9.5 dB), ±5f_m …; carrier suppressed</td><td>Simplest. ±f_m both appear, so I/Q image can't be separated from the tone</td></tr>
+      <tr><td>SSB / serrodyne (reuse the phase shifter)</td><td>Step the loopback or Tx phase shifter 0 → 360° every 1/f_m in K steps (e.g. K = 8 or 16)</td><td class="v">+f_m dominant; spurs at f_m·(1 ± nK)</td><td>No extra RF block. Single sideband, so image at −f_m directly measures I/Q imbalance</td></tr>
+      <tr><td>Dedicated I/Q upconverter</td><td>Small SSB mixer driven by I/Q tones at f_m</td><td class="v">+f_m, image &lt; −30 dBc</td><td>Cleanest tone, more area; mixer itself needs checking</td></tr>
+      <tr><td>Delay line</td><td>Real delay τ gives f_b = S·τ</td><td class="v">f_b tone</td><td>On-chip τ is too small; practical only as an off-chip load-board trace (also tests the balls)</td></tr>
+      <tr><td>IF DDS (path C)</td><td>Digital synthesiser → DAC → IF input</td><td class="v">any tone(s) in DC–20 MHz</td><td>Tests only IF + ADC, not the RF</td></tr>
+      <tr><td>Noise source (path E)</td><td>Forward-biased diode/transistor (hot) vs matched termination (cold)</td><td class="v">white noise</td><td>ENR must be characterised; drifts with temperature</td></tr>
+    </tbody>
+  </table></div>
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 600 220" role="img" aria-label="IF spectrum of an SSB loopback: DC notch removed by the HPF, a main tone at plus f_m, a small image at minus f_m that measures I/Q imbalance, a second harmonic at 2 f_m that measures linearity, and a raised noise floor.">
+      <defs><marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <line x1="40" y1="180" x2="580" y2="180" stroke="currentColor" stroke-width="1.2" marker-end="url(#a2)"/>
+      <text class="lbl" x="575" y="200" text-anchor="end">IF freq</text>
+      <line x1="300" y1="186" x2="300" y2="176" stroke="currentColor"/><text class="s" x="300" y="200" text-anchor="middle">0</text>
+      <line x1="400" y1="186" x2="400" y2="176" stroke="currentColor"/><text class="s" x="400" y="200" text-anchor="middle">+f_m</text>
+      <line x1="200" y1="186" x2="200" y2="176" stroke="currentColor"/><text class="s" x="200" y="200" text-anchor="middle">−f_m</text>
+      <line x1="500" y1="186" x2="500" y2="176" stroke="currentColor"/><text class="s" x="500" y="200" text-anchor="middle">+2f_m</text>
+      <path d="M40,168 H270 Q300,200 330,168 H570" fill="none" stroke="var(--muted)" stroke-width="1.2"/>
+      <text class="s" x="300" y="160" text-anchor="middle">HPF notch · leakage</text>
+      <rect x="394" y="30" width="12" height="138" fill="var(--test)"/>
+      <rect x="194" y="126" width="12" height="42" fill="var(--if)"/>
+      <rect x="494" y="140" width="12" height="28" fill="var(--lo)"/>
+      <text class="s" x="414" y="44">tone → gain, phase</text>
+      <text class="s" x="186" y="118" text-anchor="end">image → I/Q error</text>
+      <text class="s" x="512" y="132">HD2 → linearity</text>
+      <text class="s" x="60" y="162">noise floor → NF</text>
+    </svg>
+    </div>
+    <figcaption>One loopback capture gives several results. The tone's amplitude and phase give gain and phase, the image gives I/Q imbalance, the harmonics give linearity, and the noise floor between tones gives noise (and NF, together with the known gain).</figcaption>
+  </figure>
+  <h3>Level plan for loopback B (typical)</h3>
+<div class="eq">P_Tx out                           +12 dBm
+Tx output coupler (weak)           −20 dB    ← costs ≈0.05 dB of Pout
+Programmable attenuator            −0 … −30 dB
+Modulator loss (SSB / BPSK 1st)    −4 … −6 dB
+Rx input coupler                   −20 dB    ← adds ≈0.2–0.4 dB to NF
+─────────────────────────────────────────────
+At LNA input                       ≈ −34 … −64 dBm   (well below Rx P1dB ≈ −10 dBm)</div>
+  <p>Set the attenuator so the tone sits about 10–20 dB below ADC full scale. The ratio of tone to noise in one FFT bin is then 50–70 dB, so a single chirp is enough for gain and phase accuracy better than 0.05 dB / 0.3°.</p>
+</section>
+
+<section id="meas">
+  <div class="sec-head"><span class="num">03</span><h2>Measuring on-chip: four instruments in silicon</h2></div>
+  <div class="cards">
+    <div class="card">
+      <h3>1 · Power detector + aux ADC</h3>
+      <p>A square-law (diode-connected MOS or bipolar) or log detector sits on a weak coupler at the PA output. Its DC output is proportional to RF power and goes to a 10–12 bit SAR ADC through the analog mux. A second detector on the reverse port measures reflected power.</p>
+<div class="eq">V_det = V_off + k · P_RF        (square-law region)
+P_out[dBm] = 10log((V_on − V_off)/k) + C_cpl
+Differential: V_off = V_det with PA off → removes offset/drift</div>
+      <p>Always measure <b>PA on minus PA off</b>, and ratio against an on-chip reference voltage, so that offset and ADC gain errors cancel.</p>
+    </div>
+    <div class="card">
+      <h3>2 · Main Rx ADC + FFT as a vector receiver</h3>
+      <p>The normal Rx chain acts as a vector network analyser receiver. Pick f_m so it falls exactly on a bin (f_m = k·F_s/N) to avoid leakage between bins, and use a rectangular window.</p>
+<div class="eq">X_i[k] = FFT(x_i)[k]            channel i, tone bin k
+A_i  = 2|X_i[k]| / N            amplitude
+φ_i  = arg X_i[k]               phase
+ΔG_i = 20log(A_i/A_ref)         relative gain
+Δφ_i = φ_i − φ_ref              relative phase
+Noise = mean |X[j]|², j ≠ tone, harmonics, DC</div>
+    </div>
+    <div class="card">
+      <h3>3 · Frequency counter and PLL monitor</h3>
+      <p>A prescaler divides the VCO (÷N, e.g. 256 at 20 GHz ≈ 78 MHz). A counter gated by the crystal counts it. The resolution at RF is set by the gate time:</p>
+<div class="eq">f_RF = 4 · N · count / T_gate
+Δf_RF = 4 · N / T_gate
+  T_gate = 1 ms  → 1.0 MHz resolution at 77 GHz
+  T_gate = 10 ms → 0.1 MHz</div>
+      <p>For slope and linearity during a chirp, read the <b>PLL phase error</b> (the ΣΔ loop error or TDC output in an ADPLL). Integrated frequency error along the ramp gives the RMS nonlinearity directly, without a counter.</p>
+    </div>
+    <div class="card">
+      <h3>4 · Aux ADC as DMM</h3>
+      <p>The same aux ADC reads temperatures (PTAT diodes near each PA, digital, VCO), every supply rail through dividers, LNA and PA bias currents (through sense resistors), and a second bandgap. The two bandgaps checking each other is what makes the aux ADC trustworthy as a reference.</p>
+      <dl class="kv">
+        <dt>Resolution</dt><dd>10–12 bit, ≈1 mV LSB</dd>
+        <dt>Temp accuracy</dt><dd>±2–5 °C after 1-point trim</dd>
+        <dt>Conversion</dt><dd>≈1–5 µs per channel</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="recipes">
+  <div class="sec-head"><span class="num">04</span><h2>Test recipes: stimulus → path → measurement → result</h2></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Test</th><th>Path</th><th>Chip does</th><th>Computes</th><th>Feeds back</th></tr></thead>
+    <tbody>
+      <tr><td>Tx output power</td><td><span class="tag">A</span></td><td>PA on/off per Tx, per gain code; sweep 3 frequencies across the band</td><td class="v">P_out[dBm], gain-code step error, flatness</td><td>Tx power LUT, pass/fail</td></tr>
+      <tr><td>Tx ball / antenna open</td><td><span class="tag">A</span></td><td>Read reverse detector</td><td class="v">Return loss estimate</td><td>Pass/fail (needs the load board termination)</td></tr>
+      <tr><td>Tx phase-shifter linearity</td><td><span class="tag">B</span></td><td>Step all 64 codes on one Tx, capture loopback tone phase and amplitude</td><td class="v">Phase INL/DNL, AM/PM per code</td><td>Code-correction LUT</td></tr>
+      <tr><td>Tx-to-Tx phase / gain</td><td><span class="tag">B</span></td><td>Enable each Tx in turn into the same Rx</td><td class="v">ΔG, Δφ vs Tx1</td><td>MIMO / beamforming calibration</td></tr>
+      <tr><td>Rx gain and Rx-to-Rx match</td><td><span class="tag">B</span></td><td>One Tx into all Rx at once, same capture</td><td class="v">Absolute gain (via A), ΔG_i, Δφ_i</td><td>Rx calibration vector</td></tr>
+      <tr><td>I/Q imbalance</td><td><span class="tag">B</span> SSB</td><td>Tone at +f_m, measure image at −f_m</td><td class="v">IRR, ε (gain), θ (phase)</td><td>DFE I/Q correction coefficients</td></tr>
+      <tr><td>Rx compression</td><td><span class="tag">B</span></td><td>Sweep attenuator, track output vs input</td><td class="v">P1dB (input-referred)</td><td>Pass/fail</td></tr>
+      <tr><td>Rx noise figure</td><td><span class="tag">E</span> or <span class="tag">B</span>+noise</td><td>Hot/cold captures, or cold only plus known gain</td><td class="v">NF [dB]</td><td>Pass/fail, NF bins</td></tr>
+      <tr><td>IF filter response</td><td><span class="tag">C</span></td><td>Sweep DDS 50 kHz–20 MHz, each HPF/LPF setting</td><td class="v">Corner freq, ripple, group delay</td><td>Filter trim (R/C codes)</td></tr>
+      <tr><td>VGA gain steps</td><td><span class="tag">C</span></td><td>Fixed tone, step all gain codes</td><td class="v">Step error, monotonicity</td><td>Gain LUT</td></tr>
+      <tr><td>ADC dynamic performance</td><td><span class="tag">C</span></td><td>Near-full-scale tone, long capture</td><td class="v">SNR, SFDR, THD, ENOB</td><td>Pass/fail</td></tr>
+      <tr><td>LO frequency / range</td><td><span class="tag">D</span></td><td>Force VCO to band edges, count</td><td class="v">f_min, f_max, K_VCO</td><td>VCO band-select trim</td></tr>
+      <tr><td>Chirp slope / linearity</td><td><span class="tag">D</span></td><td>Run chirp, log PLL phase error along the ramp</td><td class="v">Slope error, RMS/peak nonlinearity</td><td>Pre-distortion coefficients</td></tr>
+      <tr><td>Supplies, temps, bandgap</td><td><span class="tag">F</span></td><td>Scan the mux</td><td class="v">V, T, BG1 vs BG2</td><td>Temp sensor trim, BG trim</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Key recipes in detail</h3>
+  <div class="cards">
+    <div class="card">
+      <h3>Rx gain &amp; phase match (path B)</h3>
+      <ol>
+        <li>Enable Tx1 at a fixed power code; enable the loopback, attenuator code for about −15 dBFS at the ADC.</li>
+        <li>Start the SSB modulator at f_m = k·F_s/N (e.g. 1.25 MHz).</li>
+        <li>Run a CW or shallow chirp. Capture N samples on all Rx at the same time.</li>
+        <li>FFT; read X_i[k] for each Rx. Average 8–16 chirps for margin.</li>
+        <li>ΔG_i, Δφ_i relative to Rx1 → write the calibration vector; compare with limits.</li>
+      </ol>
+      <p>All Rx share one input signal and one LO, so the loopback's own variation cancels in the relative result.</p>
+    </div>
+    <div class="card">
+      <h3>Noise figure without a noise source</h3>
+<div class="eq">1. Known input tone P_in at LNA (from A + loopback cal)
+2. G_total = P_tone,out − P_in            (from FFT)
+3. Disable loopback (input = 50 Ω, T0)
+4. N_out = mean noise PSD in bins [dBFS/Hz → dBm/Hz]
+5. NF = N_out − G_total − (−174 dBm/Hz)</div>
+      <p>Accuracy depends on the absolute value of P_in. Correlate it to lab NF on golden units, and track it with a guard band of about ±1 dB. With an on-chip hot/cold source, use Y = N_hot/N_cold, NF = ENR − 10log(Y−1).</p>
+    </div>
+    <div class="card">
+      <h3>Tx phase-shifter sweep</h3>
+<div class="eq">for code c = 0..63:
+   set PS(Tx_n) = c ; capture ; X[k]
+   φ(c) = arg X[k] − arg X_c=0[k]
+   A(c) = |X[k]| / |X_c=0[k]|
+INL(c) = φ(c) − c · 5.625°
+→ store corrected code map c' = argmin |φ(c) − target|</div>
+      <p>About 64 captures of 50 µs each is roughly 3 ms per Tx. On an RF ATE this would need a phase-coherent receiver on every Tx ball.</p>
+    </div>
+    <div class="card">
+      <h3>Chirp linearity (path D)</h3>
+      <ol>
+        <li>Program the production chirp profile (slope, B, T_ramp).</li>
+        <li>Stream the PLL phase error e[n] into memory during the ramp.</li>
+        <li>Integrate to frequency error Δf[n]. Fit and remove a line to get the nonlinearity residual.</li>
+        <li>Report RMS and peak residual (in kHz and % of B) inside the ADC window only, plus settling time after reset.</li>
+      </ol>
+      <p>The counter (1 ms gate) checks the absolute start and stop frequency against the 76–81 GHz band edges.</p>
+    </div>
+  </div>
+</section>
+
+<section id="feedback">
+  <div class="sec-head"><span class="num">05</span><h2>Feeding results back: pass/fail, trim, calibration</h2></div>
+  <p>Each measurement ends up in one or more of three places. The same code runs at wafer test, final test, module EOL and in the field.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Destination</th><th>What goes there</th><th>When</th><th>Mechanism</th></tr></thead>
+    <tbody>
+      <tr><td>Result registers → ATE</td><td>Measured values plus pass/fail bits against limits in the test FW</td><td>Every test</td><td>ATE reads over SPI; binning, datalog, SPC</td></tr>
+      <tr><td>eFuse / OTP (permanent trim)</td><td>Bandgap, temperature-sensor offset, detector offset and slope, VCO band, IF filter R/C codes, LO/PA bias</td><td>Wafer or final test, once</td><td>Compute → burn → re-measure to verify</td></tr>
+      <tr><td>Module flash (calibration tables)</td><td>Rx/Tx gain and phase vectors, phase-shifter LUT, Tx power vs temperature, I/Q coefficients</td><td>Module EOL (with the real antenna)</td><td>Host MCU stores; loaded at boot</td></tr>
+      <tr><td>Runtime (closed loop)</td><td>Tx power servo, temperature recalibration, safety monitor reports</td><td>Every frame or every N frames</td><td>RF ctrl CPU → registers; faults → error pin / host</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note"><b>Order matters.</b> Trim the references first (bandgap → aux ADC → temperature sensor → power detector). Every later measurement depends on them, so a wrong bandgap trim makes every downstream result wrong in the same way.</div>
+</section>
+
+<section id="flow">
+  <div class="sec-head"><span class="num">06</span><h2>Production flow on a low-cost tester</h2></div>
+  <ol class="steps">
+    <li><b>Contact and DC:</b> continuity, leakage, IDDQ, supply currents (ATE PMU).</li>
+    <li><b>Digital:</b> scan / ATPG, logic BIST, memory BIST (with repair if available), eFuse read.</li>
+    <li><b>Boot test firmware</b> over SPI into the RF control CPU's RAM; the ATE supplies the 40 MHz reference.</li>
+    <li><b>Reference trims:</b> bandgap and aux ADC (compare against one precision ATE voltage), temperature sensor (against the chuck or handler temperature).</li>
+    <li><b>LO:</b> VCO band calibration, lock, counter check of band edges, chirp linearity.</li>
+    <li><b>Tx (A):</b> power per Tx and gain code; reverse-power check with the load-board termination.</li>
+    <li><b>Loopback (B, C, E):</b> run all Rx in parallel: gain, phase, I/Q, NF, IF response, ADC SNR/SFDR, then the phase-shifter sweep.</li>
+    <li><b>Burn eFuse</b>, re-run a short verify subset, read the final result block. Bin.</li>
+    <li><b>Hot/cold insertion:</b> re-run the short list at temperature to fill the temperature LUT and catch drift outliers.</li>
+  </ol>
+  <div class="split">
+    <div>
+      <h3>Where the test time goes</h3>
+      <ul>
+        <li>Most BIST measurements take µs to a few ms: one chirp capture plus an FFT.</li>
+        <li>All Rx measured at once; the Tx measured by switching, not by moving an instrument.</li>
+        <li>No instrument settling, RF switch matrix or GPIB/LAN transfers; only a short SPI readout of results.</li>
+        <li>Multi-site becomes easy: 8–32 sites need only digital pins, DC and a shared reference clock.</li>
+        <li>The rest is fixed overhead: FW download, eFuse burn, temperature soak. Compress the FW and burn eFuses on all sites in parallel.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Load board without RF instruments</h3>
+      <ul>
+        <li>Terminate each Tx ball in a matched load, which gives a known reflection for the reverse-detector test.</li>
+        <li>Optionally, a <b>passive external loopback</b>: a Tx ball → attenuator/trace → Rx ball on the load board. This also tests the balls, bumps and package transitions, which the on-chip loopback cannot see.</li>
+        <li>A longer trace gives a real delay τ, so a chirp produces f_b = S·τ; it checks slope end-to-end.</li>
+        <li>Keep one audit RF tester for sample-based correlation, not for every part.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="accuracy">
+  <div class="sec-head"><span class="num">07</span><h2>Accuracy, correlation and coverage limits</h2></div>
+  <p>BIST measures <b>relative</b> quantities very well (channel matching, steps, linearity, trends). <b>Absolute</b> quantities (Pout in dBm, NF in dB) inherit the uncertainty of an on-chip reference, such as the coupler, detector or noise-source ENR, which varies with process.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Quantity</th><th>Typical BIST accuracy</th><th>Main error source</th><th>How to handle it</th></tr></thead>
+    <tbody>
+      <tr><td>Rx/Tx relative gain</td><td class="v">±0.1–0.2 dB</td><td>Coupler asymmetry between channels</td><td>Symmetric layout; one-time characterisation</td></tr>
+      <tr><td>Rx/Tx relative phase</td><td class="v">±1–2°</td><td>Loopback routing length mismatch</td><td>Matched routing; correction constants from design</td></tr>
+      <tr><td>Absolute Tx power</td><td class="v">±0.5–1 dB</td><td>Detector slope and coupling spread</td><td>Detector trim; golden-unit correlation</td></tr>
+      <tr><td>Noise figure</td><td class="v">±0.7–1.5 dB</td><td>Absolute gain or ENR uncertainty</td><td>Correlation + guard band; audit sampling</td></tr>
+      <tr><td>LO frequency</td><td class="v">≤ ref ppm + 1/T_gate</td><td>Crystal accuracy</td><td>Use the ATE's precision reference during test</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Correlation and guard-banding</h3>
+<div class="eq">1. Characterise N_golden ≥ 30 units per lot corner on full RF ATE / bench
+2. Fit  true = a · BIST + b   (per test, per channel), record residual σ
+3. Test limit = spec limit ∓ (k·σ_residual),  k ≈ 3
+4. Ongoing: audit sample per lot on the RF tester; alarm on drift of b</div>
+  <h3>What the loopback cannot see</h3>
+  <ul>
+    <li><b>Package and balls beyond the couplers:</b> use the reverse detector against the load-board termination, or the passive external loopback.</li>
+    <li><b>Faults in the test circuitry itself:</b> a broken loopback or a detector stuck at a plausible value. Add self-checks: loopback on vs off, detector with PA off must read offset only, both bandgaps must agree.</li>
+    <li><b>Common-mode faults:</b> a shared LO fault affects the stimulus and the receiver equally and can cancel out in a ratio. Use the counter (D) as an independent check.</li>
+    <li><b>Spurious emission and absolute phase noise far from the carrier:</b> cover them by design and characterisation, plus the PLL monitor. Measuring them in production would still need an instrument.</li>
+    <li><b>Antenna, radome, EIRP:</b> tested at module EOL in a chamber, not at chip level.</li>
+  </ul>
+</section>
+
+<section id="checklist">
+  <div class="sec-head"><span class="num">08</span><h2>DFT design checklist</h2></div>
+  <div class="split">
+    <div>
+      <h3>RF / analog</h3>
+      <ul>
+        <li>Couplers weak enough: ≤ 0.1 dB Pout loss, ≤ 0.3 dB NF penalty</li>
+        <li>Loopback isolation when off &gt; 60 dB (leakage lands at DC, but its harmonics may not)</li>
+        <li>Loopback attenuator range ≥ 30 dB to test from small signal to compression</li>
+        <li>Modulator f_m derived from the reference, bin-aligned to the ADC FFT</li>
+        <li>Detectors at matched positions on every Tx, with forward and reverse ports</li>
+        <li>Two independent bandgaps; aux ADC reference ≠ monitored reference</li>
+        <li>Noise source with stable ENR, or design for the cold method</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Digital / firmware</h3>
+      <ul>
+        <li>Capture buffer for raw ADC samples of all Rx at once (≥ 1 chirp)</li>
+        <li>FFT accelerator reachable from the RF control CPU during test</li>
+        <li>PLL phase-error and counter readable at high rate</li>
+        <li>Test FW loadable over SPI, with limits and results in a compact table</li>
+        <li>eFuse burn + verify built into the FW; lockout after programming</li>
+        <li>Same monitor code reused in the field for the ISO 26262 safety mechanisms</li>
+        <li>Datalog format that includes the raw values, not just pass/fail, for correlation</li>
+      </ul>
+    </div>
+  </div>
+  <footer>The numbers are typical engineering values for RFCMOS radar MMICs and are meant for architecture planning. Actual accuracy depends on the implementation and must be established by correlation against calibrated RF measurements on characterisation lots.</footer>
+</section>
+</main>
+</div>
+</div>
