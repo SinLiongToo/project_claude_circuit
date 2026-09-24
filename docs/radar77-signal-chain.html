@@ -676,7 +676,7 @@ DFE correction:  I' = I      Q' = (Q/g − I·sin φ) / cos φ      (g, φ from 
 <section id="bist">
   <div class="sec-head"><span class="num">12</span><h2>Monitoring and built-in self-test</h2><span class="domain dig">Safety · ASIL-B</span></div>
   <p>A slow SAR auxiliary ADC (10–12 bit, behind an analog mux) reads the power detectors, temperature sensors and supply dividers. Loopback paths inject known signals through the real Rx chain and main ADCs. The RF control CPU runs these monitors in the idle time between frames. The total must fit in the FTTI from the system safety concept.</p>
-  <p><b>Deep dive:</b> <a href="radar77-bist-loopback.html">Radar BIST &amp; Loopback</a> covers stimulus generation, loopback routing, on-chip measurement, trim feedback and instrument-free production test.</p>
+  <p><b>Deep dive:</b> <a href="radar77-bist-loopback.html">Radar BIST &amp; Loopback</a> covers stimulus generation, loopback routing, on-chip measurement, trim feedback and instrument-free production test. <a href="radar77-dft-stress.html">Digital DFT &amp; stress</a> covers scan, ATPG, memory/logic BIST, burn-in, HVST, PAT and AEC-Q100.</p>
   <div class="cols">
     <div>
       <h3>Analog and RF monitors</h3>
@@ -981,7 +981,7 @@ PA supply AM/PM: Δφ_Tx = K_AMPM · ΔV_PA       (e.g. 10°/V × 10 mV droop = 
       <tr id="g-ADPLL" data-abbr="ADPLL" data-full="All-Digital PLL (PLL with a TDC and a digital loop filter.)"><td class="v">ADPLL</td><td>All-Digital PLL</td><td>PLL with a TDC and a digital loop filter.</td></tr>
       <tr id="g-VCO" data-abbr="VCO" data-full="Voltage-Controlled Oscillator (≈ 19–20.25 GHz, multiplied ×4 to 77 GHz.)"><td class="v">VCO</td><td>Voltage-Controlled Oscillator</td><td>≈ 19–20.25 GHz, multiplied ×4 to 77 GHz.</td></tr>
       <tr id="g-PFD" data-abbr="PFD" data-full="Phase-Frequency Detector (Compares the divided VCO with the reference.)"><td class="v">PFD</td><td>Phase-Frequency Detector</td><td>Compares the divided VCO with the reference.</td></tr>
-      <tr id="g-CP" data-abbr="CP" data-full="Charge Pump (Converts PFD pulses into loop-filter current.)"><td class="v">CP</td><td>Charge Pump</td><td>Converts PFD pulses into loop-filter current.</td></tr>
+      <tr id="g-CP" data-abbr="CP" data-full="Charge Pump; also Chip Probe (In a PLL: converts PFD pulses into loop-filter current. In test flows: wafer-level probe test.)"><td class="v">CP</td><td>Charge Pump; also Chip Probe</td><td>In a PLL: converts PFD pulses into loop-filter current. In test flows: wafer-level probe test.</td></tr>
       <tr id="g-TDC" data-abbr="TDC" data-full="Time-to-Digital Converter (Digital phase detector of an ADPLL.)"><td class="v">TDC</td><td>Time-to-Digital Converter</td><td>Digital phase detector of an ADPLL.</td></tr>
       <tr id="g-XTAL" data-abbr="XTAL" data-full="Crystal (reference oscillator) (40/50 MHz reference for PLL, ADC and digital.)"><td class="v">XTAL</td><td>Crystal (reference oscillator)</td><td>40/50 MHz reference for PLL, ADC and digital.</td></tr>
       <tr id="g-DDS" data-abbr="DDS" data-full="Direct Digital Synthesizer (Digitally generated tone (IF test tone).)"><td class="v">DDS</td><td>Direct Digital Synthesizer</td><td>Digitally generated tone (IF test tone).</td></tr>
@@ -1070,6 +1070,59 @@ PA supply AM/PM: Δφ_Tx = K_AMPM · ΔV_PA       (e.g. 10°/V × 10 mV droop = 
       <tr id="g-EMC" data-abbr="EMC" data-full="Electromagnetic Compatibility"><td class="v">EMC</td><td>Electromagnetic Compatibility</td><td></td></tr>
       <tr id="g-CISPR" data-abbr="CISPR" data-full="Comité International Spécial des Perturbations Radioélectriques (CISPR 25: vehicle-component emissions.)"><td class="v">CISPR</td><td>Comité International Spécial des Perturbations Radioélectriques</td><td>CISPR 25: vehicle-component emissions.</td></tr>
       <tr id="g-OOB" data-abbr="OOB" data-full="Out-of-Band (emission)"><td class="v">OOB</td><td>Out-of-Band (emission)</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Digital DFT, stress &amp; reliability</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-SE" data-abbr="SE" data-full="Scan Enable (Selects shift (SE = 1) or functional capture (SE = 0) in scan flops.)"><td class="v">SE</td><td>Scan Enable</td><td>Selects shift (SE = 1) or functional capture (SE = 0) in scan flops.</td></tr>
+      <tr id="g-SAF" data-abbr="SAF" data-full="Stuck-At Fault (Node permanently 0 or 1.)"><td class="v">SAF</td><td>Stuck-At Fault</td><td>Node permanently 0 or 1.</td></tr>
+      <tr id="g-TDF" data-abbr="TDF" data-full="Transition Delay Fault (Node slow to rise or fall; needs at-speed test.)"><td class="v">TDF</td><td>Transition Delay Fault</td><td>Node slow to rise or fall; needs at-speed test.</td></tr>
+      <tr id="g-STA" data-abbr="STA" data-full="Static Timing Analysis (Finds the longest paths for timing-aware ATPG.)"><td class="v">STA</td><td>Static Timing Analysis</td><td>Finds the longest paths for timing-aware ATPG.</td></tr>
+      <tr id="g-OCC" data-abbr="OCC" data-full="On-Chip Clock Controller (Gates exact launch/capture pulses from the PLL for at-speed test.)"><td class="v">OCC</td><td>On-Chip Clock Controller</td><td>Gates exact launch/capture pulses from the PLL for at-speed test.</td></tr>
+      <tr id="g-LOC" data-abbr="LOC" data-full="Launch-On-Capture (At-speed scheme; also called broadside.)"><td class="v">LOC</td><td>Launch-On-Capture</td><td>At-speed scheme; also called broadside.</td></tr>
+      <tr id="g-LOS" data-abbr="LOS" data-full="Launch-On-Shift (At-speed scheme; SE must switch at speed.)"><td class="v">LOS</td><td>Launch-On-Shift</td><td>At-speed scheme; SE must switch at speed.</td></tr>
+      <tr id="g-EDT" data-abbr="EDT" data-full="Embedded Deterministic Test (Scan compression (decompressor + compactor).)"><td class="v">EDT</td><td>Embedded Deterministic Test</td><td>Scan compression (decompressor + compactor).</td></tr>
+      <tr id="g-LFSR" data-abbr="LFSR" data-full="Linear-Feedback Shift Register (Pseudo-random sequence generator.)"><td class="v">LFSR</td><td>Linear-Feedback Shift Register</td><td>Pseudo-random sequence generator.</td></tr>
+      <tr id="g-PRPG" data-abbr="PRPG" data-full="Pseudo-Random Pattern Generator (LFSR that feeds the scan chains in LBIST.)"><td class="v">PRPG</td><td>Pseudo-Random Pattern Generator</td><td>LFSR that feeds the scan chains in LBIST.</td></tr>
+      <tr id="g-MISR" data-abbr="MISR" data-full="Multiple-Input Signature Register (Compresses responses into one signature.)"><td class="v">MISR</td><td>Multiple-Input Signature Register</td><td>Compresses responses into one signature.</td></tr>
+      <tr id="g-STUMPS" data-abbr="STUMPS" data-full="Self-Test Using MISR and Parallel Shift-register sequence generator (Standard LBIST architecture.)"><td class="v">STUMPS</td><td>Self-Test Using MISR and Parallel Shift-register sequence generator</td><td>Standard LBIST architecture.</td></tr>
+      <tr id="g-LBIST" data-abbr="LBIST" data-full="Logic BIST (On-chip random-pattern scan test; used at key-on.)"><td class="v">LBIST</td><td>Logic BIST</td><td>On-chip random-pattern scan test; used at key-on.</td></tr>
+      <tr id="g-MBIST" data-abbr="MBIST" data-full="Memory BIST (On-chip March-algorithm test of SRAMs.)"><td class="v">MBIST</td><td>Memory BIST</td><td>On-chip March-algorithm test of SRAMs.</td></tr>
+      <tr id="g-BIRA" data-abbr="BIRA" data-full="Built-In Redundancy Analysis (Computes which spare rows/columns repair a memory.)"><td class="v">BIRA</td><td>Built-In Redundancy Analysis</td><td>Computes which spare rows/columns repair a memory.</td></tr>
+      <tr id="g-BISR" data-abbr="BISR" data-full="Built-In Self-Repair (Loads the repair from eFuse at boot.)"><td class="v">BISR</td><td>Built-In Self-Repair</td><td>Loads the repair from eFuse at boot.</td></tr>
+      <tr id="g-IR" data-abbr="IR" data-full="IR drop (Supply voltage drop (current × resistance), high during scan shift.)"><td class="v">IR</td><td>IR drop</td><td>Supply voltage drop (current × resistance), high during scan shift.</td></tr>
+      <tr id="g-JTAG" data-abbr="JTAG" data-full="Joint Test Action Group (IEEE 1149.1) (Boundary scan and test access port.)"><td class="v">JTAG</td><td>Joint Test Action Group (IEEE 1149.1)</td><td>Boundary scan and test access port.</td></tr>
+      <tr id="g-TAP" data-abbr="TAP" data-full="Test Access Port (JTAG pins TCK, TMS, TDI, TDO, TRST.)"><td class="v">TAP</td><td>Test Access Port</td><td>JTAG pins TCK, TMS, TDI, TDO, TRST.</td></tr>
+      <tr id="g-BSDL" data-abbr="BSDL" data-full="Boundary Scan Description Language (Describes a chip&#x27;s JTAG boundary-scan cells.)"><td class="v">BSDL</td><td>Boundary Scan Description Language</td><td>Describes a chip&#x27;s JTAG boundary-scan cells.</td></tr>
+      <tr id="g-IJTAG" data-abbr="IJTAG" data-full="Internal JTAG (IEEE 1687) (Network for accessing on-chip instruments.)"><td class="v">IJTAG</td><td>Internal JTAG (IEEE 1687)</td><td>Network for accessing on-chip instruments.</td></tr>
+      <tr id="g-ICL" data-abbr="ICL" data-full="Instrument Connectivity Language (PDL = Procedural Description Language) (IJTAG description files.)"><td class="v">ICL</td><td>Instrument Connectivity Language (PDL = Procedural Description Language)</td><td>IJTAG description files.</td></tr>
+      <tr id="g-ECID" data-abbr="ECID" data-full="Electronic Chip ID (Unique per-die ID for traceability.)"><td class="v">ECID</td><td>Electronic Chip ID</td><td>Unique per-die ID for traceability.</td></tr>
+      <tr id="g-HVST" data-abbr="HVST" data-full="High-Voltage Stress Test (Short over-voltage on the core rail to activate latent oxide defects.)"><td class="v">HVST</td><td>High-Voltage Stress Test</td><td>Short over-voltage on the core rail to activate latent oxide defects.</td></tr>
+      <tr id="g-VLV" data-abbr="VLV" data-full="Very-Low-Voltage test (Test below nominal V to expose resistive defects.)"><td class="v">VLV</td><td>Very-Low-Voltage test</td><td>Test below nominal V to expose resistive defects.</td></tr>
+      <tr id="g-Vmin" data-abbr="Vmin" data-full="Minimum operating voltage (The pass/fail edge in a shmoo; an outlier Vmin flags a defect.)"><td class="v">Vmin</td><td>Minimum operating voltage</td><td>The pass/fail edge in a shmoo; an outlier Vmin flags a defect.</td></tr>
+      <tr id="g-PAT" data-abbr="PAT" data-full="Part Average Testing (AEC-Q001) (Outlier limits at robust μ ± 6σ.)"><td class="v">PAT</td><td>Part Average Testing (AEC-Q001)</td><td>Outlier limits at robust μ ± 6σ.</td></tr>
+      <tr id="g-DPAT" data-abbr="DPAT" data-full="Dynamic Part Average Testing (PAT limits recalculated per lot or wafer.)"><td class="v">DPAT</td><td>Dynamic Part Average Testing</td><td>PAT limits recalculated per lot or wafer.</td></tr>
+      <tr id="g-GDBN" data-abbr="GDBN" data-full="Good Die in Bad Neighbourhood (Wafer-map screen that rejects dies in defect clusters.)"><td class="v">GDBN</td><td>Good Die in Bad Neighbourhood</td><td>Wafer-map screen that rejects dies in defect clusters.</td></tr>
+      <tr id="g-NNR" data-abbr="NNR" data-full="Nearest-Neighbour Residual (Compares a die&#x27;s parameter with its wafer neighbours.)"><td class="v">NNR</td><td>Nearest-Neighbour Residual</td><td>Compares a die&#x27;s parameter with its wafer neighbours.</td></tr>
+      <tr id="g-DPPM" data-abbr="DPPM" data-full="Defective Parts Per Million (Shipped-quality metric; automotive target ≪ 1.)"><td class="v">DPPM</td><td>Defective Parts Per Million</td><td>Shipped-quality metric; automotive target ≪ 1.</td></tr>
+      <tr id="g-FT" data-abbr="FT" data-full="Final Test (Package-level production test.)"><td class="v">FT</td><td>Final Test</td><td>Package-level production test.</td></tr>
+      <tr id="g-SLT" data-abbr="SLT" data-full="System-Level Test (Functional test by booting the application.)"><td class="v">SLT</td><td>System-Level Test</td><td>Functional test by booting the application.</td></tr>
+      <tr id="g-HTOL" data-abbr="HTOL" data-full="High-Temperature Operating Life (≈ 1000 h biased at max temperature (AEC-Q100).)"><td class="v">HTOL</td><td>High-Temperature Operating Life</td><td>≈ 1000 h biased at max temperature (AEC-Q100).</td></tr>
+      <tr id="g-ELFR" data-abbr="ELFR" data-full="Early Life Failure Rate (Short high-temperature operation of a large sample.)"><td class="v">ELFR</td><td>Early Life Failure Rate</td><td>Short high-temperature operation of a large sample.</td></tr>
+      <tr id="g-TC" data-abbr="TC" data-full="Temperature Cycling (Package and interconnect fatigue test.)"><td class="v">TC</td><td>Temperature Cycling</td><td>Package and interconnect fatigue test.</td></tr>
+      <tr id="g-THB" data-abbr="THB" data-full="Temperature-Humidity-Bias (85 °C / 85% RH with bias.)"><td class="v">THB</td><td>Temperature-Humidity-Bias</td><td>85 °C / 85% RH with bias.</td></tr>
+      <tr id="g-HAST" data-abbr="HAST" data-full="Highly Accelerated Stress Test (130 °C / 85% RH with bias.)"><td class="v">HAST</td><td>Highly Accelerated Stress Test</td><td>130 °C / 85% RH with bias.</td></tr>
+      <tr id="g-RH" data-abbr="RH" data-full="Relative Humidity"><td class="v">RH</td><td>Relative Humidity</td><td></td></tr>
+      <tr id="g-HTSL" data-abbr="HTSL" data-full="High-Temperature Storage Life (Unbiased bake.)"><td class="v">HTSL</td><td>High-Temperature Storage Life</td><td>Unbiased bake.</td></tr>
+      <tr id="g-HBM" data-abbr="HBM" data-full="Human-Body Model (ESD)"><td class="v">HBM</td><td>Human-Body Model (ESD)</td><td></td></tr>
+      <tr id="g-CDM" data-abbr="CDM" data-full="Charged-Device Model (ESD)"><td class="v">CDM</td><td>Charged-Device Model (ESD)</td><td></td></tr>
+      <tr id="g-LU" data-abbr="LU" data-full="Latch-Up (JESD78 test.)"><td class="v">LU</td><td>Latch-Up</td><td>JESD78 test.</td></tr>
+      <tr id="g-EM" data-abbr="EM" data-full="Electromigration (Metal wear-out under current (wafer-level reliability).)"><td class="v">EM</td><td>Electromigration</td><td>Metal wear-out under current (wafer-level reliability).</td></tr>
+      <tr id="g-TDDB" data-abbr="TDDB" data-full="Time-Dependent Dielectric Breakdown (Gate-oxide wear-out.)"><td class="v">TDDB</td><td>Time-Dependent Dielectric Breakdown</td><td>Gate-oxide wear-out.</td></tr>
+      <tr id="g-HCI" data-abbr="HCI" data-full="Hot-Carrier Injection (Transistor degradation mechanism.)"><td class="v">HCI</td><td>Hot-Carrier Injection</td><td>Transistor degradation mechanism.</td></tr>
+      <tr id="g-NBTI" data-abbr="NBTI" data-full="Negative-Bias Temperature Instability (PMOS threshold drift.)"><td class="v">NBTI</td><td>Negative-Bias Temperature Instability</td><td>PMOS threshold drift.</td></tr>
     </tbody>
   </table></div>
   <h3>PCB, package &amp; materials</h3>
