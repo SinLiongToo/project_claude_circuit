@@ -151,6 +151,11 @@ kbd{font:500 11px/1 var(--mono);color:var(--muted);border:1px solid var(--line);
 @keyframes findFlash{0%,30%{box-shadow:0 0 0 3px var(--lo);background-color:var(--lo-soft)}100%{box-shadow:0 0 0 3px transparent}}
 @media (prefers-reduced-motion: reduce){.find-flash{animation:none;outline:3px solid var(--lo)}}
 .find-ov[hidden]{display:none}
+/* glossary */
+.gl-tbl td.v{font-weight:600;color:var(--rf);white-space:nowrap}
+.gl-tbl td:first-child{width:90px}
+a.gl{color:inherit;text-decoration:underline dotted;text-decoration-color:var(--muted);text-underline-offset:3px;cursor:help}
+a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
 </style>
 
 <div class="wrap">
@@ -186,6 +191,7 @@ kbd{font:500 11px/1 var(--mono);color:var(--muted);border:1px solid var(--line);
     <li><a href="#infra">Clock, package, thermal</a></li>
     <li><a href="#calc">Calculator</a></li>
     <li><a href="#verify">Verification</a></li>
+    <li><a href="#glossary">Glossary</a></li>
   </ol>
 </nav>
 
@@ -886,6 +892,205 @@ PA supply AM/PM: Δφ_Tx = K_AMPM · ΔV_PA       (e.g. 10°/V × 10 mV droop = 
   </ol>
   <footer>The figures are typical engineering ranges for current RFCMOS and SiGe automotive radar and are meant for early trade-offs. Always design against your chosen MMIC's datasheet and the current versions of the regulations.</footer>
 </section>
+
+<section id="glossary">
+  <div class="sec-head"><span class="num">17</span><h2>Glossary of abbreviations</h2></div>
+  <p>Abbreviations are underlined with dots the first time they appear in each section. Hover to see the meaning; click to jump here. Use Search (Ctrl+K) to find an abbreviation anywhere on the page.</p>
+  <h3>Radar system &amp; ADAS</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-ACC" data-abbr="ACC" data-full="Adaptive Cruise Control (Keeps distance to the car ahead; uses long-range front radar.)"><td class="v">ACC</td><td>Adaptive Cruise Control</td><td>Keeps distance to the car ahead; uses long-range front radar.</td></tr>
+      <tr id="g-ADAS" data-abbr="ADAS" data-full="Advanced Driver-Assistance Systems (The vehicle functions the radar serves.)"><td class="v">ADAS</td><td>Advanced Driver-Assistance Systems</td><td>The vehicle functions the radar serves.</td></tr>
+      <tr id="g-AEB" data-abbr="AEB" data-full="Autonomous Emergency Braking (Brakes automatically when a collision is imminent.)"><td class="v">AEB</td><td>Autonomous Emergency Braking</td><td>Brakes automatically when a collision is imminent.</td></tr>
+      <tr id="g-BSD" data-abbr="BSD" data-full="Blind-Spot Detection (Corner-radar function.)"><td class="v">BSD</td><td>Blind-Spot Detection</td><td>Corner-radar function.</td></tr>
+      <tr id="g-LCA" data-abbr="LCA" data-full="Lane-Change Assist (Corner-radar function that warns of fast approaching vehicles.)"><td class="v">LCA</td><td>Lane-Change Assist</td><td>Corner-radar function that warns of fast approaching vehicles.</td></tr>
+      <tr id="g-RCTA" data-abbr="RCTA" data-full="Rear Cross-Traffic Alert (Rear corner-radar function when reversing.)"><td class="v">RCTA</td><td>Rear Cross-Traffic Alert</td><td>Rear corner-radar function when reversing.</td></tr>
+      <tr id="g-L2" data-abbr="L2" data-full="SAE automation Level 2 (L3 = Level 3) (Partial (L2) and conditional (L3) driving automation.)"><td class="v">L2</td><td>SAE automation Level 2 (L3 = Level 3)</td><td>Partial (L2) and conditional (L3) driving automation.</td></tr>
+      <tr id="g-FMCW" data-abbr="FMCW" data-full="Frequency-Modulated Continuous Wave (A linear chirp; range comes from the beat frequency f_b = S·2R/c.)"><td class="v">FMCW</td><td>Frequency-Modulated Continuous Wave</td><td>A linear chirp; range comes from the beat frequency f_b = S·2R/c.</td></tr>
+      <tr id="g-FoV" data-abbr="FoV" data-full="Field of View (Angular coverage in azimuth and elevation.)"><td class="v">FoV</td><td>Field of View</td><td>Angular coverage in azimuth and elevation.</td></tr>
+      <tr id="g-RCS" data-abbr="RCS" data-full="Radar Cross Section (Target reflectivity in dBsm (car ≈ 10, pedestrian ≈ −10…0).)"><td class="v">RCS</td><td>Radar Cross Section</td><td>Target reflectivity in dBsm (car ≈ 10, pedestrian ≈ −10…0).</td></tr>
+      <tr id="g-dBsm" data-abbr="dBsm" data-full="Decibels relative to 1 m² (Unit of RCS.)"><td class="v">dBsm</td><td>Decibels relative to 1 m²</td><td>Unit of RCS.</td></tr>
+      <tr id="g-EIRP" data-abbr="EIRP" data-full="Effective Isotropic Radiated Power (Tx power + antenna gain; limited by regulations.)"><td class="v">EIRP</td><td>Effective Isotropic Radiated Power</td><td>Tx power + antenna gain; limited by regulations.</td></tr>
+      <tr id="g-MIMO" data-abbr="MIMO" data-full="Multiple-Input Multiple-Output (N_tx × N_rx channels form a larger virtual array.)"><td class="v">MIMO</td><td>Multiple-Input Multiple-Output</td><td>N_tx × N_rx channels form a larger virtual array.</td></tr>
+      <tr id="g-TDM" data-abbr="TDM" data-full="Time-Division Multiplexing (One Tx per chirp; v_max falls by a factor of N_tx.)"><td class="v">TDM</td><td>Time-Division Multiplexing</td><td>One Tx per chirp; v_max falls by a factor of N_tx.</td></tr>
+      <tr id="g-BPM" data-abbr="BPM" data-full="Binary Phase Modulation (0/180° codes across chirps separate the Tx signals.)"><td class="v">BPM</td><td>Binary Phase Modulation</td><td>0/180° codes across chirps separate the Tx signals.</td></tr>
+      <tr id="g-DDMA" data-abbr="DDMA" data-full="Doppler-Division Multiple Access (Each Tx gets a slow-time phase ramp and separates in Doppler.)"><td class="v">DDMA</td><td>Doppler-Division Multiple Access</td><td>Each Tx gets a slow-time phase ramp and separates in Doppler.</td></tr>
+      <tr id="g-DoA" data-abbr="DoA" data-full="Direction of Arrival (Angle estimation over the virtual array.)"><td class="v">DoA</td><td>Direction of Arrival</td><td>Angle estimation over the virtual array.</td></tr>
+      <tr id="g-DBF" data-abbr="DBF" data-full="Digital Beamforming (FFT or matched steering over array channels.)"><td class="v">DBF</td><td>Digital Beamforming</td><td>FFT or matched steering over array channels.</td></tr>
+      <tr id="g-CFAR" data-abbr="CFAR" data-full="Constant False Alarm Rate (Adaptive detection threshold (CA = cell-averaging, OS = ordered-statistic).)"><td class="v">CFAR</td><td>Constant False Alarm Rate</td><td>Adaptive detection threshold (CA = cell-averaging, OS = ordered-statistic).</td></tr>
+      <tr id="g-FFT" data-abbr="FFT" data-full="Fast Fourier Transform (Range, Doppler and angle FFTs build the radar cube.)"><td class="v">FFT</td><td>Fast Fourier Transform</td><td>Range, Doppler and angle FFTs build the radar cube.</td></tr>
+      <tr id="g-SNR" data-abbr="SNR" data-full="Signal-to-Noise Ratio"><td class="v">SNR</td><td>Signal-to-Noise Ratio</td><td></td></tr>
+      <tr id="g-MUSIC" data-abbr="MUSIC" data-full="MUltiple SIgnal Classification (Subspace super-resolution DoA algorithm.)"><td class="v">MUSIC</td><td>MUltiple SIgnal Classification</td><td>Subspace super-resolution DoA algorithm.</td></tr>
+      <tr id="g-ESPRIT" data-abbr="ESPRIT" data-full="Estimation of Signal Parameters via Rotational Invariance Techniques (Super-resolution DoA algorithm.)"><td class="v">ESPRIT</td><td>Estimation of Signal Parameters via Rotational Invariance Techniques</td><td>Super-resolution DoA algorithm.</td></tr>
+      <tr id="g-IAA" data-abbr="IAA" data-full="Iterative Adaptive Approach (Super-resolution spectral / DoA estimator.)"><td class="v">IAA</td><td>Iterative Adaptive Approach</td><td>Super-resolution spectral / DoA estimator.</td></tr>
+      <tr id="g-DBSCAN" data-abbr="DBSCAN" data-full="Density-Based Spatial Clustering of Applications with Noise (Groups detections into objects.)"><td class="v">DBSCAN</td><td>Density-Based Spatial Clustering of Applications with Noise</td><td>Groups detections into objects.</td></tr>
+      <tr id="g-EKF" data-abbr="EKF" data-full="Extended Kalman Filter (Nonlinear tracking filter.)"><td class="v">EKF</td><td>Extended Kalman Filter</td><td>Nonlinear tracking filter.</td></tr>
+      <tr id="g-UKF" data-abbr="UKF" data-full="Unscented Kalman Filter (Nonlinear tracking filter using sigma points.)"><td class="v">UKF</td><td>Unscented Kalman Filter</td><td>Nonlinear tracking filter using sigma points.</td></tr>
+      <tr id="g-IMM" data-abbr="IMM" data-full="Interacting Multiple Model (Tracker that mixes several motion models.)"><td class="v">IMM</td><td>Interacting Multiple Model</td><td>Tracker that mixes several motion models.</td></tr>
+      <tr id="g-HWA" data-abbr="HWA" data-full="Hardware Accelerator (On-chip FFT / radar processing engine.)"><td class="v">HWA</td><td>Hardware Accelerator</td><td>On-chip FFT / radar processing engine.</td></tr>
+      <tr id="g-RTS" data-abbr="RTS" data-full="Radar Target Simulator (Echo generator for HIL and EOL testing.)"><td class="v">RTS</td><td>Radar Target Simulator</td><td>Echo generator for HIL and EOL testing.</td></tr>
+      <tr id="g-HIL" data-abbr="HIL" data-full="Hardware-in-the-Loop (Testing the real sensor against simulated scenarios.)"><td class="v">HIL</td><td>Hardware-in-the-Loop</td><td>Testing the real sensor against simulated scenarios.</td></tr>
+      <tr id="g-EOL" data-abbr="EOL" data-full="End-of-Line (Final production test of a module or vehicle.)"><td class="v">EOL</td><td>End-of-Line</td><td>Final production test of a module or vehicle.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>RF &amp; analog front end</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-RF" data-abbr="RF" data-full="Radio Frequency (Here the 76–81 GHz signal.)"><td class="v">RF</td><td>Radio Frequency</td><td>Here the 76–81 GHz signal.</td></tr>
+      <tr id="g-LO" data-abbr="LO" data-full="Local Oscillator (The chirp signal that drives the Tx and the Rx mixers.)"><td class="v">LO</td><td>Local Oscillator</td><td>The chirp signal that drives the Tx and the Rx mixers.</td></tr>
+      <tr id="g-IF" data-abbr="IF" data-full="Intermediate Frequency (The beat / baseband signal after the mixer, DC–20 MHz.)"><td class="v">IF</td><td>Intermediate Frequency</td><td>The beat / baseband signal after the mixer, DC–20 MHz.</td></tr>
+      <tr id="g-PA" data-abbr="PA" data-full="Power Amplifier (Tx output stage, 12–14 dBm.)"><td class="v">PA</td><td>Power Amplifier</td><td>Tx output stage, 12–14 dBm.</td></tr>
+      <tr id="g-LNA" data-abbr="LNA" data-full="Low-Noise Amplifier (First Rx stage; sets most of the NF.)"><td class="v">LNA</td><td>Low-Noise Amplifier</td><td>First Rx stage; sets most of the NF.</td></tr>
+      <tr id="g-NF" data-abbr="NF" data-full="Noise Figure (Noise the receiver adds, in dB.)"><td class="v">NF</td><td>Noise Figure</td><td>Noise the receiver adds, in dB.</td></tr>
+      <tr id="g-VGA" data-abbr="VGA" data-full="Variable-Gain Amplifier (Programmable-gain stage (IF), or signed VGAs in the phase rotator.)"><td class="v">VGA</td><td>Variable-Gain Amplifier</td><td>Programmable-gain stage (IF), or signed VGAs in the phase rotator.</td></tr>
+      <tr id="g-TIA" data-abbr="TIA" data-full="Transimpedance Amplifier (Current-to-voltage stage after a passive mixer.)"><td class="v">TIA</td><td>Transimpedance Amplifier</td><td>Current-to-voltage stage after a passive mixer.</td></tr>
+      <tr id="g-HPF" data-abbr="HPF" data-full="High-Pass Filter (In IF: removes leakage and DC, and equalises R⁻⁴.)"><td class="v">HPF</td><td>High-Pass Filter</td><td>In IF: removes leakage and DC, and equalises R⁻⁴.</td></tr>
+      <tr id="g-LPF" data-abbr="LPF" data-full="Low-Pass Filter"><td class="v">LPF</td><td>Low-Pass Filter</td><td></td></tr>
+      <tr id="g-AAF" data-abbr="AAF" data-full="Anti-Aliasing Filter (Low-pass filter in front of the ADC.)"><td class="v">AAF</td><td>Anti-Aliasing Filter</td><td>Low-pass filter in front of the ADC.</td></tr>
+      <tr id="g-PPF" data-abbr="PPF" data-full="Polyphase Filter (RC-CR network that generates I/Q.)"><td class="v">PPF</td><td>Polyphase Filter</td><td>RC-CR network that generates I/Q.</td></tr>
+      <tr id="g-I-Q" data-abbr="I/Q" data-full="In-phase / Quadrature (Two copies of a signal 90° apart.)"><td class="v">I/Q</td><td>In-phase / Quadrature</td><td>Two copies of a signal 90° apart.</td></tr>
+      <tr id="g-IRR" data-abbr="IRR" data-full="Image Rejection Ratio (How well an I/Q path suppresses the mirror frequency.)"><td class="v">IRR</td><td>Image Rejection Ratio</td><td>How well an I/Q path suppresses the mirror frequency.</td></tr>
+      <tr id="g-SSB" data-abbr="SSB" data-full="Single Sideband (A frequency shift in one direction only, e.g. the loopback offset.)"><td class="v">SSB</td><td>Single Sideband</td><td>A frequency shift in one direction only, e.g. the loopback offset.</td></tr>
+      <tr id="g-BPSK" data-abbr="BPSK" data-full="Binary Phase-Shift Keying (0/180° switching; produces ±f_m sidebands.)"><td class="v">BPSK</td><td>Binary Phase-Shift Keying</td><td>0/180° switching; produces ±f_m sidebands.</td></tr>
+      <tr id="g-VM" data-abbr="VM" data-full="Vector Modulator (I/Q-weighted phase rotator.)"><td class="v">VM</td><td>Vector Modulator</td><td>I/Q-weighted phase rotator.</td></tr>
+      <tr id="g-RTPS" data-abbr="RTPS" data-full="Reflection-Type Phase Shifter (Hybrid coupler terminated by tunable loads.)"><td class="v">RTPS</td><td>Reflection-Type Phase Shifter</td><td>Hybrid coupler terminated by tunable loads.</td></tr>
+      <tr id="g-P1dB" data-abbr="P1dB" data-full="1 dB compression point (Input (or output) level where gain drops by 1 dB.)"><td class="v">P1dB</td><td>1 dB compression point</td><td>Input (or output) level where gain drops by 1 dB.</td></tr>
+      <tr id="g-HD2" data-abbr="HD2" data-full="2nd-order Harmonic Distortion (HD3 = 3rd) (Harmonics show up as ghost targets at 2×/3× range.)"><td class="v">HD2</td><td>2nd-order Harmonic Distortion (HD3 = 3rd)</td><td>Harmonics show up as ghost targets at 2×/3× range.</td></tr>
+      <tr id="g-AM-PM" data-abbr="AM/PM" data-full="Amplitude-to-phase conversion (Phase change caused by amplitude or supply changes.)"><td class="v">AM/PM</td><td>Amplitude-to-phase conversion</td><td>Phase change caused by amplitude or supply changes.</td></tr>
+      <tr id="g-RL" data-abbr="RL" data-full="Return Loss (Match quality, in dB.)"><td class="v">RL</td><td>Return Loss</td><td>Match quality, in dB.</td></tr>
+      <tr id="g-Cpl" data-abbr="Cpl" data-full="Coupler (directional coupler) (Taps a small, known fraction (−15…−20 dB) of a signal for detection or loopback.)"><td class="v">Cpl</td><td>Coupler (directional coupler)</td><td>Taps a small, known fraction (−15…−20 dB) of a signal for detection or loopback.</td></tr>
+      <tr id="g-PD" data-abbr="PD" data-full="Power Detector (Diode or square-law RF-to-DC converter.)"><td class="v">PD</td><td>Power Detector</td><td>Diode or square-law RF-to-DC converter.</td></tr>
+      <tr id="g-CW" data-abbr="CW" data-full="Continuous Wave (An unmodulated single-frequency tone.)"><td class="v">CW</td><td>Continuous Wave</td><td>An unmodulated single-frequency tone.</td></tr>
+      <tr id="g-ENR" data-abbr="ENR" data-full="Excess Noise Ratio (Calibrated output level of a noise source.)"><td class="v">ENR</td><td>Excess Noise Ratio</td><td>Calibrated output level of a noise source.</td></tr>
+      <tr id="g-SiGe" data-abbr="SiGe" data-full="Silicon-Germanium (BiCMOS) (Bipolar-plus-CMOS process used for earlier radar chips.)"><td class="v">SiGe</td><td>Silicon-Germanium (BiCMOS)</td><td>Bipolar-plus-CMOS process used for earlier radar chips.</td></tr>
+      <tr id="g-CMOS" data-abbr="CMOS" data-full="Complementary Metal-Oxide-Semiconductor (RFCMOS = CMOS process with RF / mmWave capability.)"><td class="v">CMOS</td><td>Complementary Metal-Oxide-Semiconductor</td><td>RFCMOS = CMOS process with RF / mmWave capability.</td></tr>
+      <tr id="g-RFCMOS" data-abbr="RFCMOS" data-full="RF-capable CMOS (Today&#x27;s single-chip radar process (e.g. 45/40/28/22 nm).)"><td class="v">RFCMOS</td><td>RF-capable CMOS</td><td>Today&#x27;s single-chip radar process (e.g. 45/40/28/22 nm).</td></tr>
+      <tr id="g-NMOS" data-abbr="NMOS" data-full="N-channel MOS transistor (PMOS = P-channel)"><td class="v">NMOS</td><td>N-channel MOS transistor (PMOS = P-channel)</td><td></td></tr>
+      <tr id="g-PTAT" data-abbr="PTAT" data-full="Proportional To Absolute Temperature (Voltage or current used by temperature sensors.)"><td class="v">PTAT</td><td>Proportional To Absolute Temperature</td><td>Voltage or current used by temperature sensors.</td></tr>
+      <tr id="g-BG" data-abbr="BG" data-full="Bandgap reference (Temperature-stable voltage reference (BG1/BG2 = two independent ones).)"><td class="v">BG</td><td>Bandgap reference</td><td>Temperature-stable voltage reference (BG1/BG2 = two independent ones).</td></tr>
+      <tr id="g-PVT" data-abbr="PVT" data-full="Process, Voltage, Temperature (Variation corners a design must cover.)"><td class="v">PVT</td><td>Process, Voltage, Temperature</td><td>Variation corners a design must cover.</td></tr>
+    </tbody>
+  </table></div>
+  <h3>LO, clock &amp; synthesis</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-PLL" data-abbr="PLL" data-full="Phase-Locked Loop (Locks the VCO to the crystal and generates the ramp.)"><td class="v">PLL</td><td>Phase-Locked Loop</td><td>Locks the VCO to the crystal and generates the ramp.</td></tr>
+      <tr id="g-ADPLL" data-abbr="ADPLL" data-full="All-Digital PLL (PLL with a TDC and a digital loop filter.)"><td class="v">ADPLL</td><td>All-Digital PLL</td><td>PLL with a TDC and a digital loop filter.</td></tr>
+      <tr id="g-VCO" data-abbr="VCO" data-full="Voltage-Controlled Oscillator (≈ 19–20.25 GHz, multiplied ×4 to 77 GHz.)"><td class="v">VCO</td><td>Voltage-Controlled Oscillator</td><td>≈ 19–20.25 GHz, multiplied ×4 to 77 GHz.</td></tr>
+      <tr id="g-PFD" data-abbr="PFD" data-full="Phase-Frequency Detector (Compares the divided VCO with the reference.)"><td class="v">PFD</td><td>Phase-Frequency Detector</td><td>Compares the divided VCO with the reference.</td></tr>
+      <tr id="g-CP" data-abbr="CP" data-full="Charge Pump (Converts PFD pulses into loop-filter current.)"><td class="v">CP</td><td>Charge Pump</td><td>Converts PFD pulses into loop-filter current.</td></tr>
+      <tr id="g-TDC" data-abbr="TDC" data-full="Time-to-Digital Converter (Digital phase detector of an ADPLL.)"><td class="v">TDC</td><td>Time-to-Digital Converter</td><td>Digital phase detector of an ADPLL.</td></tr>
+      <tr id="g-XTAL" data-abbr="XTAL" data-full="Crystal (reference oscillator) (40/50 MHz reference for PLL, ADC and digital.)"><td class="v">XTAL</td><td>Crystal (reference oscillator)</td><td>40/50 MHz reference for PLL, ADC and digital.</td></tr>
+      <tr id="g-DDS" data-abbr="DDS" data-full="Direct Digital Synthesizer (Digitally generated tone (IF test tone).)"><td class="v">DDS</td><td>Direct Digital Synthesizer</td><td>Digitally generated tone (IF test tone).</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Data conversion &amp; digital</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-ADC" data-abbr="ADC" data-full="Analog-to-Digital Converter (Main Rx ADCs (ΣΔ) and the aux SAR ADC.)"><td class="v">ADC</td><td>Analog-to-Digital Converter</td><td>Main Rx ADCs (ΣΔ) and the aux SAR ADC.</td></tr>
+      <tr id="g-DAC" data-abbr="DAC" data-full="Digital-to-Analog Converter (Rotator I/Q weights, bias, trim, test-tone generation.)"><td class="v">DAC</td><td>Digital-to-Analog Converter</td><td>Rotator I/Q weights, bias, trim, test-tone generation.</td></tr>
+      <tr id="g-SAR" data-abbr="SAR" data-full="Successive-Approximation Register ADC (Slow, precise ADC used for monitoring.)"><td class="v">SAR</td><td>Successive-Approximation Register ADC</td><td>Slow, precise ADC used for monitoring.</td></tr>
+      <tr id="g-CT" data-abbr="CT" data-full="Continuous-Time (CT-ΣΔ) (Sigma-delta ADC with a continuous-time loop filter.)"><td class="v">CT</td><td>Continuous-Time (CT-ΣΔ)</td><td>Sigma-delta ADC with a continuous-time loop filter.</td></tr>
+      <tr id="g-ENOB" data-abbr="ENOB" data-full="Effective Number of Bits"><td class="v">ENOB</td><td>Effective Number of Bits</td><td></td></tr>
+      <tr id="g-SFDR" data-abbr="SFDR" data-full="Spurious-Free Dynamic Range (Tone relative to the largest spur.)"><td class="v">SFDR</td><td>Spurious-Free Dynamic Range</td><td>Tone relative to the largest spur.</td></tr>
+      <tr id="g-THD" data-abbr="THD" data-full="Total Harmonic Distortion"><td class="v">THD</td><td>Total Harmonic Distortion</td><td></td></tr>
+      <tr id="g-DR" data-abbr="DR" data-full="Dynamic Range"><td class="v">DR</td><td>Dynamic Range</td><td></td></tr>
+      <tr id="g-INL" data-abbr="INL" data-full="Integral Nonlinearity (Deviation from the ideal transfer line.)"><td class="v">INL</td><td>Integral Nonlinearity</td><td>Deviation from the ideal transfer line.</td></tr>
+      <tr id="g-DNL" data-abbr="DNL" data-full="Differential Nonlinearity (Deviation of each step from 1 LSB.)"><td class="v">DNL</td><td>Differential Nonlinearity</td><td>Deviation of each step from 1 LSB.</td></tr>
+      <tr id="g-LSB" data-abbr="LSB" data-full="Least Significant Bit (MSB = most significant)"><td class="v">LSB</td><td>Least Significant Bit (MSB = most significant)</td><td></td></tr>
+      <tr id="g-DFE" data-abbr="DFE" data-full="Digital Front End (Decimation, DC and I/Q correction, interference handling.)"><td class="v">DFE</td><td>Digital Front End</td><td>Decimation, DC and I/Q correction, interference handling.</td></tr>
+      <tr id="g-CIC" data-abbr="CIC" data-full="Cascaded Integrator-Comb (Multiplier-free decimation filter.)"><td class="v">CIC</td><td>Cascaded Integrator-Comb</td><td>Multiplier-free decimation filter.</td></tr>
+      <tr id="g-FIR" data-abbr="FIR" data-full="Finite Impulse Response filter"><td class="v">FIR</td><td>Finite Impulse Response filter</td><td></td></tr>
+      <tr id="g-DSP" data-abbr="DSP" data-full="Digital Signal Processor"><td class="v">DSP</td><td>Digital Signal Processor</td><td></td></tr>
+      <tr id="g-MCU" data-abbr="MCU" data-full="Microcontroller Unit"><td class="v">MCU</td><td>Microcontroller Unit</td><td></td></tr>
+      <tr id="g-CPU" data-abbr="CPU" data-full="Central Processing Unit (E.g. the RF control CPU that runs chirps and monitors.)"><td class="v">CPU</td><td>Central Processing Unit</td><td>E.g. the RF control CPU that runs chirps and monitors.</td></tr>
+      <tr id="g-SoC" data-abbr="SoC" data-full="System-on-Chip"><td class="v">SoC</td><td>System-on-Chip</td><td></td></tr>
+      <tr id="g-ECU" data-abbr="ECU" data-full="Electronic Control Unit (Vehicle computer that receives radar data.)"><td class="v">ECU</td><td>Electronic Control Unit</td><td>Vehicle computer that receives radar data.</td></tr>
+      <tr id="g-SRAM" data-abbr="SRAM" data-full="Static RAM (RAM = random-access memory)"><td class="v">SRAM</td><td>Static RAM (RAM = random-access memory)</td><td></td></tr>
+      <tr id="g-ECC" data-abbr="ECC" data-full="Error-Correcting Code (Memory protection for functional safety.)"><td class="v">ECC</td><td>Error-Correcting Code</td><td>Memory protection for functional safety.</td></tr>
+      <tr id="g-DMA" data-abbr="DMA" data-full="Direct Memory Access"><td class="v">DMA</td><td>Direct Memory Access</td><td></td></tr>
+      <tr id="g-LUT" data-abbr="LUT" data-full="Look-Up Table (E.g. phase-code → (I, Q) DAC codes, Tx power vs. temperature.)"><td class="v">LUT</td><td>Look-Up Table</td><td>E.g. phase-code → (I, Q) DAC codes, Tx power vs. temperature.</td></tr>
+      <tr id="g-FW" data-abbr="FW" data-full="Firmware (SW = software)"><td class="v">FW</td><td>Firmware (SW = software)</td><td></td></tr>
+      <tr id="g-OTP" data-abbr="OTP" data-full="One-Time Programmable memory (Holds trims and IDs, like eFuse.)"><td class="v">OTP</td><td>One-Time Programmable memory</td><td>Holds trims and IDs, like eFuse.</td></tr>
+      <tr id="g-SPI" data-abbr="SPI" data-full="Serial Peripheral Interface (Configuration / test bus from host or ATE.)"><td class="v">SPI</td><td>Serial Peripheral Interface</td><td>Configuration / test bus from host or ATE.</td></tr>
+      <tr id="g-CAN" data-abbr="CAN" data-full="Controller Area Network (CAN-FD = Flexible Data-rate) (Vehicle bus for object lists.)"><td class="v">CAN</td><td>Controller Area Network (CAN-FD = Flexible Data-rate)</td><td>Vehicle bus for object lists.</td></tr>
+      <tr id="g-ETH" data-abbr="ETH" data-full="Ethernet (100/1000BASE-T1) (Automotive single-pair Ethernet.)"><td class="v">ETH</td><td>Ethernet (100/1000BASE-T1)</td><td>Automotive single-pair Ethernet.</td></tr>
+      <tr id="g-CSI" data-abbr="CSI" data-full="Camera Serial Interface (MIPI CSI-2) (Streams raw radar data to a central SoC.)"><td class="v">CSI</td><td>Camera Serial Interface (MIPI CSI-2)</td><td>Streams raw radar data to a central SoC.</td></tr>
+      <tr id="g-LVDS" data-abbr="LVDS" data-full="Low-Voltage Differential Signaling (Raw-data debug / streaming interface.)"><td class="v">LVDS</td><td>Low-Voltage Differential Signaling</td><td>Raw-data debug / streaming interface.</td></tr>
+      <tr id="g-GPIO" data-abbr="GPIO" data-full="General-Purpose Input/Output"><td class="v">GPIO</td><td>General-Purpose Input/Output</td><td></td></tr>
+      <tr id="g-IO" data-abbr="IO" data-full="Input/Output"><td class="v">IO</td><td>Input/Output</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Power</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-LDO" data-abbr="LDO" data-full="Low-Dropout regulator (Linear regulator; one per noise-sensitive domain.)"><td class="v">LDO</td><td>Low-Dropout regulator</td><td>Linear regulator; one per noise-sensitive domain.</td></tr>
+      <tr id="g-PMIC" data-abbr="PMIC" data-full="Power-Management IC (External bucks, supervisors and watchdog.)"><td class="v">PMIC</td><td>Power-Management IC</td><td>External bucks, supervisors and watchdog.</td></tr>
+      <tr id="g-PSRR" data-abbr="PSRR" data-full="Power-Supply Rejection Ratio (How much supply ripple an LDO (or circuit) blocks.)"><td class="v">PSRR</td><td>Power-Supply Rejection Ratio</td><td>How much supply ripple an LDO (or circuit) blocks.</td></tr>
+      <tr id="g-UV" data-abbr="UV" data-full="Under-Voltage (OV = Over-Voltage) (Supply monitors, a safety mechanism.)"><td class="v">UV</td><td>Under-Voltage (OV = Over-Voltage)</td><td>Supply monitors, a safety mechanism.</td></tr>
+      <tr id="g-GND" data-abbr="GND" data-full="Ground"><td class="v">GND</td><td>Ground</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Test &amp; production</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-BIST" data-abbr="BIST" data-full="Built-In Self-Test (On-chip stimulus + measurement.)"><td class="v">BIST</td><td>Built-In Self-Test</td><td>On-chip stimulus + measurement.</td></tr>
+      <tr id="g-DFT" data-abbr="DFT" data-full="Design for Test"><td class="v">DFT</td><td>Design for Test</td><td></td></tr>
+      <tr id="g-ATE" data-abbr="ATE" data-full="Automatic Test Equipment (Production tester.)"><td class="v">ATE</td><td>Automatic Test Equipment</td><td>Production tester.</td></tr>
+      <tr id="g-ATPG" data-abbr="ATPG" data-full="Automatic Test Pattern Generation (Scan patterns for digital logic.)"><td class="v">ATPG</td><td>Automatic Test Pattern Generation</td><td>Scan patterns for digital logic.</td></tr>
+      <tr id="g-IDDQ" data-abbr="IDDQ" data-full="Quiescent supply-current test (Detects leakage defects.)"><td class="v">IDDQ</td><td>Quiescent supply-current test</td><td>Detects leakage defects.</td></tr>
+      <tr id="g-PMU" data-abbr="PMU" data-full="Parametric Measurement Unit (ATE DC source/measure channel.)"><td class="v">PMU</td><td>Parametric Measurement Unit</td><td>ATE DC source/measure channel.</td></tr>
+      <tr id="g-SPC" data-abbr="SPC" data-full="Statistical Process Control"><td class="v">SPC</td><td>Statistical Process Control</td><td></td></tr>
+      <tr id="g-VNA" data-abbr="VNA" data-full="Vector Network Analyzer (Lab instrument for S-parameters.)"><td class="v">VNA</td><td>Vector Network Analyzer</td><td>Lab instrument for S-parameters.</td></tr>
+      <tr id="g-AWG" data-abbr="AWG" data-full="Arbitrary Waveform Generator"><td class="v">AWG</td><td>Arbitrary Waveform Generator</td><td></td></tr>
+      <tr id="g-DMM" data-abbr="DMM" data-full="Digital Multimeter"><td class="v">DMM</td><td>Digital Multimeter</td><td></td></tr>
+      <tr id="g-GPIB" data-abbr="GPIB" data-full="General-Purpose Interface Bus (Instrument control bus (like LAN).)"><td class="v">GPIB</td><td>General-Purpose Interface Bus</td><td>Instrument control bus (like LAN).</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Safety, standards &amp; regulation</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-ASIL" data-abbr="ASIL" data-full="Automotive Safety Integrity Level (ISO 26262 risk class A–D; radar typically ASIL-B.)"><td class="v">ASIL</td><td>Automotive Safety Integrity Level</td><td>ISO 26262 risk class A–D; radar typically ASIL-B.</td></tr>
+      <tr id="g-ISO" data-abbr="ISO" data-full="ISO 26262 / ISO/SAE 21434 / ISO 11452 (Functional safety / cybersecurity / EMC immunity.)"><td class="v">ISO</td><td>ISO 26262 / ISO/SAE 21434 / ISO 11452</td><td>Functional safety / cybersecurity / EMC immunity.</td></tr>
+      <tr id="g-FTTI" data-abbr="FTTI" data-full="Fault-Tolerant Time Interval (Time from fault to hazard; monitors must react within it.)"><td class="v">FTTI</td><td>Fault-Tolerant Time Interval</td><td>Time from fault to hazard; monitors must react within it.</td></tr>
+      <tr id="g-FMEDA" data-abbr="FMEDA" data-full="Failure Modes, Effects and Diagnostic Analysis"><td class="v">FMEDA</td><td>Failure Modes, Effects and Diagnostic Analysis</td><td></td></tr>
+      <tr id="g-SPFM" data-abbr="SPFM" data-full="Single-Point Fault Metric (ISO 26262 coverage metric.)"><td class="v">SPFM</td><td>Single-Point Fault Metric</td><td>ISO 26262 coverage metric.</td></tr>
+      <tr id="g-LFM" data-abbr="LFM" data-full="Latent Fault Metric (ISO 26262 coverage metric.)"><td class="v">LFM</td><td>Latent Fault Metric</td><td>ISO 26262 coverage metric.</td></tr>
+      <tr id="g-AEC" data-abbr="AEC" data-full="Automotive Electronics Council (AEC-Q100 / Q200) (Qualification of ICs / passives.)"><td class="v">AEC</td><td>Automotive Electronics Council (AEC-Q100 / Q200)</td><td>Qualification of ICs / passives.</td></tr>
+      <tr id="g-ETSI" data-abbr="ETSI" data-full="European Telecommunications Standards Institute (EN 301 091 / EN 303 396 radar standards.)"><td class="v">ETSI</td><td>European Telecommunications Standards Institute</td><td>EN 301 091 / EN 303 396 radar standards.</td></tr>
+      <tr id="g-FCC" data-abbr="FCC" data-full="Federal Communications Commission (US rules, Part 95M for 76–81 GHz.)"><td class="v">FCC</td><td>Federal Communications Commission</td><td>US rules, Part 95M for 76–81 GHz.</td></tr>
+      <tr id="g-EMC" data-abbr="EMC" data-full="Electromagnetic Compatibility"><td class="v">EMC</td><td>Electromagnetic Compatibility</td><td></td></tr>
+      <tr id="g-CISPR" data-abbr="CISPR" data-full="Comité International Spécial des Perturbations Radioélectriques (CISPR 25: vehicle-component emissions.)"><td class="v">CISPR</td><td>Comité International Spécial des Perturbations Radioélectriques</td><td>CISPR 25: vehicle-component emissions.</td></tr>
+      <tr id="g-OOB" data-abbr="OOB" data-full="Out-of-Band (emission)"><td class="v">OOB</td><td>Out-of-Band (emission)</td><td></td></tr>
+    </tbody>
+  </table></div>
+  <h3>PCB, package &amp; materials</h3>
+  <div class="tbl"><table class="gl-tbl">
+    <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr id="g-PCB" data-abbr="PCB" data-full="Printed Circuit Board"><td class="v">PCB</td><td>Printed Circuit Board</td><td></td></tr>
+      <tr id="g-BGA" data-abbr="BGA" data-full="Ball Grid Array (FC-BGA = flip-chip BGA.)"><td class="v">BGA</td><td>Ball Grid Array</td><td>FC-BGA = flip-chip BGA.</td></tr>
+      <tr id="g-eWLB" data-abbr="eWLB" data-full="embedded Wafer-Level Ball-grid-array (Fan-out package with low RF loss.)"><td class="v">eWLB</td><td>embedded Wafer-Level Ball-grid-array</td><td>Fan-out package with low RF loss.</td></tr>
+      <tr id="g-AoP" data-abbr="AoP" data-full="Antenna-on-Package"><td class="v">AoP</td><td>Antenna-on-Package</td><td></td></tr>
+      <tr id="g-LoP" data-abbr="LoP" data-full="Launch-on-Package (RF launched from package into waveguide / antenna.)"><td class="v">LoP</td><td>Launch-on-Package</td><td>RF launched from package into waveguide / antenna.</td></tr>
+      <tr id="g-GCPW" data-abbr="GCPW" data-full="Grounded Coplanar Waveguide (PCB transmission line at the ball launch.)"><td class="v">GCPW</td><td>Grounded Coplanar Waveguide</td><td>PCB transmission line at the ball launch.</td></tr>
+      <tr id="g-SIW" data-abbr="SIW" data-full="Substrate-Integrated Waveguide (Waveguide formed with via fences in the PCB.)"><td class="v">SIW</td><td>Substrate-Integrated Waveguide</td><td>Waveguide formed with via fences in the PCB.</td></tr>
+      <tr id="g-FR4" data-abbr="FR4" data-full="Flame-Retardant epoxy-glass laminate (Standard low-cost PCB material.)"><td class="v">FR4</td><td>Flame-Retardant epoxy-glass laminate</td><td>Standard low-cost PCB material.</td></tr>
+      <tr id="g-ENEPIG" data-abbr="ENEPIG" data-full="Electroless Nickel, Electroless Palladium, Immersion Gold (PCB surface finish.)"><td class="v">ENEPIG</td><td>Electroless Nickel, Electroless Palladium, Immersion Gold</td><td>PCB surface finish.</td></tr>
+      <tr id="g-ImAg" data-abbr="ImAg" data-full="Immersion Silver (PCB surface finish.)"><td class="v">ImAg</td><td>Immersion Silver</td><td>PCB surface finish.</td></tr>
+      <tr id="g-HASL" data-abbr="HASL" data-full="Hot-Air Solder Leveling (Surface finish; too rough/uneven for 77 GHz.)"><td class="v">HASL</td><td>Hot-Air Solder Leveling</td><td>Surface finish; too rough/uneven for 77 GHz.</td></tr>
+      <tr id="g-PBT" data-abbr="PBT" data-full="Polybutylene terephthalate (PC = polycarbonate) (Radome plastics.)"><td class="v">PBT</td><td>Polybutylene terephthalate (PC = polycarbonate)</td><td>Radome plastics.</td></tr>
+      <tr id="g-HFSS" data-abbr="HFSS" data-full="High-Frequency Structure Simulator (Ansys) (3D EM simulator (CST = Dassault&#x27;s equivalent).)"><td class="v">HFSS</td><td>High-Frequency Structure Simulator (Ansys)</td><td>3D EM simulator (CST = Dassault&#x27;s equivalent).</td></tr>
+    </tbody>
+  </table></div>
+</section>
 </main>
 </div>
 </div>
@@ -1087,6 +1292,42 @@ PA supply AM/PM: Δφ_Tx = K_AMPM · ΔV_PA       (e.g. 10°/V × 10 mV droop = 
     if((e.ctrlKey||e.metaKey)&&k==="k"){e.preventDefault();ov.hidden?open():close();return}
     if(e.key==="Escape"){if(!ov.hidden)close();else clearHits();return}
     if(e.key==="/"&&ov.hidden&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)){e.preventDefault();open()}
+  });
+})();
+</script>
+<script>
+(function(){
+  const rows=[...document.querySelectorAll("#glossary tr[data-abbr]")];
+  if(!rows.length)return;
+  const map={};rows.forEach(r=>{map[r.dataset.abbr]=r});
+  const keys=Object.keys(map).sort((a,b)=>b.length-a.length);
+  const re=new RegExp("(?<![\\w/-])("+keys.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")(?:s)?(?![\\w])","g");
+  const SKIP="svg,script,style,a,h1,h2,h3,th,.eq,code,kbd,form,.out,.find-ov,#glossary,nav,.num,.domain,button,mark";
+  document.querySelectorAll("main section").forEach(sec=>{
+    if(sec.id==="glossary")return;
+    const seen=new Set(), nodes=[];
+    const w=document.createTreeWalker(sec,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentNode.closest(SKIP)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+    while(w.nextNode())nodes.push(w.currentNode);
+    nodes.forEach(n=>{
+      const s=n.nodeValue;re.lastIndex=0;let m,last=0,f=null;
+      while((m=re.exec(s))){
+        const k=m[1];if(seen.has(k))continue;seen.add(k);
+        f=f||document.createDocumentFragment();
+        f.appendChild(document.createTextNode(s.slice(last,m.index)));
+        const a=document.createElement("a");a.className="gl";a.href="#"+map[k].id;a.title=k+" — "+map[k].dataset.full;a.textContent=m[0];
+        f.appendChild(a);last=m.index+m[0].length;
+      }
+      if(f){f.appendChild(document.createTextNode(s.slice(last)));n.parentNode.replaceChild(f,n)}
+    });
+  });
+  const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.addEventListener("click",e=>{
+    const a=e.target.closest("a.gl");if(!a)return;
+    const r=document.getElementById(a.getAttribute("href").slice(1));if(!r)return;
+    e.preventDefault();
+    r.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
+    r.classList.remove("find-flash");void r.offsetWidth;r.classList.add("find-flash");
+    setTimeout(()=>r.classList.remove("find-flash"),1900);
   });
 })();
 </script>
