@@ -33,7 +33,7 @@
       if(t.length<2)return;
       idx.push({el,title,n,t,w:/^H[23]$/.test(el.tagName)?2:0});
     });
-    sec.querySelectorAll("figure svg").forEach(svg=>{
+    sec.querySelectorAll("figure .fig:not(.chart) svg").forEach(svg=>{
       const t=[...svg.querySelectorAll("text")].map(x=>x.textContent.trim()).filter(Boolean).join(" · ");
       if(t)idx.push({el:svg.closest("figure"),title,n,t:"Diagram: "+t,w:0,fig:true});
     });

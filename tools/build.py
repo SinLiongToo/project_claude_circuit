@@ -84,7 +84,7 @@ def page_items(fname):
             if el.name in ('h2', 'h3'):
                 it['h'] = 1
             items.append(it)
-        for svg in sec.select('figure svg'):
+        for svg in sec.select('figure .fig:not(.chart) svg'):
             t = ' · '.join(norm(x.get_text()) for x in svg.find_all('text') if norm(x.get_text()))
             if t:
                 items.append({'p': fname, 'id': sid, 'n': n, 's': st, 't': 'Diagram: ' + t})
