@@ -168,6 +168,17 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
 <section id="why">
   <div class="sec-head"><span class="num">00</span><h2>Why BIST: what it replaces</h2></div>
   <p>Testing a 77 GHz transceiver the conventional way needs mmWave power meters or spectrum analysers per Tx, a calibrated 77 GHz source and noise source for the Rx, frequency-extension heads, and an RF-capable load board. Each channel is measured one after another, with instrument settling and switching in between. The equipment is expensive, needs calibration, is hard to run multi-site, and in practice takes up most of the test time.</p>
+  <h3>BIST vs BISM</h3>
+  <p><b>BIST</b> (Built-In Self-Test) and <b>BISM</b> (Built-In Self-Measurement) use the same on-chip stimulus, loopback paths, detectors, ADCs and counters. What differs is the result. BIST answers <i>“is this part good?”</i> with pass/fail against a limit. BISM answers <i>“what is the value?”</i> with a calibrated number (Tx power in dBm, Rx gain and phase, NF, LO frequency). That number feeds eFuse trims, calibration tables, correlation against the RF tester, and in-field trend monitoring. Most of the recipes on this page are BISM, and the pass/fail step is simply a limit applied to the measured value.</p>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>BIST: self-test</th><th>BISM: self-measurement</th></tr></thead>
+    <tbody>
+      <tr><td>Output</td><td>Pass/fail, fault flag</td><td>Value with units and accuracy</td></tr>
+      <tr><td>Needs absolute accuracy?</td><td>Only enough to hold the limit with guard band</td><td>Yes: correlated to golden units, trimmed references</td></tr>
+      <tr><td>Used for</td><td>Screening, binning, start-up checks, safety fault detection</td><td>Trim, calibration LUTs, correlation, drift and trend tracking</td></tr>
+      <tr><td>Example</td><td>“Tx1 power within 12 ± 1.5 dBm” → pass</td><td>“Tx1 = 12.4 dBm at 85 °C” → power LUT entry</td></tr>
+    </tbody>
+  </table></div>
   <p>With BIST the chip is its own instrument. The ATE only supplies power, a reference clock and a digital interface (SPI/I²C, GPIOs). It loads a test firmware, starts a test list, and reads back results the chip has already computed.</p>
   <div class="tbl"><table>
     <thead><tr><th>What the ATE used to provide</th><th>On-chip replacement</th></tr></thead>
@@ -681,7 +692,8 @@ INL(c) = φ(c) − c · 5.625°
   <div class="tbl"><table class="gl-tbl">
     <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
     <tbody>
-      <tr id="g-BIST" data-abbr="BIST" data-full="Built-In Self-Test (On-chip stimulus + measurement.)"><td class="v">BIST</td><td>Built-In Self-Test</td><td>On-chip stimulus + measurement.</td></tr>
+      <tr id="g-BIST" data-abbr="BIST" data-full="Built-In Self-Test (On-chip stimulus + measurement; result is pass/fail or a value checked against a limit.)"><td class="v">BIST</td><td>Built-In Self-Test</td><td>On-chip stimulus + measurement; result is pass/fail or a value checked against a limit.</td></tr>
+      <tr id="g-BISM" data-abbr="BISM" data-full="Built-In Self-Measurement (Same on-chip hardware, but the result is a calibrated value (dB, °, MHz) used for trim, calibration and trend.)"><td class="v">BISM</td><td>Built-In Self-Measurement</td><td>Same on-chip hardware, but the result is a calibrated value (dB, °, MHz) used for trim, calibration and trend.</td></tr>
       <tr id="g-DFT" data-abbr="DFT" data-full="Design for Test"><td class="v">DFT</td><td>Design for Test</td><td></td></tr>
       <tr id="g-ATE" data-abbr="ATE" data-full="Automatic Test Equipment (Production tester.)"><td class="v">ATE</td><td>Automatic Test Equipment</td><td>Production tester.</td></tr>
       <tr id="g-ATPG" data-abbr="ATPG" data-full="Automatic Test Pattern Generation (Scan patterns for digital logic.)"><td class="v">ATPG</td><td>Automatic Test Pattern Generation</td><td>Scan patterns for digital logic.</td></tr>
