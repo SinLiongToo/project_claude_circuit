@@ -91,7 +91,20 @@ def page_items(fname):
     return title, items
 
 
+def check_tokens(fname):
+    """Fail if a page uses a CSS custom property its light :root block doesn't define
+    (an undefined colour silently renders as nothing)."""
+    s = rd(fname)
+    i = s.index(':root{')
+    defined = set(re.findall(r'(--[\w-]+)\s*:', s[i:s.index('}', i)]))
+    missing = sorted(set(re.findall(r'var\((--[\w-]+)', s)) - defined)
+    if missing:
+        sys.exit('%s uses undefined CSS variables: %s' % (fname, ', '.join(missing)))
+
+
 def main():
+    for fname, _ in PAGES:
+        check_tokens(fname)
     # 1 + 2: search component and glossary
     for fname, toc_after in PAGES:
         wr(fname, refresh_search(rd(fname)))
