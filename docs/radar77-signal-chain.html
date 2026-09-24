@@ -518,8 +518,64 @@ Split: quantisation (±0.5 LSB) + INL (≤ 1 LSB) + mismatch/drift margin  →  
     </div>
   </div>
 
+  <h3 id="dac-bow">What is DAC "bow"?</h3>
+  <p><b>Bow</b> is shorthand for a <b>bow-shaped INL curve</b>. Plotted against code, the error is zero at both ends and largest near mid-scale, like an arch. INL is measured against the straight line through the end points, so any gentle second-order curvature of the transfer function appears as a bow. It is the most common systematic INL shape in current-steering DACs.</p>
+  <figure>
+    <div class="fig">
+    <svg viewBox="-20 0 770 160" role="img" aria-label="Four INL-versus-code shapes on the same scale: a bow that is zero at both ends and peaks mid-scale; an S-shape crossing zero mid-scale; a sawtooth with a jump at the MSB transition; and a random wander. All are zero at code 0 and code M because INL is measured against the end-point line.">
+      <text class="t" x="20" y="18">Bow (arch)</text>
+      <line x1="20" y1="78" x2="180" y2="78" stroke="var(--line)" stroke-width="1"/>
+      <line x1="20" y1="36" x2="20" y2="120" stroke="var(--line)" stroke-width="1"/>
+      <polyline points="20.0,78.0 21.3,76.7 22.7,75.5 24.0,74.3 25.3,73.1 26.7,71.9 28.0,70.8 29.3,69.7 30.7,68.5 32.0,67.5 33.3,66.4 34.7,65.3 36.0,64.3 37.3,63.3 38.7,62.3 40.0,61.4 41.3,60.4 42.7,59.5 44.0,58.6 45.3,57.7 46.7,56.9 48.0,56.1 49.3,55.2 50.7,54.5 52.0,53.7 53.3,52.9 54.7,52.2 56.0,51.5 57.3,50.8 58.7,50.1 60.0,49.5 61.3,48.9 62.7,48.3 64.0,47.7 65.3,47.1 66.7,46.6 68.0,46.1 69.3,45.6 70.7,45.1 72.0,44.7 73.3,44.2 74.7,43.8 76.0,43.4 77.3,43.1 78.7,42.7 80.0,42.4 81.3,42.1 82.7,41.8 84.0,41.5 85.3,41.3 86.7,41.1 88.0,40.9 89.3,40.7 90.7,40.5 92.0,40.4 93.3,40.3 94.7,40.2 96.0,40.1 97.3,40.0 98.7,40.0 100.0,40.0 101.3,40.0 102.7,40.0 104.0,40.1 105.3,40.2 106.7,40.3 108.0,40.4 109.3,40.5 110.7,40.7 112.0,40.9 113.3,41.1 114.7,41.3 116.0,41.5 117.3,41.8 118.7,42.1 120.0,42.4 121.3,42.7 122.7,43.1 124.0,43.4 125.3,43.8 126.7,44.2 128.0,44.7 129.3,45.1 130.7,45.6 132.0,46.1 133.3,46.6 134.7,47.1 136.0,47.7 137.3,48.3 138.7,48.9 140.0,49.5 141.3,50.1 142.7,50.8 144.0,51.5 145.3,52.2 146.7,52.9 148.0,53.7 149.3,54.5 150.7,55.2 152.0,56.1 153.3,56.9 154.7,57.7 156.0,58.6 157.3,59.5 158.7,60.4 160.0,61.4 161.3,62.3 162.7,63.3 164.0,64.3 165.3,65.3 166.7,66.4 168.0,67.5 169.3,68.5 170.7,69.7 172.0,70.8 173.3,71.9 174.7,73.1 176.0,74.3 177.3,75.5 178.7,76.7 180.0,78.0" fill="none" stroke="var(--test)" stroke-width="2"/>
+      <text class="s" x="22" y="134">0</text>
+      <text class="s" x="180" y="134" text-anchor="end">M</text>
+      <text class="s" x="20" y="150">2nd-order curvature</text>
+      <text class="t" x="210" y="18">S-shape</text>
+      <line x1="210" y1="78" x2="370" y2="78" stroke="var(--line)" stroke-width="1"/>
+      <line x1="210" y1="36" x2="210" y2="120" stroke="var(--line)" stroke-width="1"/>
+      <polyline points="210.0,78.0 211.3,74.8 212.7,71.7 214.0,68.9 215.3,66.1 216.7,63.5 218.0,61.1 219.3,58.8 220.7,56.7 222.0,54.7 223.3,52.9 224.7,51.1 226.0,49.6 227.3,48.1 228.7,46.8 230.0,45.6 231.3,44.5 232.7,43.6 234.0,42.7 235.3,42.0 236.7,41.4 238.0,40.9 239.3,40.5 240.7,40.3 242.0,40.1 243.3,40.0 244.7,40.0 246.0,40.1 247.3,40.3 248.7,40.6 250.0,41.0 251.3,41.4 252.7,42.0 254.0,42.6 255.3,43.2 256.7,44.0 258.0,44.8 259.3,45.7 260.7,46.7 262.0,47.7 263.3,48.7 264.7,49.9 266.0,51.0 267.3,52.3 268.7,53.5 270.0,54.9 271.3,56.2 272.7,57.6 274.0,59.0 275.3,60.5 276.7,62.0 278.0,63.5 279.3,65.1 280.7,66.6 282.0,68.2 283.3,69.8 284.7,71.4 286.0,73.1 287.3,74.7 288.7,76.4 290.0,78.0 291.3,79.6 292.7,81.3 294.0,82.9 295.3,84.6 296.7,86.2 298.0,87.8 299.3,89.4 300.7,90.9 302.0,92.5 303.3,94.0 304.7,95.5 306.0,97.0 307.3,98.4 308.7,99.8 310.0,101.1 311.3,102.5 312.7,103.7 314.0,105.0 315.3,106.1 316.7,107.3 318.0,108.3 319.3,109.3 320.7,110.3 322.0,111.2 323.3,112.0 324.7,112.8 326.0,113.4 327.3,114.0 328.7,114.6 330.0,115.0 331.3,115.4 332.7,115.7 334.0,115.9 335.3,116.0 336.7,116.0 338.0,115.9 339.3,115.7 340.7,115.5 342.0,115.1 343.3,114.6 344.7,114.0 346.0,113.3 347.3,112.4 348.7,111.5 350.0,110.4 351.3,109.2 352.7,107.9 354.0,106.4 355.3,104.9 356.7,103.1 358.0,101.3 359.3,99.3 360.7,97.2 362.0,94.9 363.3,92.5 364.7,89.9 366.0,87.1 367.3,84.3 368.7,81.2 370.0,78.0" fill="none" stroke="var(--if)" stroke-width="2"/>
+      <text class="s" x="212" y="134">0</text>
+      <text class="s" x="370" y="134" text-anchor="end">M</text>
+      <text class="s" x="210" y="150">3rd-order curvature</text>
+      <text class="t" x="400" y="18">Sawtooth</text>
+      <line x1="400" y1="78" x2="560" y2="78" stroke="var(--line)" stroke-width="1"/>
+      <line x1="400" y1="36" x2="400" y2="120" stroke="var(--line)" stroke-width="1"/>
+      <polyline points="400.0,78.0 401.3,77.4 402.7,76.7 404.0,76.1 405.3,75.5 406.7,74.8 408.0,74.2 409.3,73.6 410.7,72.9 412.0,72.3 413.3,71.7 414.7,71.0 416.0,70.4 417.3,69.8 418.7,69.1 420.0,68.5 421.3,67.9 422.7,67.2 424.0,66.6 425.3,66.0 426.7,65.3 428.0,64.7 429.3,64.1 430.7,63.4 432.0,62.8 433.3,62.2 434.7,61.5 436.0,60.9 437.3,60.3 438.7,59.6 440.0,59.0 441.3,58.4 442.7,57.7 444.0,57.1 445.3,56.5 446.7,55.8 448.0,55.2 449.3,54.6 450.7,53.9 452.0,53.3 453.3,52.7 454.7,52.0 456.0,51.4 457.3,50.8 458.7,50.1 460.0,49.5 461.3,48.9 462.7,48.2 464.0,47.6 465.3,47.0 466.7,46.3 468.0,45.7 469.3,45.1 470.7,44.4 472.0,43.8 473.3,43.2 474.7,42.5 476.0,41.9 477.3,41.3 478.7,40.6" fill="none" stroke="var(--lo)" stroke-width="2"/>
+      <polyline points="480.0,116.0 481.3,115.4 482.7,114.7 484.0,114.1 485.3,113.5 486.7,112.8 488.0,112.2 489.3,111.6 490.7,110.9 492.0,110.3 493.3,109.7 494.7,109.0 496.0,108.4 497.3,107.8 498.7,107.1 500.0,106.5 501.3,105.9 502.7,105.2 504.0,104.6 505.3,104.0 506.7,103.3 508.0,102.7 509.3,102.1 510.7,101.4 512.0,100.8 513.3,100.2 514.7,99.5 516.0,98.9 517.3,98.3 518.7,97.6 520.0,97.0 521.3,96.4 522.7,95.7 524.0,95.1 525.3,94.5 526.7,93.8 528.0,93.2 529.3,92.6 530.7,91.9 532.0,91.3 533.3,90.7 534.7,90.0 536.0,89.4 537.3,88.8 538.7,88.1 540.0,87.5 541.3,86.9 542.7,86.2 544.0,85.6 545.3,85.0 546.7,84.3 548.0,83.7 549.3,83.1 550.7,82.4 552.0,81.8 553.3,81.2 554.7,80.5 556.0,79.9 557.3,79.3 558.7,78.6 560.0,78.0" fill="none" stroke="var(--lo)" stroke-width="2"/>
+      <line x1="480.0" y1="40.0" x2="480.0" y2="116.0" stroke="var(--lo)" stroke-width="1.2" stroke-dasharray="3 2"/>
+      <text class="s" x="402" y="134">0</text>
+      <text class="s" x="560" y="134" text-anchor="end">M</text>
+      <text class="s" x="400" y="150">MSB weight mismatch</text>
+      <text class="t" x="590" y="18">Random</text>
+      <line x1="590" y1="78" x2="750" y2="78" stroke="var(--line)" stroke-width="1"/>
+      <line x1="590" y1="36" x2="590" y2="120" stroke="var(--line)" stroke-width="1"/>
+      <polyline points="590.0,78.0 591.3,78.9 592.7,76.7 594.0,77.5 595.3,78.6 596.7,82.2 598.0,82.9 599.3,78.3 600.7,76.5 602.0,72.2 603.3,71.1 604.7,69.3 606.0,68.5 607.3,75.0 608.7,71.4 610.0,69.3 611.3,67.1 612.7,73.8 614.0,80.6 615.3,84.0 616.7,85.8 618.0,84.4 619.3,84.5 620.7,82.2 622.0,84.7 623.3,83.3 624.7,81.6 626.0,84.1 627.3,77.1 628.7,74.7 630.0,69.8 631.3,72.2 632.7,75.0 634.0,76.2 635.3,76.5 636.7,73.8 638.0,72.7 639.3,74.4 640.7,78.1 642.0,80.0 643.3,75.0 644.7,78.1 646.0,77.0 647.3,75.1 648.7,80.9 650.0,80.6 651.3,75.2 652.7,83.2 654.0,84.3 655.3,84.6 656.7,87.7 658.0,85.6 659.3,85.7 660.7,91.5 662.0,88.0 663.3,85.2 664.7,81.3 666.0,75.4 667.3,73.8 668.7,73.2 670.0,78.2 671.3,75.6 672.7,77.9 674.0,79.6 675.3,84.5 676.7,88.3 678.0,90.3 679.3,85.0 680.7,93.0 682.0,98.7 683.3,97.6 684.7,91.7 686.0,89.2 687.3,96.7 688.7,106.6 690.0,105.0 691.3,107.9 692.7,112.2 694.0,108.2 695.3,103.6 696.7,102.8 698.0,101.7 699.3,99.8 700.7,93.3 702.0,90.7 703.3,88.5 704.7,86.2 706.0,92.3 707.3,87.1 708.7,83.1 710.0,80.8 711.3,88.6 712.7,91.0 714.0,87.5 715.3,94.6 716.7,95.2 718.0,91.0 719.3,96.1 720.7,89.5 722.0,87.2 723.3,87.6 724.7,86.2 726.0,83.5 727.3,82.9 728.7,78.1 730.0,80.6 731.3,82.2 732.7,77.9 734.0,77.6 735.3,81.0 736.7,77.1 738.0,71.1 739.3,72.7 740.7,78.1 742.0,78.5 743.3,79.0 744.7,80.0 746.0,74.3 747.3,78.2 748.7,73.1 750.0,78.0" fill="none" stroke="var(--dig)" stroke-width="2"/>
+      <text class="s" x="592" y="134">0</text>
+      <text class="s" x="750" y="134" text-anchor="end">M</text>
+      <text class="s" x="590" y="150">unit-cell mismatch</text>
+      <text class="lbl" x="16" y="44" text-anchor="end">+pk</text>
+      <text class="lbl" x="16" y="82" text-anchor="end">0</text>
+    </svg>
+    </div>
+    <figcaption>The four common INL shapes, normalised to the same peak and plotted against code 0 … M. All are zero at the end points by definition. A bow and an S-shape are smooth and systematic, so calibration removes them easily. A sawtooth jumps at the MSB transition (it also shows up as a DNL spike there). Random mismatch has no pattern and is set by unit-cell matching.</figcaption>
+  </figure>
+  <div class="tbl"><table>
+    <thead><tr><th>Shape</th><th>Cause</th><th>Signature</th><th>Remedy</th></tr></thead>
+    <tbody>
+      <tr><td>Bow (arch)</td><td>2nd-order curvature: finite output impedance of the current cells, IR drop along the shared supply/ground, quadratic process/thermal gradients, a nonlinear load</td><td>0 at ends, peak at M/2</td><td>Cascoded cells, low-R routing, common-centroid layout; calibration with one quadratic coefficient or the LUT</td></tr>
+      <tr><td>S-shape</td><td>3rd-order curvature (compression at both ends)</td><td>Zero crossing mid-scale, opposite signs at each end</td><td>Linearise the load; LUT</td></tr>
+      <tr><td>Sawtooth / steps</td><td>Binary-weighted MSB current mismatch</td><td>Jumps at M/2, M/4…; DNL spikes there</td><td>Segmented (thermometer-coded) MSBs, trimming</td></tr>
+      <tr><td>Random</td><td>Unit-cell mismatch (σ ∝ 1/√area)</td><td>Noisy wander</td><td>Larger unit cells, dynamic element matching</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>In the rotator, the load adds its own bow.</b> The DAC current sets the Gilbert-cell VGA gain, and gain vs. tail current is curved. So even a perfect DAC shows bow at the RF output. That is one reason the rotator is calibrated end-to-end through the loopback rather than DAC-only.</li>
+    <li><b>What it does to the rotator:</b> for most phase codes, I and Q sit at different points on the bow, so they get different errors. The output vector is therefore both scaled and <b>rotated</b>. The constellation bulges out (positive bow) or dents in (negative bow) between the axes, giving <b>amplitude ripple</b> and phase error even with perfect I/Q balance.</li>
+    <li><b>Size of the effect</b> (7-bit DAC, perfect I/Q, from the explorer's model): 3 LSB of bow gives about 1.4° RMS phase error and 0.55 dB amplitude ripple, most of a 2° budget. At 1 LSB (the spec) it is about three times smaller. Try it in the explorer below, whose "DAC INL bow" input uses <code>e(m) = INL_peak · 4·(m/M)·(1 − m/M)</code> on both DACs.</li>
+  </ul>
+
   <h3>Phase-rotator error explorer</h3>
-  <p>This models a 6-bit rotator (64 codes) with your DAC resolution, DAC nonlinearity and quadrature errors. "Raw" uses ideal cos/sin codes. "LUT-corrected" pre-distorts the codes to cancel the I/Q gain/phase imbalance. DAC INL (a bow-shaped error, peak at mid-scale) and random per-code mismatch (a fixed seed, so the plot is repeatable) are applied to both I and Q DACs in either mode. Set both to 0 to see an ideal DAC.</p>
+  <p>This models a 6-bit rotator (64 codes) with your DAC resolution, DAC nonlinearity and quadrature errors. "Raw" uses ideal cos/sin codes. "LUT-corrected" pre-distorts the codes to cancel the I/Q gain/phase imbalance. DAC INL (a <a href="#dac-bow">bow-shaped</a> error, peak at mid-scale) and random per-code mismatch (a fixed seed, so the plot is repeatable) are applied to both I and Q DACs in either mode. Set both to 0 to see an ideal DAC.</p>
   <div class="calc">
     <div class="panel">
       <form class="fields" id="rot" autocomplete="off">
