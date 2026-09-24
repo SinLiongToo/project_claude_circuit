@@ -172,6 +172,7 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
     <li><a href="#mbist">Memory BIST</a></li>
     <li><a href="#lbist">Logic BIST &amp; in-field</a></li>
     <li><a href="#jtag">JTAG &amp; test access</a></li>
+    <li><a href="#continuity">Open / short / Cres</a></li>
     <li><a href="#stress">Stress screening</a></li>
     <li><a href="#qual">Qualification</a></li>
     <li><a href="#flow">Production flow</a></li>
@@ -444,8 +445,132 @@ Add:     checkerboard / data backgrounds, retention (pause at low V, high T), re
   <div class="note"><b>Security.</b> Scan and JTAG can read or write any internal state, including keys and safety configuration. Lock test and debug access in production parts (password/challenge unlock, fused lock, scan reset on mode change), as required by ISO/SAE 21434.</div>
 </section>
 
+<section id="continuity">
+  <div class="sec-head"><span class="num">08</span><h2>Continuity: open, short and contact-resistance (Cres) test</h2><span class="domain test">First test</span></div>
+  <p>The first tests at every insertion (wafer probe and final test) check that the tester is actually connected to every pin, and that no pin is shorted, <b>before</b> any power is applied. The chip is not powered. The tester's per-pin PMU pushes a small current into each pin and reads the voltage across the pin's ESD protection diode. The test takes a few milliseconds, catches bad contacts, bent probes, bridged balls and assembly opens, and protects the part and the load board from powering up into a short.</p>
+
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 760 270" role="img" aria-label="Diode continuity test: the PMU forces −100 µA into a signal pad through the contact resistance. All other pins, including VDD and VSS, are held at 0 V. Current flows from VSS through the lower ESD diode, so the pad reads about −0.65 V. A forward current of +100 µA instead flows through the upper diode to VDD and reads about +0.65 V.">
+      <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <rect class="blk dig" x="20" y="100" width="150" height="66" rx="6"/>
+      <text class="t" x="95" y="122" text-anchor="middle">Tester PMU</text>
+      <text class="s" x="95" y="139" text-anchor="middle">force I = −100 µA</text>
+      <text class="s" x="95" y="154" text-anchor="middle">measure V, clamp ±2 V</text>
+      <line x1="170" y1="133" x2="205" y2="133" stroke="currentColor" stroke-width="1.5"/>
+      <polyline points="205,133 212,123 222,143 232,123 242,143 252,123 259,133" fill="none" stroke="var(--test)" stroke-width="1.8"/>
+      <text class="s" x="232" y="112" text-anchor="middle" fill="var(--test)">R_contact</text>
+      <line x1="259" y1="133" x2="360" y2="133" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="360" y="118" width="30" height="30" fill="var(--dig-soft)" stroke="var(--dig)" stroke-width="1.6"/>
+      <text class="s" x="375" y="168" text-anchor="middle">pad</text>
+      <line x1="390" y1="133" x2="560" y2="133" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="560" y="113" width="120" height="40" rx="6" class="cloud"/>
+      <text class="s" x="620" y="137" text-anchor="middle">core (unpowered)</text>
+      <!-- VDD rail and upper diode (anode at pad side, cathode at VDD) -->
+      <line x1="440" y1="30" x2="720" y2="30" stroke="var(--lo)" stroke-width="2"/>
+      <text class="lbl" x="724" y="34">VDD = 0 V</text>
+      <line x1="470" y1="133" x2="470" y2="92" stroke="currentColor" stroke-width="1.5"/>
+      <polygon points="458,92 482,92 470,72" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="458" y1="72" x2="482" y2="72" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="470" y1="72" x2="470" y2="30" stroke="currentColor" stroke-width="1.5"/>
+      <text class="s" x="490" y="86">D_up (to VDD)</text>
+      <!-- VSS rail and lower diode (anode at VSS, cathode at pad) -->
+      <line x1="440" y1="240" x2="720" y2="240" stroke="var(--dig)" stroke-width="2"/>
+      <text class="lbl" x="724" y="244">VSS = 0 V</text>
+      <line x1="470" y1="133" x2="470" y2="174" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="458" y1="174" x2="482" y2="174" stroke="currentColor" stroke-width="1.8"/>
+      <polygon points="458,194 482,194 470,174" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="470" y1="194" x2="470" y2="240" stroke="currentColor" stroke-width="1.5"/>
+      <text class="s" x="490" y="190">D_dn (from VSS)</text>
+      <circle cx="470" cy="133" r="3" fill="currentColor"/>
+      <path d="M440,226 V150" fill="none" stroke="var(--test)" stroke-width="1.6" marker-end="url(#a4)" color="var(--test)"/>
+      <text class="s" x="434" y="210" text-anchor="end" fill="var(--test)">−100 µA path</text>
+      <text class="s" x="300" y="200" text-anchor="middle">pad reads ≈ −V_f ≈ −0.65 V</text>
+    </svg>
+    </div>
+    <figcaption>The diode method. With every other pin held at 0 V, forcing −100 µA out of a pad pulls current from VSS through the lower ESD diode, so a good connection reads about −0.65 V. Forcing +100 µA reads about +0.65 V through the upper diode to VDD. An open contact has no current path, so the PMU hits its voltage clamp. A short reads near 0 V.</figcaption>
+  </figure>
+
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 700 120" role="img" aria-label="Measured-voltage windows for −100 µA: open at the −2 V clamp, a guard band, pass from −0.9 to −0.3 V, a guard band, and short from −0.2 to 0 V.">
+      <line x1="40" y1="60" x2="660" y2="60" stroke="currentColor" stroke-width="1"/>
+      <rect x="40" y="44" width="248" height="32" fill="var(--bad)" opacity=".22"/>
+      <rect x="288" y="44" width="93" height="32" fill="var(--sunk)"/>
+      <rect x="381" y="44" width="186" height="32" fill="var(--ok)" opacity=".25"/>
+      <rect x="567" y="44" width="31" height="32" fill="var(--sunk)"/>
+      <rect x="598" y="44" width="62" height="32" fill="var(--bad)" opacity=".22"/>
+      <text class="t" x="164" y="65" text-anchor="middle">OPEN</text>
+      <text class="t" x="474" y="65" text-anchor="middle">PASS</text>
+      <text class="t" x="629" y="65" text-anchor="middle">SHORT</text>
+      <text class="s" x="334" y="65" text-anchor="middle">guard</text>
+      <g class="s">
+        <text x="40" y="96" text-anchor="middle">−2.0</text><text x="288" y="96" text-anchor="middle">−1.2</text><text x="381" y="96" text-anchor="middle">−0.9</text><text x="560" y="96" text-anchor="end">−0.3</text><text x="605" y="96" text-anchor="start">−0.2</text><text x="660" y="112" text-anchor="middle">0 V</text>
+      </g>
+      <text class="lbl" x="40" y="30">V_pin at −100 µA (typical limits)</text>
+    </svg>
+    </div>
+    <figcaption>Typical pass windows. The exact limits come from characterisation of the ESD diodes over temperature (V_f falls about 2 mV/°C, so a hot-probe insertion reads lower). Values in the guard bands fail as "marginal" and usually trigger a re-contact.</figcaption>
+  </figure>
+
+  <h3>Test list and typical limits</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Test</th><th>Method</th><th>Typical pass window</th><th>A fail means</th></tr></thead>
+    <tbody>
+      <tr><td>Open/short to VSS diode</td><td>FIMV −100 µA per pin, all other pins 0 V, clamp −2 V</td><td class="v">−0.9 … −0.3 V</td><td>Near 0 V: short to VSS or a neighbour. At the clamp: open (no contact, bent probe, missing ball)</td></tr>
+      <tr><td>Open/short to VDD diode</td><td>FIMV +100 µA, clamp +2 V</td><td class="v">+0.3 … +0.9 V</td><td>Same logic through the upper diode; confirms both ESD paths</td></tr>
+      <tr><td>Pin-to-pin short</td><td>Odd pins at 0 V, even pins forced (then swap); or each pin vs its neighbours at +0.2 V</td><td class="v">|I| &lt; 1 µA between neighbours</td><td>Solder bridge, probe-to-probe contact, metal short</td></tr>
+      <tr><td>Power-rail short</td><td>FVMI a small voltage (0.1–0.5 V, below diode turn-on) on each rail, others 0 V</td><td class="v">I &lt; rail-specific limit (µA–mA)</td><td>VDD–VSS short: stops the flow before full power-up</td></tr>
+      <tr><td>Input leakage (IIL / IIH)</td><td>FVMI 0 V and VDDIO on inputs, chip powered</td><td class="v">|I| &lt; 1 µA (typical digital IO)</td><td>Damaged input, gate-oxide leak, ESD damage (runs after power-up)</td></tr>
+      <tr><td>Contact resistance (Cres)</td><td>Kelvin: force and sense needles on the same pad, or the two-current diode method below</td><td class="v">&lt; 0.5–2 Ω (probe card), &lt; 0.1 Ω (FT socket)</td><td>Contamination or oxide on probes/socket: clean the probes, or re-seat the part</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Measuring contact resistance</h3>
+  <div class="cards">
+    <div class="card">
+      <h3>Kelvin (4-wire) method</h3>
+      <p>Two needles touch the same pad: one carries the force current, the other only senses voltage (no current, so no drop across it). The difference between the force and sense voltages is the drop across the force contact:</p>
+<div class="eq">R_c = (V_force − V_sense) / I_force
+I_force ≈ 10–50 mA (resolution), limited by pad/ESD rating</div>
+      <p>Needs Kelvin-capable pads or probes. Common for power and critical analog pins, and on FT sockets.</p>
+    </div>
+    <div class="card">
+      <h3>Two-current diode method (no Kelvin)</h3>
+      <p>Force two currents through the same ESD diode. The diode's logarithmic term is known, so what remains is the series resistance (contact + pad + routing):</p>
+<div class="eq">V(I) = n·V_T·ln(I/I_s) + I·R_s
+R_s = [ΔV − n·V_T·ln(I₂/I₁)] / (I₂ − I₁)
+e.g. I₁ = 100 µA, I₂ = 1 mA, n·V_T ≈ 30 mV
+→ ln term ≈ 69 mV, the rest ÷ 0.9 mA = R_s</div>
+      <p>Works on every diode-protected pin with standard PMUs. Resolution is limited to about 1 Ω, which is enough to flag bad contacts.</p>
+    </div>
+  </div>
+
+  <h3>Radar-SoC pin types need different handling</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Pin type</th><th>DC structure at the pad</th><th>How to test continuity</th></tr></thead>
+    <tbody>
+      <tr><td>Digital IO (SPI, GPIO, JTAG)</td><td>Diodes to VDDIO and VSS</td><td>Standard diode method, ±100 µA</td></tr>
+      <tr><td>Analog / reference (bias, XTAL)</td><td>Small diodes, sometimes a series resistor</td><td>Lower current (10–50 µA) and a wider window; account for the series R</td></tr>
+      <tr><td><b>RF balls (Tx / Rx)</b> with shunt-inductor ESD</td><td>An inductor to GND gives a <b>DC short to ground</b> (≈ 0.5–3 Ω DCR)</td><td><b>Inverted logic:</b> a "short" is the good result. Force about 1–10 mA and check R inside a window (e.g. 0.3–5 Ω). High R or the clamp means open</td></tr>
+      <tr><td>RF balls with series DC-block capacitor</td><td>No DC path at all</td><td>A DC test can't see them. Use a capacitance measurement, or the RF reflected-power detector (<a href="radar77-bist-loopback.html#arch">BIST path A</a>) against the load-board termination</td></tr>
+      <tr><td>Supply / ground balls (many in parallel)</td><td>Many balls per rail</td><td>A DC test sees the whole rail, so a single open ball is invisible. Use per-ball Kelvin contact on the socket, or current-sharing checks. Otherwise it's covered only statistically at FT</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note"><b>Using Cres data.</b> Log Cres per site and per touchdown, not just pass/fail. A rising trend means the probe tips need cleaning, and the prober can trigger online cleaning automatically before contact failures become yield loss. Retesting "open" fails once after re-contact separates contact problems from real defects. Track the recovery rate, because a high one points to the probe card, not the wafer.</div>
+
+  <h3>Where it sits in the flow</h3>
+  <ol class="steps">
+    <li><b>Cres</b> (the tester's own contact check), then <b>open/short</b> on all pins in parallel, all unpowered.</li>
+    <li><b>Power-rail short</b> check, then ramp the supplies with current limits.</li>
+    <li><b>Leakage</b> (IIL/IIH) and IDDQ with the chip powered.</li>
+    <li>Only then: scan, MBIST, BIST/BISM and everything else. Continuity failures are binned separately (contact vs device) so yield reports don't confuse probe-card problems with silicon defects.</li>
+  </ol>
+</section>
+
 <section id="stress">
-  <div class="sec-head"><span class="num">08</span><h2>Stress conditions and screening</h2><span class="domain test">Screening</span></div>
+  <div class="sec-head"><span class="num">09</span><h2>Stress conditions and screening</h2><span class="domain test">Screening</span></div>
   <p>Some defects are <b>latent</b>. The part passes a normal test today but fails after weeks in the car: thin gate-oxide spots, marginal vias, weak SRAM cells. Screening applies <b>stress</b> (voltage, temperature, time) to make those defects fail at test, and <b>statistics</b> to reject parts that pass but look abnormal.</p>
   <div class="tbl"><table>
     <thead><tr><th>Screen</th><th>Typical condition</th><th>Targets</th><th>Where</th></tr></thead>
@@ -481,7 +606,7 @@ PAT limits = μ ± 6σ   (inside spec limits)</div>
 </section>
 
 <section id="qual">
-  <div class="sec-head"><span class="num">09</span><h2>Reliability qualification (AEC-Q100)</h2><span class="domain test">Qualification</span></div>
+  <div class="sec-head"><span class="num">10</span><h2>Reliability qualification (AEC-Q100)</h2><span class="domain test">Qualification</span></div>
   <p>Qualification is done once per product (and after major changes) on sample lots. It proves the design and process meet the automotive lifetime. Screening then keeps every shipped part in line with the qualified population. The grade sets the ambient range: Grade 1 is −40…+125 °C, Grade 0 is −40…+150 °C, and radar is typically Grade 1 or 2.</p>
   <div class="tbl"><table>
     <thead><tr><th>Test</th><th>What it stresses</th><th>Typical condition (grade-dependent)</th></tr></thead>
@@ -499,9 +624,9 @@ PAT limits = μ ± 6σ   (inside spec limits)</div>
 </section>
 
 <section id="flow">
-  <div class="sec-head"><span class="num">10</span><h2>Production test flow (digital + stress)</h2></div>
+  <div class="sec-head"><span class="num">11</span><h2>Production test flow (digital + stress)</h2></div>
   <ol class="steps">
-    <li><b>Wafer probe (CP), hot:</b> continuity and leakage → scan chain test → HVST → stuck-at + transition scan → IDDQ → MBIST + repair analysis → VLV scan/MBIST → analog/RF BIST/BISM trims (see the BIST page) → eFuse burn (repair + trims) → verify.</li>
+    <li><b>Wafer probe (CP), hot:</b> <a href="#continuity">Cres + open/short + power-short</a> → leakage → scan chain test → HVST → stuck-at + transition scan → IDDQ → MBIST + repair analysis → VLV scan/MBIST → analog/RF BIST/BISM trims (see the BIST page) → eFuse burn (repair + trims) → verify.</li>
     <li><b>Post-probe data:</b> DPAT limits, GDBN/NNR on the wafer map, ink out the outliers.</li>
     <li><b>Assembly</b> (FC-BGA / eWLB).</li>
     <li><b>Final test (FT), cold and hot:</b> reduced scan (at-speed with guard band), MBIST, LBIST self-check, BIST/BISM re-check at temperature, PAT on the key parameters.</li>
@@ -512,7 +637,7 @@ PAT limits = μ ± 6σ   (inside spec limits)</div>
 </section>
 
 <section id="calc">
-  <div class="sec-head"><span class="num">11</span><h2>Scan test-time calculator</h2></div>
+  <div class="sec-head"><span class="num">12</span><h2>Scan test-time calculator</h2></div>
   <p>Estimate scan shift time and tester memory for one test insertion. The defaults are a single-chip radar SoC with about 3 M scan flops.</p>
   <div class="calc">
     <div class="panel">
@@ -548,7 +673,7 @@ PAT limits = μ ± 6σ   (inside spec limits)</div>
 </section>
 
 <section id="checklist">
-  <div class="sec-head"><span class="num">12</span><h2>DFT checklist for a radar SoC</h2></div>
+  <div class="sec-head"><span class="num">13</span><h2>DFT checklist for a radar SoC</h2></div>
   <div class="split">
     <div>
       <h3>Architecture</h3>
@@ -578,7 +703,7 @@ PAT limits = μ ± 6σ   (inside spec limits)</div>
 </section>
 
 <section id="glossary">
-  <div class="sec-head"><span class="num">13</span><h2>Glossary of abbreviations</h2></div>
+  <div class="sec-head"><span class="num">14</span><h2>Glossary of abbreviations</h2></div>
   <p>Abbreviations are underlined with dots the first time they appear in each section. Hover to see the meaning; click to jump here. Use Search (Ctrl+K) to find an abbreviation anywhere on the page.</p>
   <h3>Radar system &amp; ADAS</h3>
   <div class="tbl"><table class="gl-tbl">
@@ -731,6 +856,15 @@ PAT limits = μ ± 6σ   (inside spec limits)</div>
       <tr id="g-ATPG" data-abbr="ATPG" data-full="Automatic Test Pattern Generation (Scan patterns for digital logic.)"><td class="v">ATPG</td><td>Automatic Test Pattern Generation</td><td>Scan patterns for digital logic.</td></tr>
       <tr id="g-IDDQ" data-abbr="IDDQ" data-full="Quiescent supply-current test (Detects leakage defects.)"><td class="v">IDDQ</td><td>Quiescent supply-current test</td><td>Detects leakage defects.</td></tr>
       <tr id="g-PMU" data-abbr="PMU" data-full="Parametric Measurement Unit (ATE DC source/measure channel.)"><td class="v">PMU</td><td>Parametric Measurement Unit</td><td>ATE DC source/measure channel.</td></tr>
+      <tr id="g-Cres" data-abbr="Cres" data-full="Contact resistance (Probe or socket contact resistance; measured with the Kelvin or two-current method.)"><td class="v">Cres</td><td>Contact resistance</td><td>Probe or socket contact resistance; measured with the Kelvin or two-current method.</td></tr>
+      <tr id="g-FIMV" data-abbr="FIMV" data-full="Force Current, Measure Voltage (PMU mode used for open/short (diode) tests.)"><td class="v">FIMV</td><td>Force Current, Measure Voltage</td><td>PMU mode used for open/short (diode) tests.</td></tr>
+      <tr id="g-FVMI" data-abbr="FVMI" data-full="Force Voltage, Measure Current (PMU mode used for leakage and power-short tests.)"><td class="v">FVMI</td><td>Force Voltage, Measure Current</td><td>PMU mode used for leakage and power-short tests.</td></tr>
+      <tr id="g-IIL" data-abbr="IIL" data-full="Input leakage current, input Low (IIH = input High) (Leakage limit per IO pin, typically |I| &lt; 1 µA.)"><td class="v">IIL</td><td>Input leakage current, input Low (IIH = input High)</td><td>Leakage limit per IO pin, typically |I| &lt; 1 µA.</td></tr>
+      <tr id="g-IIH" data-abbr="IIH" data-full="Input leakage current, input High"><td class="v">IIH</td><td>Input leakage current, input High</td><td></td></tr>
+      <tr id="g-ESD" data-abbr="ESD" data-full="Electrostatic Discharge (Pad protection diodes / clamps; the diode method uses them for continuity.)"><td class="v">ESD</td><td>Electrostatic Discharge</td><td>Pad protection diodes / clamps; the diode method uses them for continuity.</td></tr>
+      <tr id="g-VDD" data-abbr="VDD" data-full="Positive supply rail (VSS = ground / negative rail)"><td class="v">VDD</td><td>Positive supply rail (VSS = ground / negative rail)</td><td></td></tr>
+      <tr id="g-VSS" data-abbr="VSS" data-full="Ground / negative supply rail"><td class="v">VSS</td><td>Ground / negative supply rail</td><td></td></tr>
+      <tr id="g-DCR" data-abbr="DCR" data-full="DC Resistance (E.g. of an RF shunt inductor, 0.5–3 Ω.)"><td class="v">DCR</td><td>DC Resistance</td><td>E.g. of an RF shunt inductor, 0.5–3 Ω.</td></tr>
       <tr id="g-SPC" data-abbr="SPC" data-full="Statistical Process Control"><td class="v">SPC</td><td>Statistical Process Control</td><td></td></tr>
       <tr id="g-VNA" data-abbr="VNA" data-full="Vector Network Analyzer (Lab instrument for S-parameters.)"><td class="v">VNA</td><td>Vector Network Analyzer</td><td>Lab instrument for S-parameters.</td></tr>
       <tr id="g-AWG" data-abbr="AWG" data-full="Arbitrary Waveform Generator"><td class="v">AWG</td><td>Arbitrary Waveform Generator</td><td></td></tr>
