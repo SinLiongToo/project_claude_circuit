@@ -454,7 +454,7 @@ INL(c) = φ(c) − c · 5.625°
 <section id="flow">
   <div class="sec-head"><span class="num">06</span><h2>Production flow on a low-cost tester</h2></div>
   <ol class="steps">
-    <li><b>Contact and DC:</b> continuity, leakage, IDDQ, supply currents (ATE PMU).</li>
+    <li><b>Contact and DC:</b> continuity, leakage, IDDQ, supply currents (ATE PMU). See <a href="radar77-continuity.html">open/short &amp; Cres test</a>.</li>
     <li><b>Digital:</b> scan / ATPG, logic BIST, memory BIST (with repair if available), eFuse read. Details, including stress screening, on the <a href="radar77-dft-stress.html">digital DFT page</a>.</li>
     <li><b>Boot test firmware</b> over SPI into the RF control CPU's RAM; the ATE supplies the 40 MHz reference.</li>
     <li><b>Reference trims:</b> bandgap and aux ADC (compare against one precision ATE voltage), temperature sensor (against the chuck or handler temperature).</li>
