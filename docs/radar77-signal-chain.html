@@ -147,21 +147,23 @@ footer{font-size:12.5px;color:var(--muted);padding-top:12px;max-width:80ch}
     <li><a href="#spec">System spec</a></li>
     <li><a href="#antenna">Antenna &amp; transition</a></li>
     <li><a href="#tx">Transmitter</a></li>
+    <li><a href="#rotator">Phase rotator &amp; DACs</a></li>
     <li><a href="#lo">Chirp synthesis (LO)</a></li>
     <li><a href="#rx">Receiver &amp; downconversion</a></li>
+    <li><a href="#iq">I/Q generation</a></li>
     <li><a href="#if">IF conditioning</a></li>
     <li><a href="#adc">ADC</a></li>
     <li><a href="#dfe">Digital front end</a></li>
     <li><a href="#dsp">Radar processing</a></li>
     <li><a href="#bist">Monitoring &amp; BIST</a></li>
-    <li><a href="#infra">Power, clock, package</a></li>
+    <li><a href="#power">Power &amp; LDOs</a></li>
+    <li><a href="#infra">Clock, package, thermal</a></li>
     <li><a href="#calc">Calculator</a></li>
     <li><a href="#verify">Verification</a></li>
   </ol>
 </nav>
 
 <main>
-<!-- 00 -->
 <section id="chain">
   <div class="sec-head"><span class="num">00</span><h2>Signal chain at a glance</h2></div>
   <p>The transmit and receive paths share one LO. A fractional-N PLL generates a linear frequency ramp at about 20 GHz. A ×4 multiplier brings it up to 77 GHz, and the result drives both the PA and the Rx mixers. Because each Rx mixer multiplies the echo by the chirp being transmitted at that moment, a target shows up as a low beat frequency (a few MHz). That is why a modest ADC can digitise a signal with GHz of bandwidth. Click a block to jump to its section.</p>
@@ -181,7 +183,7 @@ footer{font-size:12.5px;color:var(--muted);padding-top:12px;max-width:80ch}
         <rect class="frf" x="32" y="56" width="10" height="14" opacity=".8"/><rect class="frf" x="50" y="56" width="10" height="14" opacity=".8"/><rect class="frf" x="68" y="56" width="10" height="14" opacity=".8"/>
         <text class="s" x="55" y="100" text-anchor="middle">Tx ant ×3</text></a>
       <a href="#tx"><rect class="blk rf" x="120" y="40" width="100" height="46" rx="6"/><text class="t" x="170" y="60" text-anchor="middle">PA + detector</text><text class="s" x="170" y="76" text-anchor="middle">12–14 dBm</text></a>
-      <a href="#tx"><rect class="blk rf" x="240" y="40" width="100" height="46" rx="6"/><text class="t" x="290" y="60" text-anchor="middle">Phase shifter</text><text class="s" x="290" y="76" text-anchor="middle">6-bit · BPM</text></a>
+      <a href="#rotator"><rect class="blk rf" x="240" y="40" width="100" height="46" rx="6"/><text class="t" x="290" y="60" text-anchor="middle">Phase rotator</text><text class="s" x="290" y="76" text-anchor="middle">I/Q VM · DACs</text></a>
       <a href="#infra"><rect class="blk lo" x="480" y="40" width="100" height="46" rx="6"/><text class="t" x="530" y="60" text-anchor="middle">Ref XTAL</text><text class="s" x="530" y="76" text-anchor="middle">40 MHz</text></a>
       <a href="#bist"><rect class="blk dig" x="720" y="40" width="100" height="46" rx="6"/><text class="t" x="770" y="60" text-anchor="middle">Aux ADC</text><text class="s" x="770" y="76" text-anchor="middle">PD · temp · V</text></a>
 
@@ -216,7 +218,7 @@ footer{font-size:12.5px;color:var(--muted);padding-top:12px;max-width:80ch}
         <rect class="frf" x="30" y="296" width="8" height="14" opacity=".8"/><rect class="frf" x="44" y="296" width="8" height="14" opacity=".8"/><rect class="frf" x="58" y="296" width="8" height="14" opacity=".8"/><rect class="frf" x="72" y="296" width="8" height="14" opacity=".8"/>
         <text class="s" x="55" y="340" text-anchor="middle">Rx ant ×4</text></a>
       <a href="#rx"><rect class="blk rf" x="120" y="280" width="100" height="46" rx="6"/><text class="t" x="170" y="300" text-anchor="middle">LNA</text><text class="s" x="170" y="316" text-anchor="middle">NF 10–14 dB</text></a>
-      <a href="#rx"><rect class="blk rf" x="240" y="280" width="100" height="46" rx="6"/><text class="t" x="290" y="300" text-anchor="middle">I/Q mixer</text><text class="s" x="290" y="316" text-anchor="middle">RF → IF</text></a>
+      <a href="#iq"><rect class="blk rf" x="240" y="280" width="100" height="46" rx="6"/><text class="t" x="290" y="300" text-anchor="middle">I/Q mixer</text><text class="s" x="290" y="316" text-anchor="middle">RF → IF</text></a>
       <a href="#if"><rect class="blk if" x="360" y="280" width="100" height="46" rx="6"/><text class="t" x="410" y="300" text-anchor="middle">HPF·VGA·AAF</text><text class="s" x="410" y="316" text-anchor="middle">24–48 dB gain</text></a>
       <a href="#adc"><rect class="blk if" x="480" y="280" width="100" height="46" rx="6"/><text class="t" x="530" y="300" text-anchor="middle">ΣΔ ADC</text><text class="s" x="530" y="316" text-anchor="middle">12–16 bit</text></a>
       <a href="#dfe"><rect class="blk dig" x="600" y="280" width="100" height="46" rx="6"/><text class="t" x="650" y="300" text-anchor="middle">DFE</text><text class="s" x="650" y="316" text-anchor="middle">decim · DC</text></a>
@@ -238,7 +240,6 @@ footer{font-size:12.5px;color:var(--muted);padding-top:12px;max-width:80ch}
   </figure>
 </section>
 
-<!-- 01 -->
 <section id="spec">
   <div class="sec-head"><span class="num">01</span><h2>System specification: start here</h2></div>
   <p>Everything downstream comes from a few top-level numbers: maximum range, range resolution, maximum and resolvable velocity, field of view and angular resolution, update rate, and the smallest target that must be detected at that range. Pick the sensor class first.</p>
@@ -268,7 +269,6 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   <p>Plug your own numbers into these with the <a href="#calc">calculator</a>.</p>
 </section>
 
-<!-- 02 -->
 <section id="antenna">
   <div class="sec-head"><span class="num">02</span><h2>Antenna, MIMO array and chip-to-antenna transition</h2><span class="domain rf">RF · 77 GHz</span></div>
   <p>At 77 GHz, λ₀ = 3.9 mm, so λ/2 is about 1.95 mm. That makes a 12- to 192-element virtual array fit in a palm-sized module. The antenna sets gain, beamwidth, sidelobes and, through the MIMO layout, angular resolution. For long-range designs it is usually the biggest factor in the link budget.</p>
@@ -322,7 +322,6 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   <div class="note"><b>Design tip.</b> The PCB patch array's centre frequency moves with εr and etch tolerance. Simulate over the ±tolerance corners in HFSS or CST, and use the on-chip Rx gain/phase calibration to absorb the channel mismatch that remains.</div>
 </section>
 
-<!-- 03 -->
 <section id="tx">
   <div class="sec-head"><span class="num">03</span><h2>Transmitter: phase shifter, PA, power control</h2><span class="domain rf">RF · 77 GHz</span></div>
   <p>Each Tx channel takes the 77 GHz LO, applies a programmable phase (for BPM/DDMA MIMO coding and beam steering), amplifies it, and sends it to the antenna. The coupler and power detector at the output feed the monitoring ADC.</p>
@@ -333,7 +332,7 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
       <tr><td></td><td>Power control range / step</td><td class="v">0 to −26 dB back-off / 1 dB (temperature compensation, EIRP limit)</td></tr>
       <tr><td></td><td>Output match</td><td class="v">RL &lt; −10 dB over 76–81 GHz</td></tr>
       <tr><td></td><td>Drift over −40…+125 °C Tj</td><td class="v">≈ ±1.5–2 dB uncompensated</td></tr>
-      <tr><td>Phase shifter</td><td>Resolution</td><td class="v">6 bit (5.625°) vector-modulator type</td></tr>
+      <tr><td>Phase shifter</td><td>Resolution</td><td class="v">6 bit (5.625°) vector modulator, see <a href="#rotator">phase rotator</a></td></tr>
       <tr><td></td><td>Switching speed</td><td class="v">Chirp-to-chirp (&lt; 1 µs) for DDMA/BPM</td></tr>
       <tr><td></td><td>RMS phase / amplitude error</td><td class="v">&lt; 3° / &lt; 0.5 dB after calibration</td></tr>
       <tr><td>Binary phase modulation</td><td>0/180° per chirp</td><td class="v">For BPM-MIMO (Tx separation without losing SNR)</td></tr>
@@ -350,9 +349,113 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   <div class="note"><b>Regulatory ceiling.</b> ETSI EN 301 091 / EN 303 396 and FCC Part 95M limit peak EIRP to about 55 dBm, and also set mean-EIRP and out-of-band limits. With several Tx beamforming, P_t + G_ant + 20log N_tx can reach that limit, so check it with all Tx on.</div>
 </section>
 
-<!-- 04 -->
+<!-- rotator -->
+<section id="rotator">
+  <div class="sec-head"><span class="num">04</span><h2>Phase rotator and its control DACs</h2><span class="domain rf">RF · 77 GHz</span><span class="domain dig">DAC</span></div>
+  <p>Each Tx channel needs a fast, fine-grained phase control, used for BPM/DDMA MIMO codes, beam steering, and calibrating out channel mismatch. At 77 GHz the usual solution is an active <b>vector-modulator phase rotator</b>. It splits the LO into quadrature components I (0°) and Q (90°), weights each with a signed variable-gain stage set by a current DAC, and sums them:</p>
+<div class="eq">v_out = a_I · LO_I + a_Q · LO_Q = A·cos θ · cos ωt + A·sin θ · sin ωt = A · cos(ωt − θ)
+a_I = round(M · cos θ_k)    a_Q = round(M · sin θ_k)    M = 2^(b−1) − 1  (sign-magnitude DAC)
+θ_k = k · 360° / 2^n        n = phase bits (e.g. 6 → 5.625° step)</div>
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 780 300" role="img" aria-label="Vector-modulator phase rotator: the LO goes into a quadrature generator, which gives I and Q. Each drives a signed Gilbert-cell VGA whose weight is set by a DAC. A phase LUT converts the phase code into I and Q DAC codes. The two weighted currents are summed and drive the PA driver.">
+      <defs><marker id="ah3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <rect class="blk lo" x="20" y="125" width="90" height="46" rx="6"/><text class="t" x="65" y="145" text-anchor="middle">LO in</text><text class="s" x="65" y="161" text-anchor="middle">76–81 GHz</text>
+      <rect class="blk rf" x="140" y="115" width="120" height="66" rx="6"/><text class="t" x="200" y="137" text-anchor="middle">Quadrature gen</text><text class="s" x="200" y="153" text-anchor="middle">hybrid / PPF</text><text class="s" x="200" y="168" text-anchor="middle">I 0° · Q 90°</text>
+      <rect class="blk rf" x="300" y="80" width="110" height="46" rx="6"/><text class="t" x="355" y="100" text-anchor="middle">VGA_I</text><text class="s" x="355" y="116" text-anchor="middle">Gilbert, ± sign</text>
+      <rect class="blk rf" x="300" y="170" width="110" height="46" rx="6"/><text class="t" x="355" y="190" text-anchor="middle">VGA_Q</text><text class="s" x="355" y="206" text-anchor="middle">Gilbert, ± sign</text>
+      <rect class="blk dig" x="300" y="12" width="110" height="40" rx="6"/><text class="t" x="355" y="30" text-anchor="middle">DAC_I</text><text class="s" x="355" y="44" text-anchor="middle">sign + 6–7 b</text>
+      <rect class="blk dig" x="300" y="248" width="110" height="40" rx="6"/><text class="t" x="355" y="266" text-anchor="middle">DAC_Q</text><text class="s" x="355" y="280" text-anchor="middle">sign + 6–7 b</text>
+      <rect class="blk dig" x="620" y="12" width="130" height="40" rx="6"/><text class="t" x="685" y="30" text-anchor="middle">Phase LUT</text><text class="s" x="685" y="44" text-anchor="middle">code → (a_I, a_Q)</text>
+      <circle cx="470" cy="148" r="18" fill="var(--surface)" stroke="var(--rf)" stroke-width="1.6"/><text class="t" x="470" y="153" text-anchor="middle">Σ</text>
+      <rect class="blk rf" x="520" y="125" width="100" height="46" rx="6"/><text class="t" x="570" y="145" text-anchor="middle">PA driver</text><text class="s" x="570" y="161" text-anchor="middle">→ PA</text>
+      <g color="var(--lo)"><line class="w" stroke="var(--lo)" x1="110" y1="148" x2="138" y2="148" marker-end="url(#ah3)"/></g>
+      <g color="var(--rf)">
+        <path class="w" stroke="var(--rf)" d="M260,135 H280 V103 H298" marker-end="url(#ah3)"/>
+        <path class="w" stroke="var(--rf)" d="M260,161 H280 V193 H298" marker-end="url(#ah3)"/>
+        <path class="w" stroke="var(--rf)" d="M410,103 H470 V128" marker-end="url(#ah3)"/>
+        <path class="w" stroke="var(--rf)" d="M410,193 H470 V168" marker-end="url(#ah3)"/>
+        <line class="w" stroke="var(--rf)" x1="488" y1="148" x2="518" y2="148" marker-end="url(#ah3)"/>
+        <line class="w" stroke="var(--rf)" x1="620" y1="148" x2="690" y2="148" marker-end="url(#ah3)"/>
+      </g>
+      <g color="var(--dig)">
+        <line class="w" stroke="var(--dig)" stroke-dasharray="5 3" x1="355" y1="52" x2="355" y2="78" marker-end="url(#ah3)"/>
+        <line class="w" stroke="var(--dig)" stroke-dasharray="5 3" x1="355" y1="248" x2="355" y2="218" marker-end="url(#ah3)"/>
+        <line class="w" stroke="var(--dig)" stroke-dasharray="5 3" x1="620" y1="32" x2="412" y2="32" marker-end="url(#ah3)"/>
+        <path class="w" stroke="var(--dig)" stroke-dasharray="5 3" d="M750,32 H765 V268 H412" marker-end="url(#ah3)"/>
+      </g>
+      <text class="lbl" x="420" y="96">a_I = A·cos θ</text>
+      <text class="lbl" x="420" y="210">a_Q = A·sin θ</text>
+      <text class="lbl" x="700" y="140">to PA</text>
+      <text class="lbl" x="515" y="26">phase code + cal</text>
+    </svg>
+    </div>
+    <figcaption>Vector-modulator phase rotator. The LUT turns a phase code into a signed (I, Q) DAC pair. Each DAC sets the tail current of a Gilbert-cell VGA, and the sign bit swaps the differential polarity, which gives all four quadrants. The same structure can apply BPM (add 180° by flipping both signs) and a fine gain trim (scale A).</figcaption>
+  </figure>
+
+  <h3>Rotator architectures compared</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Type</th><th>How</th><th>Pros</th><th>Cons</th></tr></thead>
+    <tbody>
+      <tr><td>Active vector modulator (Cartesian)</td><td>I/Q + two signed VGAs + current DACs</td><td>Continuous 360°, fast code switching (&lt; 100 ns), small, gain as well as phase, calibratable by LUT</td><td>Needs accurate quadrature, adds noise and power, amplitude varies with code unless the LUT corrects it</td></tr>
+      <tr><td>Switched-type (HPF/LPF or delay lines)</td><td>Cascaded 180/90/45/22.5… bits switched in</td><td>Passive, linear, no DC power</td><td>6–10 dB loss at 77 GHz, larger area, phase error per bit</td></tr>
+      <tr><td>Reflection-type (RTPS)</td><td>Quadrature hybrid terminated by varactor loads</td><td>Low power, analog control</td><td>&lt; 180° per stage, loss varies with setting, needs a tuning DAC</td></tr>
+      <tr><td>LO-path rotator (before ×4)</td><td>Rotate the 20 GHz LO per Tx; ×4 multiplies the phase</td><td>Rotation at a lower frequency: easier quadrature, only 90° of range is needed</td><td>Every phase error is also ×4; a separate LO path per Tx</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Rotator and DAC specification</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Parameter</th><th>Typical target</th><th>Why / driven by</th></tr></thead>
+    <tbody>
+      <tr><td>Phase resolution</td><td class="v">6 bit (5.625°), some 7–8 bit</td><td>BPM needs 180°, DDMA needs fine slow-time phase ramps, beam steering needs ≈ 1–5°</td></tr>
+      <tr><td>RMS phase error (after LUT)</td><td class="v">&lt; 2–3°</td><td>Sidelobes in DDMA separation and beamforming</td></tr>
+      <tr><td>Amplitude variation over codes</td><td class="v">&lt; 0.5 dB p-p</td><td>AM-with-phase leaks into DDMA as spurious Doppler lines</td></tr>
+      <tr><td>I/Q DAC resolution</td><td class="v">sign + 6–7 bit per axis</td><td>Quantisation of cos/sin must be finer than the phase step (see explorer below)</td></tr>
+      <tr><td>DAC DNL / INL</td><td class="v">&lt; 0.5 LSB / &lt; 1 LSB</td><td>Monotonic weights; the LUT absorbs static INL</td></tr>
+      <tr><td>Code update / settling</td><td class="v">&lt; 100–200 ns, inside chirp idle time</td><td>Chirp-to-chirp code changes for BPM/DDMA</td></tr>
+      <tr><td>Glitch energy</td><td class="v">Small, update synchronised to chirp reset</td><td>Glitches during the ramp show up as spurs</td></tr>
+      <tr><td>Quadrature input error</td><td class="v">&lt; ±5° / ±0.5 dB raw</td><td>Sets how much the LUT has to correct (see next section)</td></tr>
+      <tr><td>Rotator gain / NF</td><td class="v">0–5 dB / not critical in Tx</td><td>PA driver headroom; Tx noise mostly irrelevant</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>The DAC implementation</h3>
+  <ul>
+    <li><b>Current-steering, sign-magnitude:</b> binary-weighted LSBs plus unary (thermometer) MSBs for monotonicity. The sign bit switches the Gilbert cell's LO polarity, so the DAC itself is unipolar.</li>
+    <li><b>Output:</b> the DAC current is the VGA tail current (or its gain-control bias). Keep the cascode headroom, and match the unit cells, placed in common-centroid layout.</li>
+    <li><b>Linearise in the LUT, not in analog:</b> the VGA's gain vs. current is not linear. Measure the real (a_I, a_Q) → phase/amplitude map with the loopback BIST, and store the inverse as the LUT.</li>
+    <li><b>Timing:</b> double-buffer the DAC registers and update them on the timing engine's chirp-start strobe, so every Tx switches in the same idle window.</li>
+  </ul>
+
+  <h3>Phase-rotator error explorer</h3>
+  <p>This models a 6-bit rotator (64 codes) with your DAC resolution and quadrature errors. "Raw" uses ideal cos/sin codes. "LUT-corrected" pre-distorts the codes to cancel the gain/phase imbalance, leaving only quantisation error.</p>
+  <div class="calc">
+    <div class="panel">
+      <form class="fields" id="rot" autocomplete="off">
+        <label for="rb">DAC bits (incl. sign)<input id="rb" type="number" min="3" max="10" step="1" value="7"></label>
+        <label for="rg">I/Q gain error (dB)<input id="rg" type="number" step="0.1" value="0.8"></label>
+        <label for="rp">Quadrature error (°)<input id="rp" type="number" step="0.5" value="6"></label>
+        <label for="rc">Codes<select id="rc"><option value="raw">Raw cos/sin</option><option value="cal">LUT-corrected</option></select></label>
+      </form>
+      <div class="out" style="margin-top:14px">
+        <div class="row"><span>RMS phase error</span><span id="r_rms"></span></div>
+        <div class="row"><span>Peak phase error</span><span id="r_pk"></span></div>
+        <div class="row"><span>Amplitude ripple (p-p)</span><span id="r_amp"></span></div>
+        <div class="row"><span>Phase step (ideal)</span><span>5.625°</span></div>
+      </div>
+      <div class="status" id="r_stat"></div>
+    </div>
+    <div class="panel">
+      <h3>Constellation (64 codes)</h3>
+      <svg id="r_plot" viewBox="0 0 300 300" role="img" aria-label="Constellation of the 64 rotator output vectors, with the ideal circle for reference." style="display:block;width:100%;max-width:320px;height:auto;margin:0 auto;color:var(--ink)"></svg>
+      <p style="font-size:13px;color:var(--muted);margin:6px 0 0">The grey circle is the ideal. Dots are the actual outputs: raw codes with imbalance form an ellipse, and the LUT pulls them back onto the circle.</p>
+    </div>
+  </div>
+</section>
+
 <section id="lo">
-  <div class="sec-head"><span class="num">04</span><h2>Chirp synthesis: the upconversion path</h2><span class="domain lo">LO · 20 → 77 GHz</span></div>
+  <div class="sec-head"><span class="num">05</span><h2>Chirp synthesis: the upconversion path</h2><span class="domain lo">LO · 20 → 77 GHz</span></div>
   <p>FMCW radar has no separate upconversion mixer. The transmitted signal is the LO. A fractional-N PLL with a ramp generator (sigma-delta modulated divider) sweeps a VCO at about 19–20.25 GHz, and a frequency multiplier (×4, or ×2 from a ~38 GHz VCO) brings it up to 76–81 GHz. The same LO then drives every Rx mixer. This sharing is why close-in phase noise largely cancels at short range (range correlation).</p>
   <div class="tbl"><table>
     <thead><tr><th>Block</th><th>Parameter</th><th>Typical target</th></tr></thead>
@@ -377,9 +480,8 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   </ul>
 </section>
 
-<!-- 05 -->
 <section id="rx">
-  <div class="sec-head"><span class="num">05</span><h2>Receiver front end and I/Q downconversion</h2><span class="domain rf">RF → IF</span></div>
+  <div class="sec-head"><span class="num">06</span><h2>Receiver front end and I/Q downconversion</h2><span class="domain rf">RF → IF</span></div>
   <p>The echo, delayed by τ = 2R/c, mixes with the chirp being transmitted at that moment. Their difference is a constant beat frequency f_b = S·τ, plus a Doppler term f_d = 2v/λ. This "stretch processing" turns a 1–4 GHz sweep into a DC–20 MHz IF signal.</p>
   <figure>
     <div class="fig">
@@ -422,9 +524,45 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   <p>A real mixer folds positive and negative IF on top of each other, so noise from the image band adds about 3 dB. It also cannot tell interference or folded spurs apart from real targets. A complex I/Q baseband keeps the full F_s as usable IF bandwidth, rejects that noise, and makes it much easier to detect radar-to-radar interference. The cost is twice the IF and ADC hardware per channel.</p>
 </section>
 
-<!-- 06 -->
+<!-- iq -->
+<section id="iq">
+  <div class="sec-head"><span class="num">07</span><h2>I/Q generation, I/Q mixers and imbalance</h2><span class="domain rf">RF · 77 GHz</span><span class="domain if">IF</span></div>
+  <p>A radar MMIC needs quadrature LO signals in three places: the <b>Rx complex mixers</b> (I and Q LO for each Rx), the <b>Tx phase rotator</b> (I and Q inputs to the vector modulator), and the <b>loopback SSB modulator</b> used by BIST. They all have the same problem: making two copies of a 76–81 GHz signal exactly 90° apart and equal in amplitude, over a 5 GHz band and −40…150 °C.</p>
+
+  <h3>Generate quadrature at the final frequency</h3>
+  <p>The LO is made at about 20 GHz and multiplied ×4, and the multiplier multiplies <i>phase</i> as well. A 90° I/Q split made at 20 GHz becomes 360° after ×4, which is useless. Quadrature therefore has to be created <b>after</b> the multiplier, at 77 GHz. The one exception is a deliberate 22.5° split at 20 GHz, which ×4 turns into 90°, but then every phase error is also multiplied by four.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Method at 77 GHz</th><th>Typical accuracy</th><th>Loss / area</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Lumped / transformer quadrature hybrid</td><td class="v">±0.3–0.5 dB, ±2–4° over 76–81 GHz</td><td class="v">1–2 dB · small</td><td>Most common. Coupled-coil transformer with capacitors; broadband, differential</td></tr>
+      <tr><td>Coupled-line (Lange / branch-line) hybrid</td><td class="v">±0.5 dB, ±3–5°</td><td class="v">1–3 dB · λ/4 ≈ 0.5 mm on-chip</td><td>Well understood, larger; branch-line is narrowband</td></tr>
+      <tr><td>RC-CR polyphase filter (1–3 stages)</td><td class="v">±0.5 dB, ±2–5° (depends on stages)</td><td class="v">3 dB per stage · needs buffers</td><td>Sensitive to R/C spread; multi-stage for bandwidth; buffers cost power</td></tr>
+      <tr><td>÷2 divider from 2× LO</td><td class="v">Inherently 90°</td><td class="v">needs a 154–162 GHz source</td><td>Not practical here</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Rx I/Q mixer design</h3>
+  <ul>
+    <li><b>Passive (switching) mixers</b> in CMOS: best linearity and lowest flicker noise, which matters because near targets sit at low IF. They need a large, well-defined LO swing, so the LO buffers must be strong.</li>
+    <li><b>Active Gilbert mixers</b> (common in SiGe): give conversion gain, need less LO drive, but have more flicker noise and lower linearity.</li>
+    <li><b>LO distribution to 4 Rx × (I, Q):</b> use a symmetric H-tree or matched LO buffers so that the channel-to-channel phase error is design-matched, not just calibrated. LO leakage into the RF port creates DC offset (self-mixing); the HPF removes it.</li>
+    <li><b>After the mixer:</b> I and Q each need their own IF chain and ADC, matched in gain and group delay, so baseband mismatch adds to the RF quadrature error.</li>
+  </ul>
+
+  <h3>What imbalance does, and how it's corrected</h3>
+<div class="eq">Model:  I = cos(ωt)          Q = g · sin(ωt + φ)        (g: gain ratio, φ: quadrature error)
+IRR   = (1 + g² + 2g·cos φ) / (1 + g² − 2g·cos φ)
+        g = 0.5 dB, φ = 3°  →  IRR ≈ 28 dB        g = 0.2 dB, φ = 1° → IRR ≈ 37 dB
+DFE correction:  I' = I      Q' = (Q/g − I·sin φ) / cos φ      (g, φ from loopback SSB test)</div>
+  <ul>
+    <li><b>Rx:</b> the image of each target appears at −f_b. With an up-chirp and complex baseband, real targets sit on positive beat frequencies, so the image mostly falls in the half of the spectrum the processing ignores. The real costs are an image of strong clutter and interference in the negative half, which confuses interference detection and makes it harder to reuse that band. About 25–30 dB IRR analog, plus DFE correction to 40–50 dB, is usually enough.</li>
+    <li><b>Tx rotator:</b> quadrature error there converts directly into phase and amplitude error per code. That is what the LUT in the <a href="#rotator">phase rotator section</a> cancels, so the Tx side is the more demanding user of I/Q accuracy.</li>
+    <li><b>Measurement:</b> the loopback SSB tone at +f_m and its image at −f_m give g and φ in a single capture (see the BIST page).</li>
+  </ul>
+</section>
+
 <section id="if">
-  <div class="sec-head"><span class="num">06</span><h2>IF conditioning: HPF, VGA, anti-alias filter</h2><span class="domain if">IF · DC–20 MHz</span></div>
+  <div class="sec-head"><span class="num">08</span><h2>IF conditioning: HPF, VGA, anti-alias filter</h2><span class="domain if">IF · DC–20 MHz</span></div>
   <p>Echo power falls as R⁻⁴, and range maps linearly to beat frequency. A second-order high-pass filter (+40 dB/decade) therefore flattens the IF spectrum: it attenuates the strong close-in clutter and leakage, so distant echoes use more of the ADC's dynamic range. The VGA then sets the level, and the anti-alias filter bounds noise and aliasing.</p>
   <div class="tbl"><table>
     <thead><tr><th>Block</th><th>Parameter</th><th>Typical target</th></tr></thead>
@@ -440,9 +578,8 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   </table></div>
 </section>
 
-<!-- 07 -->
 <section id="adc">
-  <div class="sec-head"><span class="num">07</span><h2>ADC</h2><span class="domain if">Analog → Digital</span></div>
+  <div class="sec-head"><span class="num">09</span><h2>ADC</h2><span class="domain if">Analog → Digital</span></div>
   <p>Most radar MMICs use continuous-time sigma-delta (CT-ΣΔ) ADCs. Their input is resistive, the anti-aliasing is inherent, and they reach high dynamic range at a modest output rate. Time-interleaved or pipelined SAR ADCs appear where high IF bandwidth matters more (very fast chirps, short range).</p>
   <div class="tbl"><table>
     <thead><tr><th>Parameter</th><th>Typical target</th><th>Why</th></tr></thead>
@@ -458,9 +595,8 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   </table></div>
 </section>
 
-<!-- 08 -->
 <section id="dfe">
-  <div class="sec-head"><span class="num">08</span><h2>Digital front end (DFE)</h2><span class="domain dig">Digital</span></div>
+  <div class="sec-head"><span class="num">10</span><h2>Digital front end (DFE)</h2><span class="domain dig">Digital</span></div>
   <ul>
     <li><b>Decimation chain:</b> the ΣΔ modulator runs at a few hundred MHz. CIC and half-band FIR stages bring it down to the programmed output rate and add the final channel filtering.</li>
     <li><b>DC and I/Q correction:</b> remove static DC offset and apply the gain/phase imbalance coefficients from calibration.</li>
@@ -470,9 +606,8 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   </ul>
 </section>
 
-<!-- 09 -->
 <section id="dsp">
-  <div class="sec-head"><span class="num">09</span><h2>Radar processing: radar cube to object list</h2><span class="domain dig">Digital</span></div>
+  <div class="sec-head"><span class="num">11</span><h2>Radar processing: radar cube to object list</h2><span class="domain dig">Digital</span></div>
   <ol class="steps">
     <li><b>Range FFT</b> (per chirp, per Rx, windowed): runs on the fly in the hardware accelerator while the next chirp is being sampled.</li>
     <li><b>Doppler FFT</b> (per range bin, across chirps): runs after the frame. Add TDM Doppler compensation or DDMA demultiplexing here.</li>
@@ -495,9 +630,8 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   <p>The on-chip memory often limits the chirp configuration before the RF does. Compression (block floating point) or processing range bins as they arrive keeps the cube small enough.</p>
 </section>
 
-<!-- 10 -->
 <section id="bist">
-  <div class="sec-head"><span class="num">10</span><h2>Monitoring and built-in self-test</h2><span class="domain dig">Safety · ASIL-B</span></div>
+  <div class="sec-head"><span class="num">12</span><h2>Monitoring and built-in self-test</h2><span class="domain dig">Safety · ASIL-B</span></div>
   <p>A slow SAR auxiliary ADC (10–12 bit, behind an analog mux) reads the power detectors, temperature sensors and supply dividers. Loopback paths inject known signals through the real Rx chain and main ADCs. The RF control CPU runs these monitors in the idle time between frames. The total must fit in the FTTI from the system safety concept.</p>
   <p><b>Deep dive:</b> <a href="radar77-bist-loopback.html">Radar BIST &amp; Loopback</a> covers stimulus generation, loopback routing, on-chip measurement, trim feedback and instrument-free production test.</p>
   <div class="cols">
@@ -527,15 +661,125 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   </div>
 </section>
 
-<!-- 11 -->
+<section id="power">
+  <div class="sec-head"><span class="num">13</span><h2>Power management: supply tree and LDOs</h2><span class="domain lo">Supply</span></div>
+  <p>A radar MMIC is a mixed-signal chip with very different loads: a 20 GHz VCO where microvolts of supply noise become FM, PAs that switch hundreds of mA on and off each chirp in TDM, IF and ADC circuits that turn supply ripple directly into IF spurs, and bursty digital FFT loads. The standard answer is <b>efficient bucks off-chip, quiet LDOs on-chip, one LDO per sensitive domain</b>, so that no two noise-sensitive blocks share a regulator.</p>
+  <figure>
+    <div class="fig">
+    <svg viewBox="0 0 820 360" role="img" aria-label="Supply tree: a PMIC with buck converters makes 3.3, 1.8, 1.2 and 1.0 volt rails. The 1.8 volt rail feeds on-chip LDOs for the VCO, PLL and LO, IF and ADC, and bandgap and aux. The 1.0 volt rail feeds the RF LDO for PA, LNA and mixers. 1.2 volts feeds the digital core and 3.3 volts the IO.">
+      <defs><marker id="ah4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
+      <text class="lbl" x="20" y="18">OFF-CHIP</text>
+      <text class="lbl" x="250" y="18">ON-CHIP LDOs</text>
+      <text class="lbl" x="470" y="18">DOMAIN · KEY SPEC</text>
+      <rect class="blk dig" x="20" y="30" width="130" height="310" rx="6"/>
+      <text class="t" x="85" y="60" text-anchor="middle">PMIC</text>
+      <text class="s" x="85" y="78" text-anchor="middle">12 V battery in</text>
+      <text class="s" x="85" y="94" text-anchor="middle">bucks ≈ 2 MHz</text>
+      <text class="s" x="85" y="110" text-anchor="middle">UV/OV · watchdog</text>
+      <text class="s" x="85" y="126" text-anchor="middle">ASIL-B</text>
+      <g color="var(--lo)" stroke="var(--lo)">
+        <line class="w" x1="150" y1="48" x2="468" y2="48" marker-end="url(#ah4)"/>
+        <line class="w" x1="150" y1="163" x2="220" y2="163"/>
+        <line class="w" x1="220" y1="95" x2="220" y2="230"/>
+        <line class="w" x1="220" y1="95" x2="248" y2="95" marker-end="url(#ah4)"/>
+        <line class="w" x1="220" y1="140" x2="248" y2="140" marker-end="url(#ah4)"/>
+        <line class="w" x1="220" y1="185" x2="248" y2="185" marker-end="url(#ah4)"/>
+        <line class="w" x1="220" y1="230" x2="248" y2="230" marker-end="url(#ah4)"/>
+        <line class="w" x1="150" y1="278" x2="248" y2="278" marker-end="url(#ah4)"/>
+        <line class="w" x1="150" y1="322" x2="468" y2="322" marker-end="url(#ah4)"/>
+      </g>
+      <text class="lbl" x="158" y="42">3.3 V</text>
+      <text class="lbl" x="158" y="157">1.8 V</text>
+      <text class="lbl" x="158" y="272">1.0 V</text>
+      <text class="lbl" x="158" y="316">1.2 V</text>
+      <rect class="blk lo" x="250" y="76" width="140" height="38" rx="6"/><text class="t" x="320" y="100" text-anchor="middle">VCO LDO</text>
+      <rect class="blk lo" x="250" y="121" width="140" height="38" rx="6"/><text class="t" x="320" y="145" text-anchor="middle">PLL / LO LDO</text>
+      <rect class="blk if" x="250" y="166" width="140" height="38" rx="6"/><text class="t" x="320" y="190" text-anchor="middle">IF / ADC LDO</text>
+      <rect class="blk dig" x="250" y="211" width="140" height="38" rx="6"/><text class="t" x="320" y="235" text-anchor="middle">BG / aux LDO</text>
+      <rect class="blk rf" x="250" y="259" width="140" height="38" rx="6"/><text class="t" x="320" y="283" text-anchor="middle">RF LDO (or direct)</text>
+      <g color="currentColor" stroke="currentColor">
+        <line class="w" x1="390" y1="95" x2="468" y2="95" marker-end="url(#ah4)"/>
+        <line class="w" x1="390" y1="140" x2="468" y2="140" marker-end="url(#ah4)"/>
+        <line class="w" x1="390" y1="185" x2="468" y2="185" marker-end="url(#ah4)"/>
+        <line class="w" x1="390" y1="230" x2="468" y2="230" marker-end="url(#ah4)"/>
+        <line class="w" x1="390" y1="278" x2="468" y2="278" marker-end="url(#ah4)"/>
+      </g>
+      <text class="t" x="474" y="52">IO, eFuse program, flash IF</text>
+      <text class="t" x="474" y="92">VCO</text><text class="s" x="474" y="107">lowest noise · pushing → FM</text>
+      <text class="t" x="474" y="137">PFD/CP, dividers, ×4, LO buffers</text><text class="s" x="474" y="152">PSRR at buck frequency</text>
+      <text class="t" x="474" y="182">IF chain, ADC (+ ref buffer)</text><text class="s" x="474" y="197">ripple → IF spurs</text>
+      <text class="t" x="474" y="227">Bandgap, aux ADC, sensors</text><text class="s" x="474" y="242">independent of monitored rails</text>
+      <text class="t" x="474" y="275">PA, LNA, mixers</text><text class="s" x="474" y="290">load steps with Tx on/off</text>
+      <text class="t" x="474" y="326">Digital core, DSP, HWA, SRAM</text>
+    </svg>
+    </div>
+    <figcaption>A typical supply tree for a single-chip 3Tx/4Rx radar. Amber lines are PMIC rails. Each on-chip LDO isolates one noise-sensitive domain. The aux ADC monitors every LDO output for undervoltage and overvoltage, which is an ISO 26262 safety mechanism. Many parts accept an external low-noise 1.0 V RF rail directly and bypass the internal RF LDO.</figcaption>
+  </figure>
+
+  <h3>LDO specification per domain (typical targets)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Domain</th><th>V_out / I_load</th><th>Output noise</th><th>PSRR</th><th>Transient</th></tr></thead>
+    <tbody>
+      <tr><td>VCO</td><td class="v">1.2–1.4 V / 10–30 mA</td><td class="v">&lt; 10 nV/√Hz @ 100 kHz–1 MHz</td><td class="v">&gt; 60 dB @ 1 MHz, &gt; 40 dB @ 10 MHz</td><td class="v">static load; low droop on band switch</td></tr>
+      <tr><td>PLL / CP / ×4 / LO buffers</td><td class="v">1.0–1.2 V / 30–100 mA</td><td class="v">&lt; 20 nV/√Hz</td><td class="v">&gt; 50 dB @ 1 MHz</td><td class="v">LO buffer enable steps</td></tr>
+      <tr><td>PA / Tx (per Tx or shared)</td><td class="v">1.0 V / 100–250 mA per Tx</td><td class="v">&lt; 50 nV/√Hz</td><td class="v">&gt; 40 dB @ 1 MHz</td><td class="v">±150–250 mA steps in &lt; 100 ns; &lt; 10 mV droop, settled in &lt; 1 µs</td></tr>
+      <tr><td>LNA / mixer (Rx RF)</td><td class="v">1.0 V / 20–60 mA per Rx</td><td class="v">&lt; 30 nV/√Hz</td><td class="v">&gt; 50 dB @ 1 MHz</td><td class="v">static</td></tr>
+      <tr><td>IF chain + ADC</td><td class="v">1.2–1.5 V / 20–50 mA per Rx</td><td class="v">in-band noise adds to the IF noise floor</td><td class="v">&gt; 60 dB over DC–20 MHz</td><td class="v">VGA gain switching</td></tr>
+      <tr><td>Bandgap / aux</td><td class="v">1.2 V / &lt; 5 mA</td><td class="v">low 1/f noise</td><td class="v">&gt; 60 dB</td><td class="v">static</td></tr>
+      <tr><td>Digital core</td><td class="v">1.0–1.2 V / 0.3–1 A</td><td class="v">not critical</td><td class="v">—</td><td class="v">FFT bursts; usually PMIC direct or digital LDO</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>How supply noise turns into radar errors</h3>
+<div class="eq">VCO pushing:     Δf_RF = 4 · K_push · v_n                  (×4 multiplier)
+Ripple spur:     L_spur ≈ 20log( 4·K_push·V_rip / (2·f_rip) )  [dBc]  (outside PLL bandwidth)
+  K_push = 20 MHz/V, V_rip = 10 µV @ 2 MHz  →  800 Hz deviation  →  ≈ −74 dBc sidebands
+PA supply AM/PM: Δφ_Tx = K_AMPM · ΔV_PA       (e.g. 10°/V × 10 mV droop = 0.1°)</div>
+  <ul>
+    <li><b>Inside the PLL loop bandwidth</b> (≈ 1–3 MHz) the loop suppresses VCO pushing. Outside it, only the LDO's PSRR helps. Buck converters switch at about 2 MHz, right at that edge, so VCO LDO PSRR at 1–10 MHz is the critical spec.</li>
+    <li><b>TDM Tx switching</b> steps the PA current every chirp. If the LDO hasn't settled when the ADC window opens, each Tx sees a slightly different phase and gain, which looks like a MIMO calibration error that changes with the chirp timing. Size the idle time and the LDO's loop bandwidth together.</li>
+    <li><b>IF/ADC rails:</b> ripple at f_rip appears directly as a tone at f_rip in every chirp: a fixed ghost at the range R = f_rip·c/(2S). Keep buck frequencies out of the used IF band, or sync the buck to the chirp so its harmonics fall in known bins that processing can blank.</li>
+    <li><b>Spread-spectrum bucks</b> trade a clean spur for a raised noise floor, which is often worse for radar than a synchronised, known spur.</li>
+  </ul>
+
+  <h3>LDO design choices</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Topology</th><th>Strength</th><th>Weakness</th><th>Best for</th></tr></thead>
+    <tbody>
+      <tr><td>PMOS pass + external cap</td><td>Low dropout, stable, simple</td><td>PSRR falls off above the loop bandwidth (≈ 100 kHz–1 MHz); needs a µF-class pin cap</td><td>IO, bandgap/aux, digital</td></tr>
+      <tr><td>NMOS source follower (cap-less)</td><td>Fast transient, good high-frequency PSRR (the gate is isolated from the supply)</td><td>Needs gate drive above V_in (charge pump) or more headroom</td><td>PA/RF with Tx load steps</td></tr>
+      <tr><td>Cascaded: pre-regulator + LDO</td><td>PSRR of the two stages adds (&gt; 80 dB)</td><td>More dropout (needs 1.8 V in for a 1.2 V out)</td><td>VCO</td></tr>
+      <tr><td>Feed-forward ripple cancellation</td><td>High PSRR at MHz without a large cap</td><td>Matching-dependent; more complex</td><td>VCO, IF/ADC</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>Low-noise reference:</b> filter the bandgap into the LDO with a large on-chip RC (or a sample-and-hold). The LDO then amplifies its own error-amplifier noise, so size the input pair for low 1/f noise.</li>
+    <li><b>Headroom:</b> 1.8 V → 1.2 V leaves 600 mV for cascoding and high PSRR. 1.0 V → 0.9 V leaves little, so RF LDOs often trade PSRR for dropout, or are bypassed with a clean external 1.0 V.</li>
+    <li><b>Trim and monitoring:</b> a trim DAC sets V_out (eFuse); UV/OV comparators and the aux ADC check each output. The LDO also has current limit and soft-start.</li>
+    <li><b>Sequencing:</b> power-on reset holds the chip until all rails are valid. Enable LDOs in a fixed order (reference → analog → RF) so that no block is biased from a floating rail.</li>
+  </ul>
+
+  <h3>Typical power budget (single chip, 3Tx/4Rx, active frame)</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Block</th><th>Power</th></tr></thead>
+    <tbody>
+      <tr><td>Tx (per channel while on)</td><td class="v">150–250 mW</td></tr>
+      <tr><td>Rx RF + IF (per channel)</td><td class="v">60–120 mW</td></tr>
+      <tr><td>ADC (per channel)</td><td class="v">15–40 mW</td></tr>
+      <tr><td>LO: PLL, VCO, ×4, distribution</td><td class="v">150–300 mW</td></tr>
+      <tr><td>DSP, HWA, MCU, memory</td><td class="v">300–800 mW</td></tr>
+      <tr><td>LDO losses (headroom × current)</td><td class="v">10–20% of the analog total</td></tr>
+      <tr><td><b>Chip total, averaged over frame duty</b></td><td class="v"><b>≈ 1.2–2.5 W</b></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- infra -->
 <section id="infra">
-  <div class="sec-head"><span class="num">11</span><h2>Power, clocking, package, thermal</h2></div>
+  <div class="sec-head"><span class="num">14</span><h2>Clocking, package, thermal</h2></div>
   <div class="tbl"><table>
     <thead><tr><th>Area</th><th>Guideline</th></tr></thead>
     <tbody>
-      <tr><td>Supply rails</td><td class="v">≈ 1.0/1.2 V RF and digital, 1.8 V IO/analog, 3.3 V IO; PMIC with safety monitors (ASIL-B)</td></tr>
-      <tr><td>Supply noise</td><td class="v">RF rails LDO-filtered; DC-DC switching harmonics become IF spurs, so place switching frequencies outside the IF band or sync them to the chirp</td></tr>
-      <tr><td>Supply ripple on PLL/VCO</td><td class="v">&lt; 50 µV rms in the loop band (it causes FM and ramp error)</td></tr>
       <tr><td>Reference clock</td><td class="v">One crystal for PLL, ADC and digital; cascades use one master reference plus a frame sync</td></tr>
       <tr><td>Package</td><td class="v">FC-BGA or eWLB, RF balls on the edge, GND-shielded; AoP/LoP variants</td></tr>
       <tr><td>Thermal</td><td class="v">Tj ≤ 125–140 °C at 105 °C ambient; 1–3 W per chip; PA output drops ≈ 0.02–0.04 dB/°C</td></tr>
@@ -544,9 +788,8 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   </table></div>
 </section>
 
-<!-- 12 -->
 <section id="calc">
-  <div class="sec-head"><span class="num">12</span><h2>Chirp and link-budget calculator</h2></div>
+  <div class="sec-head"><span class="num">15</span><h2>Chirp and link-budget calculator</h2></div>
   <p>The defaults are a long-range-ish TDM-MIMO configuration. Change a field and every output updates. SNR is after coherent range, Doppler and MIMO integration, minus the lumped losses L (radome, windowing, implementation).</p>
   <div class="calc">
     <div class="panel">
@@ -593,9 +836,8 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   </div>
 </section>
 
-<!-- 13 -->
 <section id="verify">
-  <div class="sec-head"><span class="num">13</span><h2>Calibration, verification, compliance</h2></div>
+  <div class="sec-head"><span class="num">16</span><h2>Calibration, verification, compliance</h2></div>
   <p>These steps run in order, from the first silicon to the vehicle.</p>
   <ol class="steps">
     <li><b>Wafer and final test:</b> ATE with a 77 GHz loopback or probe; trim the power detectors, temperature sensors and bandgaps; screen NF, Pout and phase noise.</li>
@@ -654,6 +896,51 @@ SNR   = P_t + G_t + G_r + 20log λ + σ − 30log(4π) − 40log R
   }
   $("f").addEventListener("input",run);
   $("f").addEventListener("submit",e=>e.preventDefault());
+  run();
+})();
+
+// phase-rotator error explorer
+(function(){
+  const $=id=>document.getElementById(id), NS="http://www.w3.org/2000/svg", K=64;
+  const wrap=a=>{while(a>Math.PI)a-=2*Math.PI;while(a<-Math.PI)a+=2*Math.PI;return a};
+  function el(n,at){const e=document.createElementNS(NS,n);for(const k in at)e.setAttribute(k,at[k]);return e}
+  function run(){
+    const b=Math.max(3,Math.min(10,parseInt($("rb").value)||7));
+    const g=Math.pow(10,(parseFloat($("rg").value)||0)/20), ph=(parseFloat($("rp").value)||0)*Math.PI/180;
+    const cal=$("rc").value==="cal", M=Math.pow(2,b-1)-1;
+    // Q path: g * e^{j(90°+ph)}
+    const qx=-g*Math.sin(ph), qy=g*Math.cos(ph);
+    let r=M;
+    if(cal){let mx=0;for(let k=0;k<K;k++){const t=2*Math.PI*k/K;const aq=Math.sin(t)/(g*Math.cos(ph));const ai=Math.cos(t)+aq*g*Math.sin(ph);mx=Math.max(mx,Math.abs(ai),Math.abs(aq))}r=M/mx}
+    const pts=[],err=[];
+    for(let k=0;k<K;k++){
+      const t=2*Math.PI*k/K;let ai,aq;
+      if(cal){aq=r*Math.sin(t)/(g*Math.cos(ph));ai=r*Math.cos(t)+aq*g*Math.sin(ph)}else{ai=M*Math.cos(t);aq=M*Math.sin(t)}
+      ai=Math.round(ai);aq=Math.round(aq);
+      const x=ai+aq*qx,y=aq*qy;pts.push([x,y]);err.push(wrap(Math.atan2(y,x)-t));
+    }
+    const mean=Math.atan2(err.reduce((s,e)=>s+Math.sin(e),0),err.reduce((s,e)=>s+Math.cos(e),0));
+    const e2=err.map(e=>wrap(e-mean)*180/Math.PI);
+    const rms=Math.sqrt(e2.reduce((s,e)=>s+e*e,0)/K), pk=Math.max(...e2.map(Math.abs));
+    const amps=pts.map(p=>Math.hypot(p[0],p[1])), am=amps.reduce((s,a)=>s+a,0)/K;
+    const rip=20*Math.log10(Math.max(...amps)/Math.min(...amps));
+    $("r_rms").textContent=rms.toFixed(2)+"°";$("r_pk").textContent=pk.toFixed(2)+"°";$("r_amp").textContent=rip.toFixed(2)+" dB";
+    const st=[];
+    st.push(rms<2?["ok","RMS < 2°"]:rms<3?["warn","RMS 2–3°"]:["bad","RMS > 3°"]);
+    st.push(rip<0.5?["ok","ripple < 0.5 dB"]:["warn","ripple ≥ 0.5 dB"]);
+    if(pk>5.625/2) st.push(["warn","peak > ½ step"]);
+    $("r_stat").innerHTML=st.map(s=>'<span class="pill '+s[0]+'">'+s[1]+'</span>').join("");
+    const svg=$("r_plot");svg.textContent="";
+    const S=115/Math.max(...amps,am), c=150;
+    svg.appendChild(el("line",{x1:20,y1:c,x2:280,y2:c,stroke:"var(--line)"}));
+    svg.appendChild(el("line",{x1:c,y1:20,x2:c,y2:280,stroke:"var(--line)"}));
+    svg.appendChild(el("circle",{cx:c,cy:c,r:am*S,fill:"none",stroke:"var(--muted)","stroke-width":1.2,"stroke-dasharray":"3 3"}));
+    pts.forEach(p=>svg.appendChild(el("circle",{cx:c+p[0]*S,cy:c-p[1]*S,r:3.2,fill:cal?"var(--rf)":"var(--lo)"})));
+    const tI=el("text",{x:276,y:c-6,"text-anchor":"end",class:"lbl"});tI.textContent="I";svg.appendChild(tI);
+    const tQ=el("text",{x:c+6,y:30,class:"lbl"});tQ.textContent="Q";svg.appendChild(tQ);
+  }
+  $("rot").addEventListener("input",run);
+  $("rot").addEventListener("submit",e=>e.preventDefault());
   run();
 })();
 </script>
