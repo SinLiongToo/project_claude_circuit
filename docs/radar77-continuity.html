@@ -191,68 +191,142 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
 
   <figure>
     <div class="fig">
-    <svg viewBox="0 0 760 270" role="img" aria-label="Diode continuity test: the PMU forces −100 µA into a signal pad through the contact resistance. All other pins, including VDD and VSS, are held at 0 V. Current flows from VSS through the lower ESD diode, so the pad reads about −0.65 V. A forward current of +100 µA instead flows through the upper diode to VDD and reads about +0.65 V.">
+    <svg viewBox="0 0 880 292" role="img" aria-label="Two diode continuity tests on the same pad, with every other pin including VDD and VSS held at 0 V. (a) Forcing −100 µA pulls current from VSS up through the lower ESD diode, so the pad reads about −0.65 V. (b) Forcing +100 µA pushes current through the upper ESD diode into the VDD rail held at 0 V, so the pad reads about +0.65 V. The diode not in use is shown faded.">
       <defs><marker id="a4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs>
-      <rect class="blk dig" x="20" y="100" width="150" height="66" rx="6"/>
-      <text class="t" x="95" y="122" text-anchor="middle">Tester PMU</text>
-      <text class="s" x="95" y="139" text-anchor="middle">force I = −100 µA</text>
-      <text class="s" x="95" y="154" text-anchor="middle">measure V, clamp ±2 V</text>
-      <line x1="170" y1="133" x2="205" y2="133" stroke="currentColor" stroke-width="1.5"/>
-      <polyline points="205,133 212,123 222,143 232,123 242,143 252,123 259,133" fill="none" stroke="var(--test)" stroke-width="1.8"/>
-      <text class="s" x="232" y="112" text-anchor="middle" fill="var(--test)">R_contact</text>
-      <line x1="259" y1="133" x2="360" y2="133" stroke="currentColor" stroke-width="1.5"/>
-      <rect x="360" y="118" width="30" height="30" fill="var(--dig-soft)" stroke="var(--dig)" stroke-width="1.6"/>
-      <text class="s" x="375" y="168" text-anchor="middle">pad</text>
-      <line x1="390" y1="133" x2="560" y2="133" stroke="currentColor" stroke-width="1.5"/>
-      <rect x="560" y="113" width="120" height="40" rx="6" class="cloud"/>
-      <text class="s" x="620" y="137" text-anchor="middle">core (unpowered)</text>
-      <!-- VDD rail and upper diode (anode at pad side, cathode at VDD) -->
-      <line x1="440" y1="30" x2="720" y2="30" stroke="var(--lo)" stroke-width="2"/>
-      <text class="lbl" x="724" y="34">VDD = 0 V</text>
-      <line x1="470" y1="133" x2="470" y2="92" stroke="currentColor" stroke-width="1.5"/>
-      <polygon points="458,92 482,92 470,72" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="458" y1="72" x2="482" y2="72" stroke="currentColor" stroke-width="1.8"/>
-      <line x1="470" y1="72" x2="470" y2="30" stroke="currentColor" stroke-width="1.5"/>
-      <text class="s" x="490" y="86">D_up (to VDD)</text>
-      <!-- VSS rail and lower diode (anode at VSS, cathode at pad) -->
-      <line x1="440" y1="240" x2="720" y2="240" stroke="var(--dig)" stroke-width="2"/>
-      <text class="lbl" x="724" y="244">VSS = 0 V</text>
-      <line x1="470" y1="133" x2="470" y2="174" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="458" y1="174" x2="482" y2="174" stroke="currentColor" stroke-width="1.8"/>
-      <polygon points="458,194 482,194 470,174" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
-      <line x1="470" y1="194" x2="470" y2="240" stroke="currentColor" stroke-width="1.5"/>
-      <text class="s" x="490" y="190">D_dn (from VSS)</text>
-      <circle cx="470" cy="133" r="3" fill="currentColor"/>
-      <path d="M440,226 V150" fill="none" stroke="var(--test)" stroke-width="1.6" marker-end="url(#a4)" color="var(--test)"/>
-      <text class="s" x="434" y="210" text-anchor="end" fill="var(--test)">−100 µA path</text>
-      <text class="s" x="300" y="200" text-anchor="middle">pad reads ≈ −V_f ≈ −0.65 V</text>
+      <text class="t" x="10" y="20">(a) Negative test: force −100 µA</text>
+      <text class="s" x="10" y="36">current comes up from VSS through D_dn</text>
+      <line x1="250" y1="62" x2="420" y2="62" stroke="var(--lo)" stroke-width="2"/>
+      <text class="lbl" x="420" y="56" text-anchor="end">VDD held at 0 V</text>
+      <line x1="250" y1="262" x2="420" y2="262" stroke="var(--dig)" stroke-width="2"/>
+      <text class="lbl" x="420" y="280" text-anchor="end">VSS = 0 V</text>
+      <rect class="blk dig" x="10" y="132" width="118" height="62" rx="6"/>
+      <text class="t" x="69" y="154" text-anchor="middle">Tester PMU</text>
+      <text class="s" x="69" y="170" text-anchor="middle">force −100 µA</text>
+      <text class="s" x="69" y="185" text-anchor="middle">clamp −2 V</text>
+      <line x1="128" y1="163" x2="146" y2="163" stroke="currentColor" stroke-width="1.5"/>
+      <polyline points="146,163 152,154 158,172 164,154 170,172 176,154 182,172 188,154 194,163" fill="none" stroke="var(--test)" stroke-width="1.8"/>
+      <text class="s" x="170" y="148" text-anchor="middle" fill="var(--test)">R_contact</text>
+      <line x1="194" y1="163" x2="214" y2="163" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="214" y="151" width="24" height="24" fill="var(--dig-soft)" stroke="var(--dig)" stroke-width="1.6"/>
+      <text class="s" x="226" y="190" text-anchor="middle">pad</text>
+      <line x1="238" y1="163" x2="340" y2="163" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="300" cy="163" r="3" fill="currentColor"/>
+      <rect class="cloud" x="340" y="146" width="80" height="34" rx="6"/>
+      <text class="s" x="380" y="167" text-anchor="middle">core (off)</text>
+      <g opacity=".35"><line x1="300" y1="163" x2="300" y2="124" stroke="currentColor" stroke-width="1.5"/>
+      <polygon points="288,124 312,124 300,104" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="288" y1="104" x2="312" y2="104" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="300" y1="104" x2="300" y2="62" stroke="currentColor" stroke-width="1.5"/>
+      <text class="s" x="318" y="100">D_up</text></g>
+      <g><line x1="300" y1="163" x2="300" y2="202" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="288" y1="202" x2="312" y2="202" stroke="currentColor" stroke-width="1.8"/>
+      <polygon points="288,222 312,222 300,202" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="300" y1="222" x2="300" y2="262" stroke="currentColor" stroke-width="1.5"/>
+      <text class="s" x="318" y="220">D_dn</text></g>
+      <path d="M282,256 V176 H132" fill="none" stroke="var(--test)" stroke-width="1.8" stroke-dasharray="5 3" color="var(--test)" marker-end="url(#a4)"/>
+      <text class="t" x="69" y="226" text-anchor="middle">reads ≈ −0.65 V</text>
+      <line x1="440" y1="10" x2="440" y2="284" stroke="var(--line)" stroke-width="1"/>
+      <text class="t" x="460" y="20">(b) Positive test: force +100 µA</text>
+      <text class="s" x="460" y="36">current flows out through D_up to VDD</text>
+      <line x1="700" y1="62" x2="870" y2="62" stroke="var(--lo)" stroke-width="2"/>
+      <text class="lbl" x="870" y="56" text-anchor="end">VDD held at 0 V</text>
+      <line x1="700" y1="262" x2="870" y2="262" stroke="var(--dig)" stroke-width="2"/>
+      <text class="lbl" x="870" y="280" text-anchor="end">VSS = 0 V</text>
+      <rect class="blk dig" x="460" y="132" width="118" height="62" rx="6"/>
+      <text class="t" x="519" y="154" text-anchor="middle">Tester PMU</text>
+      <text class="s" x="519" y="170" text-anchor="middle">force +100 µA</text>
+      <text class="s" x="519" y="185" text-anchor="middle">clamp +2 V</text>
+      <line x1="578" y1="163" x2="596" y2="163" stroke="currentColor" stroke-width="1.5"/>
+      <polyline points="596,163 602,154 608,172 614,154 620,172 626,154 632,172 638,154 644,163" fill="none" stroke="var(--test)" stroke-width="1.8"/>
+      <text class="s" x="620" y="148" text-anchor="middle" fill="var(--test)">R_contact</text>
+      <line x1="644" y1="163" x2="664" y2="163" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="664" y="151" width="24" height="24" fill="var(--dig-soft)" stroke="var(--dig)" stroke-width="1.6"/>
+      <text class="s" x="676" y="190" text-anchor="middle">pad</text>
+      <line x1="688" y1="163" x2="790" y2="163" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="750" cy="163" r="3" fill="currentColor"/>
+      <rect class="cloud" x="790" y="146" width="80" height="34" rx="6"/>
+      <text class="s" x="830" y="167" text-anchor="middle">core (off)</text>
+      <g><line x1="750" y1="163" x2="750" y2="124" stroke="currentColor" stroke-width="1.5"/>
+      <polygon points="738,124 762,124 750,104" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="738" y1="104" x2="762" y2="104" stroke="currentColor" stroke-width="1.8"/>
+      <line x1="750" y1="104" x2="750" y2="62" stroke="currentColor" stroke-width="1.5"/>
+      <text class="s" x="768" y="100">D_up</text></g>
+      <g opacity=".35"><line x1="750" y1="163" x2="750" y2="202" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="738" y1="202" x2="762" y2="202" stroke="currentColor" stroke-width="1.8"/>
+      <polygon points="738,222 762,222 750,202" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <line x1="750" y1="222" x2="750" y2="262" stroke="currentColor" stroke-width="1.5"/>
+      <text class="s" x="768" y="220">D_dn</text></g>
+      <path d="M582,126 H732 V68" fill="none" stroke="var(--test)" stroke-width="1.8" stroke-dasharray="5 3" color="var(--test)" marker-end="url(#a4)"/>
+      <text class="t" x="519" y="226" text-anchor="middle">reads ≈ +0.65 V</text>
     </svg>
     </div>
-    <figcaption>The diode method. With every other pin held at 0 V, forcing −100 µA out of a pad pulls current from VSS through the lower ESD diode, so a good connection reads about −0.65 V. Forcing +100 µA reads about +0.65 V through the upper diode to VDD. An open contact has no current path, so the PMU hits its voltage clamp. A short reads near 0 V.</figcaption>
+    <figcaption>The same pad tested in both polarities. Each test forward-biases one ESD diode, and the faded diode is reverse-biased. (a) Negative: the current comes up from VSS through D_dn, reading −V_f. (b) Positive: the current flows through D_up into the VDD rail, which the tester holds at 0 V, reading +V_f. An open contact has no path in either polarity, so the PMU hits its clamp. A short to ground or to a 0 V neighbour reads near 0 V in both.</figcaption>
   </figure>
 
   <figure>
     <div class="fig">
-    <svg viewBox="0 0 700 120" role="img" aria-label="Measured-voltage windows for −100 µA: open at the −2 V clamp, a guard band, pass from −0.9 to −0.3 V, a guard band, and short from −0.2 to 0 V.">
-      <line x1="40" y1="60" x2="660" y2="60" stroke="currentColor" stroke-width="1"/>
-      <rect x="40" y="44" width="248" height="32" fill="var(--bad)" opacity=".22"/>
-      <rect x="288" y="44" width="93" height="32" fill="var(--sunk)"/>
-      <rect x="381" y="44" width="186" height="32" fill="var(--ok)" opacity=".25"/>
-      <rect x="567" y="44" width="31" height="32" fill="var(--sunk)"/>
-      <rect x="598" y="44" width="62" height="32" fill="var(--bad)" opacity=".22"/>
-      <text class="t" x="164" y="65" text-anchor="middle">OPEN</text>
-      <text class="t" x="474" y="65" text-anchor="middle">PASS</text>
-      <text class="t" x="629" y="65" text-anchor="middle">SHORT</text>
-      <text class="s" x="334" y="65" text-anchor="middle">guard</text>
-      <g class="s">
-        <text x="40" y="96" text-anchor="middle">−2.0</text><text x="288" y="96" text-anchor="middle">−1.2</text><text x="381" y="96" text-anchor="middle">−0.9</text><text x="560" y="96" text-anchor="end">−0.3</text><text x="605" y="96" text-anchor="start">−0.2</text><text x="660" y="112" text-anchor="middle">0 V</text>
-      </g>
-      <text class="lbl" x="40" y="30">V_pin at −100 µA (typical limits)</text>
+    <svg viewBox="0 0 740 112" role="img" aria-label="Measured-voltage windows for both polarities, from −2 V to +2 V: open at either clamp, pass from −0.9 to −0.3 V for the negative test and +0.3 to +0.9 V for the positive test, short within ±0.2 V of zero, with guard bands in between.">
+      <text class="lbl" x="60" y="30">V_pin at ∓100 µA (typical limits; grey = guard band)</text>
+      <rect x="60.0" y="44" width="124.0" height="32" fill="var(--bad)" opacity=".22"/>
+      <text class="t" x="122.0" y="65" text-anchor="middle">OPEN</text>
+      <rect x="184.0" y="44" width="46.5" height="32" fill="var(--sunk)" opacity="1"/>
+      <rect x="230.5" y="44" width="93.0" height="32" fill="var(--ok)" opacity=".25"/>
+      <text class="t" x="277.0" y="65" text-anchor="middle">PASS −</text>
+      <rect x="323.5" y="44" width="15.5" height="32" fill="var(--sunk)" opacity="1"/>
+      <rect x="339.0" y="44" width="62.0" height="32" fill="var(--bad)" opacity=".22"/>
+      <text class="t" x="370.0" y="65" text-anchor="middle">SHORT</text>
+      <rect x="401.0" y="44" width="15.5" height="32" fill="var(--sunk)" opacity="1"/>
+      <rect x="416.5" y="44" width="93.0" height="32" fill="var(--ok)" opacity=".25"/>
+      <text class="t" x="463.0" y="65" text-anchor="middle">PASS +</text>
+      <rect x="509.5" y="44" width="46.5" height="32" fill="var(--sunk)" opacity="1"/>
+      <rect x="556.0" y="44" width="124.0" height="32" fill="var(--bad)" opacity=".22"/>
+      <text class="t" x="618.0" y="65" text-anchor="middle">OPEN</text>
+      <line x1="60.0" y1="76" x2="60.0" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="60.0" y="96" text-anchor="middle">−2.0</text>
+      <line x1="184.0" y1="76" x2="184.0" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="184.0" y="96" text-anchor="middle">−1.2</text>
+      <line x1="230.5" y1="76" x2="230.5" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="230.5" y="96" text-anchor="middle">−0.9</text>
+      <line x1="323.5" y1="76" x2="323.5" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="323.5" y="96" text-anchor="middle">−0.3</text>
+      <line x1="370.0" y1="76" x2="370.0" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="370.0" y="96" text-anchor="middle">0 V</text>
+      <line x1="416.5" y1="76" x2="416.5" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="416.5" y="96" text-anchor="middle">+0.3</text>
+      <line x1="509.5" y1="76" x2="509.5" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="509.5" y="96" text-anchor="middle">+0.9</text>
+      <line x1="556.0" y1="76" x2="556.0" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="556.0" y="96" text-anchor="middle">+1.2</text>
+      <line x1="680.0" y1="76" x2="680.0" y2="82" stroke="currentColor" stroke-width="1"/>
+      <text class="s" x="680.0" y="96" text-anchor="middle">+2.0</text>
     </svg>
     </div>
-    <figcaption>Typical pass windows. The exact limits come from characterisation of the ESD diodes over temperature (V_f falls about 2 mV/°C, so a hot-probe insertion reads lower). Values in the guard bands fail as "marginal" and usually trigger a re-contact.</figcaption>
+    <figcaption>Typical pass windows for both polarities. Exact limits come from characterising the ESD diodes over temperature (V_f falls about 2 mV/°C, so a hot-probe insertion reads closer to zero). Readings in the grey guard bands fail as "marginal" and usually trigger a re-contact.</figcaption>
   </figure>
 
+  <h3>How to run both polarities</h3>
+  <ol class="steps">
+    <li><b>Ground the rails:</b> the tester supplies hold every VDD and VSS pin at 0 V (connected, not floating), and per-pin PMUs force 0 V on all other signal pins.</li>
+    <li><b>Negative pass:</b> FIMV −100 µA on each pin under test, clamp −2 V, wait about 0.5–1 ms for the pin and cable capacitance to settle, then measure. With per-pin PMUs all pins run in parallel; with shared PMUs, in groups whose pins aren't adjacent.</li>
+    <li><b>Positive pass:</b> the same with +100 µA and a +2 V clamp.</li>
+    <li><b>Classify each pin from both readings together</b>, using limits specific to its pin type (next table).</li>
+  </ol>
+  <div class="tbl"><table>
+    <thead><tr><th>Negative reading</th><th>Positive reading</th><th>Verdict</th></tr></thead>
+    <tbody>
+      <tr><td class="v">−0.65 V (pass)</td><td class="v">+0.65 V (pass)</td><td>Good: contact made, both ESD diodes present</td></tr>
+      <tr><td class="v">at −2 V clamp</td><td class="v">at +2 V clamp</td><td><b>Open:</b> no contact, bent probe, missing ball, bond/bump open</td></tr>
+      <tr><td class="v">≈ 0 V</td><td class="v">≈ 0 V</td><td><b>Short</b> to ground or to a neighbour held at 0 V</td></tr>
+      <tr><td class="v">pass</td><td class="v">at +2 V clamp</td><td>No diode to VDD: a <b>damaged D_up</b>, <i>or expected</i> for pins designed without one (fail-safe / over-voltage-tolerant IO, open-drain nERROR, some analog pins). Use that pin type's limits.</td></tr>
+      <tr><td class="v">at −2 V clamp</td><td class="v">pass</td><td>Damaged D_dn or a break in the pad's VSS connection (rare; investigate)</td></tr>
+      <tr><td class="v">slightly low |V|</td><td class="v">slightly low |V|</td><td>Resistive path in parallel (partial short, leakage): check it against the guard band and the leakage test</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>Why run both?</b> The negative test alone proves contact. The positive test also checks the upper ESD diode and the pad's connection to the IO supply ring. That catches ESD damage from handling, and it confirms a short with a second, independent reading. Some flows run only the negative test at wafer probe for speed and both at final test.</li>
+    <li><b>The VDD rail must really be at 0 V.</b> If it floats, the positive current charges the chip's supply decoupling through D_up. The reading then ramps and fails as unstable or open, and the chip is partly back-powered through its pads. Keep the current small (≤ 100 µA) and the rails grounded.</li>
+    <li><b>Power pins</b> are checked separately: the power-rail short test, plus −100 µA on a VDD pin (with VSS at 0 V), which forward-biases the rail clamp's body diode and should read about −0.65 V.</li>
+  </ul>
 </section>
 
 <section id="limits">
