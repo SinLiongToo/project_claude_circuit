@@ -1127,12 +1127,14 @@ PAT limits = μ ± 6σ   (inside spec limits)</div>
     const m=e=>terms.every(x=>e.lt.includes(x));
     const here=idx.filter(m).sort((a,b)=>b.w-a.w), there=remote.filter(m).sort((a,b)=>b.w-a.w);
     const nh=here.length, nt=there.length;
-    meta.textContent=(nh||nt)?nh+" on this page · "+nt+" on other pages":"No matches";
+    const home=!idx.length;  // landing page: no content of its own, search everything
+    meta.textContent=(nh||nt)?(home?nt+" match"+(nt>1?"es":"")+" across all pages":nh+" on this page · "+nt+" on other pages"):"No matches";
     if(!nh&&!nt){res.innerHTML='<div class="find-empty">Nothing matches “'+esc(q.value.trim())+'”. Try fewer words or a shorter term (e.g. “PSRR”, “DAC”, “Cres”).</div>';return}
-    hits=here.slice(0,60).concat(there.slice(0,60));
+    const cap=home?120:60;
+    hits=here.slice(0,60).concat(there.slice(0,cap));
     let i=0;
     if(nh){head("On this page");here.slice(0,60).forEach(h=>add(h,i++))}
-    if(nt){head("Other pages");there.slice(0,60).forEach(h=>add(h,i++))}
+    if(nt){head(home?"All pages":"Other pages");there.slice(0,cap).forEach(h=>add(h,i++))}
     mark(0);
   }
   function add(h,i){

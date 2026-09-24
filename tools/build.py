@@ -102,8 +102,25 @@ def check_tokens(fname):
         sys.exit('%s uses undefined CSS variables: %s' % (fname, ', '.join(missing)))
 
 
+def stamp_index(total_terms):
+    """Landing page: version + build date/time, and the glossary term count."""
+    import datetime
+    ver = rd(os.path.join(HERE, '..', 'VERSION')).strip()
+    now = datetime.datetime.now().astimezone()
+    off = now.strftime('%z'); off = 'UTC%s:%s' % (off[:3], off[3:])
+    text = 'Version %s · Updated %s (%s)' % (ver, now.strftime('%Y-%m-%d %H:%M'), off)
+    s = rd(INDEX)
+    s = re.sub(r'<!--stamp-->.*?<!--/stamp-->', '<!--stamp-->%s<!--/stamp-->' % text, s, count=1, flags=re.S)
+    s = re.sub(r'\(\d+ terms,', '(%d terms,' % total_terms, s, count=1)
+    wr(INDEX, s)
+    return text
+
+
+INDEX = 'index.html'
+
+
 def main():
-    for fname, _ in PAGES:
+    for fname, _ in PAGES + [(INDEX, None)]:
         check_tokens(fname)
     # 1 + 2: search component and glossary
     for fname, toc_after in PAGES:
@@ -124,7 +141,16 @@ def main():
         s = s[:i + 1] + tag + s[i + 1:]
         wr(fname, s)
         print('%-28s index of other pages: %5.1f kB' % (fname, len(blob.encode('utf-8')) / 1024))
+    # landing page: search over every page, plus version stamp
+    blob = json.dumps({'pages': pages, 'items': items}, ensure_ascii=False,
+                      separators=(',', ':')).replace('</', '<\\/')
+    s = refresh_search(rd(INDEX))
+    i = s.index('\n<button class="find-btn"')
+    s = s[:i + 1] + '<script type="application/json" id="siteIndex" data-self="%s">%s</script>\n' % (INDEX, blob) + s[i + 1:]
+    wr(INDEX, s)
+    print('%-28s index of all pages:   %5.1f kB' % (INDEX, len(blob.encode('utf-8')) / 1024))
     print('items:', len(items))
+    print(stamp_index(sum(len(r) for _, r in glossary.G)))
 
 
 if __name__ == '__main__':

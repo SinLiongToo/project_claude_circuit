@@ -13,4 +13,6 @@ Published with GitHub Pages: https://sinliongtoo.github.io/project_claude_circui
 
 After changing any page, run `python tools/build.py` (needs `beautifulsoup4`). It refreshes the shared search component, regenerates the glossary (`tools/glossary.py` holds the terms), renumbers sections, and rebuilds the cross-page search index embedded in each page.
 
+The landing page footer shows the version from `VERSION` and the build date/time; both are stamped by `tools/build.py`. Bump `VERSION` for each published change (minor for new content, patch for fixes).
+
 Figures are typical engineering values for early trade-offs; verify against your chosen MMIC's datasheet and current regulations.
