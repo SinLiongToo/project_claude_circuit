@@ -1,0 +1,29 @@
+/* page search */
+.find-btn{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:8px;font:500 13px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:10px 14px;box-shadow:0 4px 16px rgba(0,0,0,.12);cursor:pointer}
+.find-btn:hover{border-color:var(--rf)}
+.find-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.find-btn svg{width:16px;height:16px}
+kbd{font:500 11px/1 var(--mono);color:var(--muted);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:3px 5px;background:var(--bg)}
+@media (max-width:600px){.find-btn kbd{display:none}}
+.find-ov{position:fixed;inset:0;z-index:50;background:rgba(10,16,14,.45);padding:calc(8vh + env(safe-area-inset-top,0px)) 16px 16px;display:flex;justify-content:center;align-items:flex-start}
+.find-box{width:100%;max-width:680px;max-height:78vh;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:0 18px 50px rgba(0,0,0,.3);overflow:hidden}
+.find-in{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.find-in svg{width:18px;height:18px;color:var(--muted);flex:none}
+.find-in input{flex:1;min-width:0;font:16px var(--sans);color:var(--ink);background:transparent;border:0;outline:0}
+.find-in input::placeholder{color:var(--muted)}
+.find-meta{font:12px var(--mono);color:var(--muted);padding:8px 14px;border-bottom:1px solid var(--line)}
+.find-res{overflow-y:auto;padding:6px}
+.find-item{display:block;width:100%;text-align:left;background:transparent;border:0;border-radius:6px;padding:9px 10px;cursor:pointer;color:var(--ink);font:inherit}
+.find-item:hover,.find-item[aria-selected="true"]{background:var(--sunk)}
+.find-item .fs{display:flex;gap:8px;align-items:baseline;font:500 11px/1.3 var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.find-item .fs b{color:var(--rf);font-weight:600}
+.find-item .fx{font-size:13.5px;line-height:1.5;display:block;overflow-wrap:anywhere}
+.find-item mark,mark.find-hit{background:var(--lo-soft);color:var(--ink);outline:1px solid var(--lo);border-radius:2px;padding:0 1px}
+.find-empty{padding:18px 12px;color:var(--muted);font-size:14px}
+.find-flash{animation:findFlash 1.8s ease}
+@keyframes findFlash{0%,30%{box-shadow:0 0 0 3px var(--lo);background-color:var(--lo-soft)}100%{box-shadow:0 0 0 3px transparent}}
+@media (prefers-reduced-motion: reduce){.find-flash{animation:none;outline:3px solid var(--lo)}}
+.find-ov[hidden]{display:none}
+.find-grp{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:12px 10px 6px}
+.find-grp:first-child{padding-top:6px}
+a.find-item{text-decoration:none}
