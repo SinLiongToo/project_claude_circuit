@@ -25,6 +25,7 @@ PAGES = [
     ('radar77-bist-loopback.html', '<li><a href="#checklist">Design checklist</a></li>'),
     ('radar77-continuity.html', '<li><a href="#data">Data &amp; test flow</a></li>'),
     ('radar77-dft-stress.html', '<li><a href="#checklist">DFT checklist</a></li>'),
+    ('radar77-test-flow.html', '<li><a href="#bins">Fail bins</a></li>'),
 ]
 
 rd = lambda p: io.open(p, encoding='utf-8').read()
