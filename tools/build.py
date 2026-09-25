@@ -25,7 +25,6 @@ PAGES = [
     ('radar77-bist-loopback.html', '<li><a href="#checklist">Design checklist</a></li>'),
     ('radar77-continuity.html', '<li><a href="#data">Data &amp; test flow</a></li>'),
     ('radar77-dft-stress.html', '<li><a href="#checklist">DFT checklist</a></li>'),
-    ('radar77-test-flow.html', '<li><a href="#flow">Test flow</a></li>'),
 ]
 
 rd = lambda p: io.open(p, encoding='utf-8').read()
@@ -133,6 +132,10 @@ def main():
         title, its = page_items(fname)
         pages[fname] = {'title': title, 'url': fname}
         items += its
+    # the landing page's own sections (e.g. the production test flow) are searchable from every page
+    _, its = page_items(INDEX)
+    pages[INDEX] = {'title': 'Main page', 'url': INDEX}
+    items += its
     for fname, _ in PAGES:
         blob = json.dumps({'pages': pages, 'items': [i for i in items if i['p'] != fname]},
                           ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
@@ -143,7 +146,7 @@ def main():
         wr(fname, s)
         print('%-28s index of other pages: %5.1f kB' % (fname, len(blob.encode('utf-8')) / 1024))
     # landing page: search over every page, plus version stamp
-    blob = json.dumps({'pages': pages, 'items': items}, ensure_ascii=False,
+    blob = json.dumps({'pages': pages, 'items': [i for i in items if i['p'] != INDEX]}, ensure_ascii=False,
                       separators=(',', ':')).replace('</', '<\\/')
     s = refresh_search(rd(INDEX))
     i = s.index('\n<button class="find-btn"')
