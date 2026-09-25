@@ -215,6 +215,24 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
     </tbody>
   </table></div>
 
+  <h3 id="bv">Breakdown voltages</h3>
+  <p>Breakdown tests ramp the voltage on a dedicated PCM structure until the current jumps past a compliance limit. The voltage at that point is the breakdown voltage (BV). The test is <b>destructive</b>, so it runs only on scribe-line structures at sample sites, never on the product dies. What matters is not only the mean but the <b>low tail</b>: a few early breakdowns point to extrinsic defects (weak oxide spots, particles) that become early-life failures in the field.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Breakdown parameter</th><th>PCM structure and test</th><th>Typical requirement</th><th>Why it matters for the radar chip</th></tr></thead>
+    <tbody>
+      <tr><td>Gate-oxide breakdown (Vbd)</td><td>Large-area and edge-intensive MOS capacitors; ramped voltage (V-ramp) to a current threshold. Core and thick IO oxide measured separately</td><td class="v">Several × the max operating voltage; tight low tail</td><td>Sets the room for <a href="radar77-dft-stress.html#stress">HVST</a> (stress must stay safely below Vbd); oxide quality links to IDDQ and early-life fails</td></tr>
+      <tr><td>Drain-source breakdown (BVdss)</td><td>Transistor with gate off; ramp the drain until the drain current exceeds the limit (avalanche or punch-through)</td><td class="v">Margin over the maximum drain swing</td><td>The <a href="radar77-signal-chain.html#tx">PA</a> drain swings to about 2 × VDD at 77 GHz. BVdss and hot-carrier limits cap the output power, which is why mmWave CMOS PAs use cascode or stacked transistors</td></tr>
+      <tr><td>Junction breakdown (BVj)</td><td>N+/P-well and P+/N-well diodes in reverse bias</td><td class="v">Margin over supply + transients</td><td>Supply surges, IO and ESD diode behaviour; the <a href="radar77-continuity.html#method">continuity test</a> uses these same diodes in forward bias</td></tr>
+      <tr><td>Inter-metal dielectric (IMD) breakdown</td><td>Comb / serpentine metal structures at minimum spacing; ramp between the combs</td><td class="v">Above max line-to-line voltage, with margin</td><td>Low-k back-end reliability (line-to-line TDDB) in dense digital and power grids</td></tr>
+      <tr><td>MIM / MOM capacitor breakdown</td><td>Capacitor arrays, ramped to breakdown</td><td class="v">Margin over the rail the capacitor sits on</td><td>On-chip decoupling on the <a href="radar77-signal-chain.html#power">LDO rails</a>, IF and PLL loop-filter capacitors</td></tr>
+      <tr><td>ESD clamp trigger / snapback (Vt1)</td><td>ESD devices, measured with TLP (transmission-line pulse); often a characterisation test rather than every-lot WAT</td><td class="v">Trigger below the oxide Vbd of the circuit it protects</td><td>RF-pad ESD must protect the LNA/PA without adding much capacitance at 77 GHz</td></tr>
+    </tbody>
+  </table></div>
+<div class="eq">V-ramp:  V = V0 + k·t   until  I &gt; I_compliance   →  record Vbd
+One-sided spec (only a lower limit):   Cpk_lower = (μ − LSL) / 3σ
+Low tail: Weibull plot; a second, lower group = extrinsic defects</div>
+  <p>Breakdown voltage is a quick, one-shot check. Wafer-level reliability adds the <b>time-dependent</b> view: TDDB (time to breakdown at a constant stress voltage) and QBD (charge to breakdown). These predict lifetime at the operating voltage and are run by the foundry during process qualification and monitoring. The same SPC rules apply: watch the lower-tail percentile as well as the mean, because a shift of the tail shows up in the field long before the mean moves.</p>
+
   <h3 id="spc">SPC: keeping each parameter in control</h3>
   <p>SPC separates two kinds of limits. <b>Spec limits</b> (LSL/USL) come from the design: outside them the wafer is out of spec. <b>Control limits</b> (LCL/UCL) come from the process's own history, normally the mean ± 3σ. A point outside the control limits, or a non-random pattern inside them, means something in the process has changed, usually long before parts go out of spec. That early warning is the point of SPC.</p>
   <figure>
@@ -573,6 +591,13 @@ Centred: Cpk 1.00 ≈ 2 700 ppm · 1.33 ≈ 63 ppm · 1.67 ≈ 0.6 ppm</div>
       <tr id="g-MRB" data-abbr="MRB" data-full="Material Review Board (Decides what happens to held material: release, rework, scrap or deviation.)"><td class="v">MRB</td><td>Material Review Board</td><td>Decides what happens to held material: release, rework, scrap or deviation.</td></tr>
       <tr id="g-MIM" data-abbr="MIM" data-full="Metal-Insulator-Metal capacitor (MOM = Metal-Oxide-Metal) (Precision on-chip capacitors.)"><td class="v">MIM</td><td>Metal-Insulator-Metal capacitor (MOM = Metal-Oxide-Metal)</td><td>Precision on-chip capacitors.</td></tr>
       <tr id="g-MOM" data-abbr="MOM" data-full="Metal-Oxide-Metal (finger) capacitor"><td class="v">MOM</td><td>Metal-Oxide-Metal (finger) capacitor</td><td></td></tr>
+      <tr id="g-Vbd" data-abbr="Vbd" data-full="Gate-oxide breakdown voltage (Voltage where oxide current jumps past compliance in a V-ramp test.)"><td class="v">Vbd</td><td>Gate-oxide breakdown voltage</td><td>Voltage where oxide current jumps past compliance in a V-ramp test.</td></tr>
+      <tr id="g-BV" data-abbr="BV" data-full="Breakdown Voltage (BVdss = drain-source (gate off), BVj = junction.)"><td class="v">BV</td><td>Breakdown Voltage</td><td>BVdss = drain-source (gate off), BVj = junction.</td></tr>
+      <tr id="g-BVdss" data-abbr="BVdss" data-full="Drain-source breakdown voltage (Transistor off-state breakdown; limits PA drain swing.)"><td class="v">BVdss</td><td>Drain-source breakdown voltage</td><td>Transistor off-state breakdown; limits PA drain swing.</td></tr>
+      <tr id="g-BVj" data-abbr="BVj" data-full="Junction breakdown voltage (Reverse breakdown of N+/P-well or P+/N-well diodes.)"><td class="v">BVj</td><td>Junction breakdown voltage</td><td>Reverse breakdown of N+/P-well or P+/N-well diodes.</td></tr>
+      <tr id="g-TLP" data-abbr="TLP" data-full="Transmission-Line Pulse (ESD device characterisation with short, high-current pulses.)"><td class="v">TLP</td><td>Transmission-Line Pulse</td><td>ESD device characterisation with short, high-current pulses.</td></tr>
+      <tr id="g-QBD" data-abbr="QBD" data-full="Charge to breakdown (Total charge an oxide passes before breaking down (reliability).)"><td class="v">QBD</td><td>Charge to breakdown</td><td>Total charge an oxide passes before breaking down (reliability).</td></tr>
+      <tr id="g-IMD" data-abbr="IMD" data-full="Inter-Metal Dielectric (Insulator between metal lines/layers; tested with comb structures.)"><td class="v">IMD</td><td>Inter-Metal Dielectric</td><td>Insulator between metal lines/layers; tested with comb structures.</td></tr>
       <tr id="g-HTOL" data-abbr="HTOL" data-full="High-Temperature Operating Life (≈ 1000 h biased at max temperature (AEC-Q100).)"><td class="v">HTOL</td><td>High-Temperature Operating Life</td><td>≈ 1000 h biased at max temperature (AEC-Q100).</td></tr>
       <tr id="g-ELFR" data-abbr="ELFR" data-full="Early Life Failure Rate (Short high-temperature operation of a large sample.)"><td class="v">ELFR</td><td>Early Life Failure Rate</td><td>Short high-temperature operation of a large sample.</td></tr>
       <tr id="g-TC" data-abbr="TC" data-full="Temperature Cycling (Package and interconnect fatigue test.)"><td class="v">TC</td><td>Temperature Cycling</td><td>Package and interconnect fatigue test.</td></tr>
