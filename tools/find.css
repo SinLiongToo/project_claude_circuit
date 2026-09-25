@@ -33,3 +33,7 @@ nav.toc a.back::before{content:none}
 .home-tab:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
 .home-tab svg{width:15px;height:15px}
 .home-tab + header.top{padding-top:22px}
+.theme-btn{position:fixed;top:calc(14px + env(safe-area-inset-top,0px));right:16px;z-index:40;display:flex;align-items:center;gap:6px;font:500 13px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 12px 7px 10px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.theme-btn:hover{border-color:var(--rf)}
+.theme-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.theme-btn svg{width:16px;height:16px}

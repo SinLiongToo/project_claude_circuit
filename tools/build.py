@@ -108,6 +108,18 @@ def ensure_home_tab(s):
     return s.replace(a, '<div class="wrap">\n' + HOME_TAB + '<header class="top">')
 
 
+THEME_INIT = ('<script>/*theme-init*/try{var t=localStorage.getItem("theme");'
+              'if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>\n')
+
+
+def ensure_theme_init(s):
+    """Apply the saved colour theme before first paint."""
+    if '/*theme-init*/' in s:
+        return s
+    i = s.index('</title>\n') + len('</title>\n')
+    return s[:i] + THEME_INIT + s[i:]
+
+
 def check_tokens(fname):
     """Fail if a page uses a CSS custom property its light :root block doesn't define
     (an undefined colour silently renders as nothing)."""
@@ -141,7 +153,7 @@ def main():
         check_tokens(fname)
     # 1 + 2: search component and glossary
     for fname, toc_after in PAGES:
-        wr(fname, ensure_home_tab(refresh_search(rd(fname))))
+        wr(fname, ensure_theme_init(ensure_home_tab(refresh_search(rd(fname)))))
         glossary.inject(fname, None, toc_after)
     # 3: site index
     pages, items = {}, []
@@ -165,7 +177,7 @@ def main():
     # landing page: search over every page, plus version stamp
     blob = json.dumps({'pages': pages, 'items': [i for i in items if i['p'] != INDEX]}, ensure_ascii=False,
                       separators=(',', ':')).replace('</', '<\\/')
-    s = refresh_search(rd(INDEX))
+    s = ensure_theme_init(refresh_search(rd(INDEX)))
     i = s.index('\n<button class="find-btn"')
     s = s[:i + 1] + '<script type="application/json" id="siteIndex" data-self="%s">%s</script>\n' % (INDEX, blob) + s[i + 1:]
     wr(INDEX, s)
