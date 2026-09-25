@@ -26,6 +26,7 @@ PAGES = [
     ('radar77-continuity.html', '<li><a href="#data">Data &amp; test flow</a></li>'),
     ('radar77-dft-stress.html', '<li><a href="#checklist">DFT checklist</a></li>'),
     ('radar77-test-flow.html', '<li><a href="#flow">Test flow</a></li>'),
+    ('radar77-pcm-wat-spc.html', '<li><a href="#pcm">PCM / WAT &amp; SPC</a></li>'),
 ]
 
 rd = lambda p: io.open(p, encoding='utf-8').read()
@@ -92,6 +93,20 @@ def page_items(fname):
     return title, items
 
 
+HOME_TAB = ('<a class="home-tab" href="index.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+            'stroke-width="2" aria-hidden="true"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/></svg>'
+            'Main page</a>\n')
+
+
+def ensure_home_tab(s):
+    """Every content page gets a tab back to the landing page, above its header."""
+    if 'class="home-tab"' in s:
+        return s
+    a = '<div class="wrap">\n<header class="top">'
+    assert s.count(a) == 1, 'page header pattern not found'
+    return s.replace(a, '<div class="wrap">\n' + HOME_TAB + '<header class="top">')
+
+
 def check_tokens(fname):
     """Fail if a page uses a CSS custom property its light :root block doesn't define
     (an undefined colour silently renders as nothing)."""
@@ -125,7 +140,7 @@ def main():
         check_tokens(fname)
     # 1 + 2: search component and glossary
     for fname, toc_after in PAGES:
-        wr(fname, refresh_search(rd(fname)))
+        wr(fname, ensure_home_tab(refresh_search(rd(fname))))
         glossary.inject(fname, None, toc_after)
     # 3: site index
     pages, items = {}, []
