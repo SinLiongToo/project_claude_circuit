@@ -27,6 +27,7 @@ PAGES = [
     ('radar77-dft-stress.html', '<li><a href="#checklist">DFT checklist</a></li>'),
     ('radar77-test-flow.html', '<li><a href="#flow">Test flow</a></li>'),
     ('radar77-pcm-wat-spc.html', '<li><a href="#pcm">PCM / WAT &amp; SPC</a></li>'),
+    ('radar77-wafer-map.html', '<li><a href="#maps">Wafer map signatures</a></li>'),
 ]
 
 rd = lambda p: io.open(p, encoding='utf-8').read()
