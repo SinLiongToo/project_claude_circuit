@@ -27,3 +27,4 @@ kbd{font:500 11px/1 var(--mono);color:var(--muted);border:1px solid var(--line);
 .find-grp{font:600 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:12px 10px 6px}
 .find-grp:first-child{padding-top:6px}
 a.find-item{text-decoration:none}
+nav.toc a.back::before{content:none}

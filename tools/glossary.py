@@ -205,6 +205,10 @@ G = [
  ("DPPM","Defective Parts Per Million","Shipped-quality metric; automotive target ≪ 1."),
  ("FT","Final Test","Package-level production test."),
  ("SLT","System-Level Test","Functional test by booting the application."),
+ ("PCM","Process Control Monitor","Test structures in the scribe lines, measured by the fab (see WAT)."),
+ ("WAT","Wafer Acceptance Test","Fab's electrical test of PCM structures before shipping wafers."),
+ ("OSAT","Outsourced Semiconductor Assembly and Test","Company that packages and tests the dies."),
+ ("QA","Quality Assurance","Sample-based outgoing inspection and audits."),
  ("HTOL","High-Temperature Operating Life","≈ 1000 h biased at max temperature (AEC-Q100)."),
  ("ELFR","Early Life Failure Rate","Short high-temperature operation of a large sample."),
  ("TC","Temperature Cycling","Package and interconnect fatigue test."),
@@ -271,7 +275,7 @@ JS = r"""<script>
   const map={};rows.forEach(r=>{map[r.dataset.abbr]=r});
   const keys=Object.keys(map).sort((a,b)=>b.length-a.length);
   const re=new RegExp("(?<![\\w/-])("+keys.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")(?:s)?(?![\\w])","g");
-  const SKIP="svg,script,style,a,h1,h2,h3,th,.eq,code,kbd,form,.out,.find-ov,#glossary,nav,.num,.domain,button,mark";
+  const SKIP="svg,script,style,a,h1,h2,h3,th,.eq,code,kbd,form,.out,.find-ov,#glossary,nav,.num,.domain,button,mark,pre,.mermaid";
   document.querySelectorAll("main section").forEach(sec=>{
     if(sec.id==="glossary")return;
     const seen=new Set(), nodes=[];
