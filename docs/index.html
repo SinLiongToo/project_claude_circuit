@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>77 GHz Radar Notes</title>
-<script>/*theme-init*/try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<script>/*theme-init*/try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("toc")==="collapsed")document.documentElement.classList.add("toc-collapsed")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@500&display=swap">
@@ -70,6 +70,15 @@ nav.toc a.back::before{content:none}
 .theme-btn:hover{border-color:var(--rf)}
 .theme-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
 .theme-btn svg{width:16px;height:16px}
+.toc-toggle{display:flex;align-items:center;gap:6px;margin:0 0 10px;font:500 12.5px var(--sans);color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 9px;cursor:pointer}
+.toc-toggle:hover{color:var(--ink);border-color:var(--rf)}
+.toc-toggle:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.toc-toggle svg{width:15px;height:15px;flex:none}
+.toc-collapsed .layout{grid-template-columns:40px minmax(0,1fr)}
+.toc-collapsed nav.toc ol,.toc-collapsed nav.toc .back{display:none}
+.toc-collapsed .toc-toggle span{display:none}
+.toc-collapsed .toc-toggle{padding:6px}
+@media (max-width:860px){.toc-collapsed .layout{grid-template-columns:minmax(0,1fr)}}
 </style>
 <div class="wrap">
   <div class="eyebrow">76–81 GHz FMCW · ADAS radar</div>
@@ -120,7 +129,7 @@ nav.toc a.back::before{content:none}
   </div>
   <p style="margin-top:20px">Abbreviations: see the <a href="radar77-signal-chain.html#glossary" style="color:var(--rf)">glossary</a> (255 terms, also at the end of each page).</p>
   <footer>Typical engineering values for early trade-offs. Verify against your MMIC datasheet and current regulations. · <a href="https://github.com/SinLiongToo/project_claude_circuit">Source on GitHub</a>
-    <p class="stamp"><!--stamp-->Version 1.7.0 · Updated 2026-09-25 17:55 (UTC+08:00)<!--/stamp--></p>
+    <p class="stamp"><!--stamp-->Version 1.7.1 · Updated 2026-09-25 20:06 (UTC+08:00)<!--/stamp--></p>
   </footer>
 </div>
 
@@ -139,6 +148,25 @@ nav.toc a.back::before{content:none}
 </div>
 <button class="theme-btn" id="themeBtn" type="button" aria-label="Colour theme: Auto (follows your system). Click to change."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg><span id="themeLbl">Auto</span></button>
 <script>
+(function(){
+  // collapsible contents panel, remembered per browser
+  const nav=document.querySelector("nav.toc");if(!nav)return;
+  const root=document.documentElement;
+  const b=document.createElement("button");b.type="button";b.className="toc-toggle";
+  const icoHide='<path d="M15 6l-6 6 6 6"/>', icoShow='<path d="M4 6h16M4 12h16M4 18h16"/>';
+  function paint(){
+    const c=root.classList.contains("toc-collapsed");
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+(c?icoShow:icoHide)+'</svg><span>'+(c?"Show contents":"Hide contents")+'</span>';
+    b.setAttribute("aria-expanded",c?"false":"true");
+    b.setAttribute("aria-label",c?"Show contents":"Hide contents");b.title=c?"Show contents":"Hide contents";
+  }
+  b.addEventListener("click",()=>{
+    const c=root.classList.toggle("toc-collapsed");
+    try{c?localStorage.setItem("toc","collapsed"):localStorage.removeItem("toc")}catch(e){}
+    paint();
+  });
+  nav.insertBefore(b,nav.firstChild);paint();
+})();
 (function(){
   // colour theme: Auto (system) -> Light -> Dark, remembered per browser
   const root=document.documentElement, b=document.getElementById("themeBtn"), lbl=document.getElementById("themeLbl");

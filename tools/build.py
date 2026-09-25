@@ -110,13 +110,14 @@ def ensure_home_tab(s):
 
 
 THEME_INIT = ('<script>/*theme-init*/try{var t=localStorage.getItem("theme");'
-              'if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>\n')
+              'if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);'
+              'if(localStorage.getItem("toc")==="collapsed")document.documentElement.classList.add("toc-collapsed")'
+              '}catch(e){}</script>\n')
 
 
 def ensure_theme_init(s):
-    """Apply the saved colour theme before first paint."""
-    if '/*theme-init*/' in s:
-        return s
+    """Apply the saved colour theme and contents-panel state before first paint."""
+    s = re.sub(r'<script>/\*theme-init\*/.*?</script>\n', '', s, count=1, flags=re.S)
     i = s.index('</title>\n') + len('</title>\n')
     return s[:i] + THEME_INIT + s[i:]
 

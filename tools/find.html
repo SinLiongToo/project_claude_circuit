@@ -14,6 +14,25 @@
 <button class="theme-btn" id="themeBtn" type="button" aria-label="Colour theme: Auto (follows your system). Click to change."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg><span id="themeLbl">Auto</span></button>
 <script>
 (function(){
+  // collapsible contents panel, remembered per browser
+  const nav=document.querySelector("nav.toc");if(!nav)return;
+  const root=document.documentElement;
+  const b=document.createElement("button");b.type="button";b.className="toc-toggle";
+  const icoHide='<path d="M15 6l-6 6 6 6"/>', icoShow='<path d="M4 6h16M4 12h16M4 18h16"/>';
+  function paint(){
+    const c=root.classList.contains("toc-collapsed");
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+(c?icoShow:icoHide)+'</svg><span>'+(c?"Show contents":"Hide contents")+'</span>';
+    b.setAttribute("aria-expanded",c?"false":"true");
+    b.setAttribute("aria-label",c?"Show contents":"Hide contents");b.title=c?"Show contents":"Hide contents";
+  }
+  b.addEventListener("click",()=>{
+    const c=root.classList.toggle("toc-collapsed");
+    try{c?localStorage.setItem("toc","collapsed"):localStorage.removeItem("toc")}catch(e){}
+    paint();
+  });
+  nav.insertBefore(b,nav.firstChild);paint();
+})();
+(function(){
   // colour theme: Auto (system) -> Light -> Dark, remembered per browser
   const root=document.documentElement, b=document.getElementById("themeBtn"), lbl=document.getElementById("themeLbl");
   if(!b)return;
