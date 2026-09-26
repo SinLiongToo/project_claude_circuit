@@ -23,6 +23,7 @@ from bs4 import BeautifulSoup  # noqa: E402
 PAGES = [
     ('radar77-signal-chain.html', '<li><a href="#verify">Verification</a></li>'),
     ('radar77-synthesizer.html', '<li><a href="#pll">Frequency synthesizer</a></li>'),
+    ('radar77-power.html', '<li><a href="#pwr">Power management</a></li>'),
     ('radar77-bist-loopback.html', '<li><a href="#checklist">Design checklist</a></li>'),
     ('radar77-continuity.html', '<li><a href="#data">Data &amp; test flow</a></li>'),
     ('radar77-dft-stress.html', '<li><a href="#checklist">DFT checklist</a></li>'),

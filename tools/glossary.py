@@ -127,6 +127,13 @@ G = [
  ("PMIC","Power-Management IC","External bucks, supervisors and watchdog."),
  ("PSRR","Power-Supply Rejection Ratio","How much supply ripple an LDO (or circuit) blocks."),
  ("UV","Under-Voltage (OV = Over-Voltage)","Supply monitors, a safety mechanism."),
+ ("OV","Over-Voltage","Rail above its window; OV monitor protects gate oxides."),
+ ("POR","Power-On Reset","Holds the chip in reset until all rails are valid."),
+ ("BOR","Brown-Out Reset","Resets when a supply sags during operation."),
+ ("ESR","Equivalent Series Resistance","Of the LDO output capacitor; its zero affects loop stability."),
+ ("OCP","Over-Current Protection","Current limit on a regulator output."),
+ ("Iq","Quiescent current","Current a regulator draws for itself with no load."),
+ ("DLDO","Digital LDO","Switched pass-device array regulated by a comparator loop."),
  ("GND","Ground",""),
 ]),
 ("Test & production", [
