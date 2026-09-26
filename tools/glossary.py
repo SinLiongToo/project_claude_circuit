@@ -83,6 +83,10 @@ G = [
  ("TDC","Time-to-Digital Converter","Digital phase detector of an ADPLL."),
  ("XTAL","Crystal (reference oscillator)","40/50 MHz reference for PLL, ADC and digital."),
  ("DDS","Direct Digital Synthesizer","Digitally generated tone (IF test tone)."),
+ ("Kvco","VCO gain","Tuning sensitivity in MHz/V; varies per band."),
+ ("AFC","Automatic Frequency Calibration (band calibration)","Picks the VCO capacitor-bank band before the PLL closes."),
+ ("MMD","Multi-Modulus Divider","Programmable divider in the PLL feedback, dithered by the ΣΔ modulator."),
+ ("CML","Current-Mode Logic","Fast differential logic used for the first divider (prescaler) stages at 20 GHz."),
 ]),
 ("Data conversion & digital", [
  ("ADC","Analog-to-Digital Converter","Main Rx ADCs (ΣΔ) and the aux SAR ADC."),
