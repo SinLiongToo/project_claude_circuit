@@ -132,6 +132,11 @@ def check_tokens(fname):
     missing = sorted(set(re.findall(r'var\((--[\w-]+)', s)) - defined)
     if missing:
         sys.exit('%s uses undefined CSS variables: %s' % (fname, ', '.join(missing)))
+    # diagram blocks (<rect class="blk X">) need an "svg .X{stroke:...}" rule, or they draw with no outline
+    css = s[:s.index('</style>')]
+    nostroke = sorted(c for c in set(re.findall(r'class="blk (\w+)"', s)) if not re.search(r'svg \.%s\{stroke' % c, css))
+    if nostroke:
+        sys.exit('%s: diagram block classes without a stroke rule: %s' % (fname, ', '.join(nostroke)))
 
 
 def stamp_index(total_terms):
