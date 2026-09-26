@@ -355,6 +355,32 @@ fmax ≈ √( fT / (8π·Rg·Cgd) )           power-gain cut-off (simplified)</d
     <li><b>Why SPC on WAT protects the radar:</b> a centred, capable process (the Cpk above) keeps every product inside the corners it was designed for, so trims converge, Tx power has margin and the calibration tables stay valid.</li>
   </ul>
 
+  <h3 id="digital">Digital impact of corners and mismatch</h3>
+  <p>Corners and mismatch don't only shift analog and RF performance. They are also a main cause of <b>digital</b> failures, and a radar SoC has a large digital part (DSP, FFT accelerator, lockstep MCUs, several MB of SRAM for the radar cube). There are two separate mechanisms.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Corner + condition</th><th>What goes wrong</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>SS, low V, high T (or low T at advanced nodes)</td><td><b>Setup-time violations:</b> logic too slow for the clock</td><td>Low Idsat means slow gates. At 28 nm and below, temperature inversion can make cold, not hot, the slowest case</td></tr>
+      <tr><td>FF, high V, low T</td><td><b>Hold-time violations:</b> data races through too fast</td><td>Very fast short paths beat the clock skew</td></tr>
+      <tr><td>FF, high T</td><td><b>Leakage and power:</b> IDDQ too high, supply droop, thermal runaway risk</td><td>Low Vt and the exponential subthreshold current make Ioff rise steeply</td></tr>
+      <tr><td>FS / SF (skewed)</td><td>Ratioed circuits fail: level shifters, SRAM write, keepers</td><td>NMOS and PMOS strengths no longer balance</td></tr>
+    </tbody>
+  </table></div>
+  <div class="tbl"><table>
+    <thead><tr><th>Mismatch-sensitive block</th><th>Failure</th><th>Why mismatch matters here</th></tr></thead>
+    <tbody>
+      <tr><td>SRAM bit cell</td><td>Read-disturb (reading flips the cell), write failure, slow access, retention loss at low voltage</td><td>Minimum-size transistors (Pelgrom: small W·L gives large σVt) and millions of cells, so each mode needs ≈ 6σ margin</td></tr>
+      <tr><td>Sense amplifiers, comparators</td><td>Wrong decision</td><td>Input offset from Vt mismatch of the input pair</td></tr>
+      <tr><td>Flip-flops, synchronisers</td><td>Setup/hold shift, longer metastability window</td><td>Mismatch inside the latch pair</td></tr>
+      <tr><td>Clock tree</td><td>Extra skew</td><td>Random buffer delay differences beyond what timing analysis assumed</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><b>Covered in design by:</b> timing signoff at every corner, voltage and temperature, with on-chip-variation (OCV) derates for local mismatch; high-sigma SRAM bit-cell yield analysis; ageing margin, because NBTI and HCI slowly shift Vt over a 15-year life.</li>
+    <li><b>Caught at test by:</b> <a href="radar77-dft-stress.html#atspeed">at-speed scan</a> with a frequency guard band at hot and cold (slow-corner and small-delay parts); <a href="radar77-dft-stress.html#stress">VLV and Vmin screens</a> and <a href="radar77-dft-stress.html#mbist">MBIST at low voltage</a> (mismatch-weak SRAM cells, marginal paths); <a href="radar77-dft-stress.html#iddq">IDDQ</a> and DPAT per corner (leakage outliers).</li>
+    <li><b>Why WAT helps here:</b> each lot's corner explains its Vmin and at-speed fallout, and lets IDDQ and PAT limits be normalised per corner so good fast-corner parts aren't rejected as outliers.</li>
+  </ul>
+
   <h3 id="bv">Breakdown voltages</h3>
   <p>Breakdown tests ramp the voltage on a dedicated PCM structure until the current jumps past a compliance limit. The voltage at that point is the breakdown voltage (BV). The test is <b>destructive</b>, so it runs only on scribe-line structures at sample sites, never on the product dies. What matters is not only the mean but the <b>low tail</b>: a few early breakdowns point to extrinsic defects (weak oxide spots, particles) that become early-life failures in the field.</p>
   <div class="tbl"><table>
@@ -688,6 +714,7 @@ Centred: Cpk 1.00 ≈ 2 700 ppm · 1.33 ≈ 63 ppm · 1.67 ≈ 0.6 ppm</div>
       <tr id="g-SAF" data-abbr="SAF" data-full="Stuck-At Fault (Node permanently 0 or 1.)"><td class="v">SAF</td><td>Stuck-At Fault</td><td>Node permanently 0 or 1.</td></tr>
       <tr id="g-TDF" data-abbr="TDF" data-full="Transition Delay Fault (Node slow to rise or fall; needs at-speed test.)"><td class="v">TDF</td><td>Transition Delay Fault</td><td>Node slow to rise or fall; needs at-speed test.</td></tr>
       <tr id="g-STA" data-abbr="STA" data-full="Static Timing Analysis (Finds the longest paths for timing-aware ATPG.)"><td class="v">STA</td><td>Static Timing Analysis</td><td>Finds the longest paths for timing-aware ATPG.</td></tr>
+      <tr id="g-OCV" data-abbr="OCV" data-full="On-Chip Variation (Timing derates in STA that account for local (mismatch) variation across the die.)"><td class="v">OCV</td><td>On-Chip Variation</td><td>Timing derates in STA that account for local (mismatch) variation across the die.</td></tr>
       <tr id="g-OCC" data-abbr="OCC" data-full="On-Chip Clock Controller (Gates exact launch/capture pulses from the PLL for at-speed test.)"><td class="v">OCC</td><td>On-Chip Clock Controller</td><td>Gates exact launch/capture pulses from the PLL for at-speed test.</td></tr>
       <tr id="g-LOC" data-abbr="LOC" data-full="Launch-On-Capture (At-speed scheme; also called broadside.)"><td class="v">LOC</td><td>Launch-On-Capture</td><td>At-speed scheme; also called broadside.</td></tr>
       <tr id="g-LOS" data-abbr="LOS" data-full="Launch-On-Shift (At-speed scheme; SE must switch at speed.)"><td class="v">LOS</td><td>Launch-On-Shift</td><td>At-speed scheme; SE must switch at speed.</td></tr>

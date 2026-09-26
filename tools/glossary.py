@@ -176,6 +176,7 @@ G = [
  ("SAF","Stuck-At Fault","Node permanently 0 or 1."),
  ("TDF","Transition Delay Fault","Node slow to rise or fall; needs at-speed test."),
  ("STA","Static Timing Analysis","Finds the longest paths for timing-aware ATPG."),
+ ("OCV","On-Chip Variation","Timing derates in STA that account for local (mismatch) variation across the die."),
  ("OCC","On-Chip Clock Controller","Gates exact launch/capture pulses from the PLL for at-speed test."),
  ("LOC","Launch-On-Capture","At-speed scheme; also called broadside."),
  ("LOS","Launch-On-Shift","At-speed scheme; SE must switch at speed."),
