@@ -236,6 +236,9 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
 .g-nolabels .gn:not(.hl) text{display:none}
 #gArr path{fill:var(--ink)}
 .g-hint{position:absolute;left:10px;bottom:8px;font:11.5px var(--sans);color:var(--muted);pointer-events:none;background:var(--surface);padding:2px 6px;border-radius:4px}
+.g-stat{position:absolute;left:10px;top:10px;max-width:calc(100% - 20px);font:500 13px var(--sans);color:var(--ink);background:var(--lo-soft);border:1px solid var(--lo);border-radius:6px;padding:6px 10px;z-index:1}
+.g-stat[hidden]{display:none}
+.g-stat button{font:inherit;color:var(--rf);background:transparent;border:0;padding:0;margin-left:6px;cursor:pointer;text-decoration:underline}
 .g-panel{position:absolute;top:10px;right:10px;bottom:10px;width:300px;overflow-y:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px;box-shadow:0 6px 22px rgba(0,0,0,.14);padding:14px 16px;font-size:13.5px}
 .g-panel[hidden]{display:none}
 @media (max-width:700px){.g-panel{position:static;width:auto;margin-top:10px;box-shadow:none;max-height:none}}
@@ -304,6 +307,7 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
   </div>
   <div class="g-wrap" id="gWrap">
     <svg id="gSvg" role="group" aria-label="Knowledge graph of the radar notes. Each item is a focusable button; select one to list its connections."><defs><marker id="gArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><g id="gVp"><g id="gE"></g><g id="gEL"></g><g id="gN"></g></g></svg>
+    <div class="g-stat" id="gStat" role="status" hidden></div>
     <div class="g-hint">Drag to pan · wheel or pinch to zoom · drag an item to move it · click for details</div>
     <aside class="g-panel" id="gPanel" hidden aria-live="polite"></aside>
   </div>
@@ -741,16 +745,22 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
     const vis=N.filter(n=>n.el.style.display!=="none");if(!vis.length)return;
     let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;vis.forEach(n=>{x0=Math.min(x0,n.x-n.bw/2);x1=Math.max(x1,n.x+n.bw/2);y0=Math.min(y0,n.y-n.r-4);y1=Math.max(y1,n.y+n.r+24);});
     const pw=(!panel.hidden&&W>700)?W-320:W;
-    const ph=H-26;k=Math.min(pw/(x1-x0),ph/(y1-y0),1.8)*.96;tx=(pw-(x0+x1)*k)/2;ty=(ph-(y0+y1)*k)/2;setT();
+    const tp=$("gStat").hidden?0:44,ph=H-26-tp;k=Math.min(pw/(x1-x0),ph/(y1-y0),1.8)*.96;tx=(pw-(x0+x1)*k)/2;ty=(ph-(y0+y1)*k)/2+tp;setT();
   }
   function zoomAt(f,cx,cy){const nk=Math.max(.2,Math.min(4,k*f));tx=cx-(cx-tx)*nk/k;ty=cy-(cy-ty)*nk/k;k=nk;setT();}
   // state
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   const hidden=new Set();let sel=null,hov=null,depth=0;const panel=$("gPanel");
   function hood(n,d){const s=new Set([n]);let f=[n];for(let i=0;i<d;i++){const nf=[];f.forEach(x=>x.nb.forEach(y=>{if(!s.has(y)){s.add(y);nf.push(y);}}));f=nf;}return s;}
   function visible(){
     const lim=(sel&&depth)?hood(sel,depth):null;
     N.forEach(n=>{n.vis=!hidden.has(n.t)&&(!lim||lim.has(n));n.el.style.display=n.vis?"":"none";});
     E.forEach(e=>{const v=e.a.vis&&e.b.vis;e.el.style.display=v?"":"none";e.tl.style.display=v?"":"none";});
+    const st=$("gStat");
+    if(!depth){st.hidden=true;return;}
+    st.hidden=false;
+    st.innerHTML=sel?"Focus: "+N.filter(n=>n.vis).length+" of "+N.length+" items within "+depth+" step"+(depth>1?"s":"")+" of <b>"+esc(sel.l)+"</b>. Click another item to move the focus.<button type=\"button\" data-all>Show whole graph</button>"
+      :"Focus is on: click an item (or find one above) to show only its neighbourhood.";
   }
   function light(){
     const f=hov||sel;
@@ -758,7 +768,6 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
     N.forEach(n=>{n.el.classList.toggle("hl",!!f&&(n===f||f.nb.has(n)));n.el.classList.toggle("sel",n===sel);});
     E.forEach(e=>{const h=!!f&&(e.a===f||e.b===f);e.el.classList.toggle("hl",h);e.tl.classList.toggle("hl",h);});
   }
-  const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
   function gloss(n){
     const keys=[n.l].concat(n.l.split(/\s*[\/+(]\s*|\s+/));
     for(const k of keys){const r=document.querySelector('#glossary tr[data-abbr="'+CSS.escape(k)+'"]');if(r)return r.dataset.full;}
@@ -793,7 +802,8 @@ a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
   $("gLegend").innerHTML=D.types.map(([t,l])=>'<span>'+icon(t)+esc(l)+' ('+N.filter(n=>n.t===t).length+')</span>').join("");
   $("gTypes").addEventListener("click",e=>{const b=e.target.closest(".g-chip");if(!b)return;const t=b.dataset.t,on=b.getAttribute("aria-pressed")==="true";
     b.setAttribute("aria-pressed",on?"false":"true");on?hidden.add(t):hidden.delete(t);if(sel&&hidden.has(sel.t))select(null);visible();light();});
-  $("gDepth").addEventListener("change",e=>{depth=+e.target.value;visible();light();fit();});
+  $("gDepth").addEventListener("change",e=>{depth=+e.target.value;visible();light();fit();if(depth&&!sel)$("gQ").focus();});
+  $("gStat").addEventListener("click",e=>{if(e.target.closest("[data-all]")){$("gDepth").value="0";$("gDepth").dispatchEvent(new Event("change"));}});
   $("gLabels").addEventListener("click",e=>{const on=e.currentTarget.getAttribute("aria-pressed")==="true";e.currentTarget.setAttribute("aria-pressed",on?"false":"true");svg.classList.toggle("g-nolabels",on);});
   $("gZin").onclick=()=>zoomAt(1.25,W/2,H/2);$("gZout").onclick=()=>zoomAt(.8,W/2,H/2);$("gFit").onclick=fit;
   $("gList").innerHTML=N.map(n=>'<option value="'+esc(n.l)+'">').join("");
