@@ -19,6 +19,7 @@ sys.path.insert(0, HERE)
 os.chdir(DOCS)
 import glossary  # noqa: E402  (uses cwd = docs)
 import graph  # noqa: E402
+import changelog  # noqa: E402
 from bs4 import BeautifulSoup  # noqa: E402
 
 # page file, TOC entry the glossary link goes after
@@ -28,6 +29,9 @@ PAGES = [
     ('radar77-synthesizer.html', '<li><a href="#pll">Frequency synthesizer</a></li>'),
     ('radar77-power.html', '<li><a href="#pwr">Power management</a></li>'),
     ('radar77-rf-frontend.html', '<li><a href="#rf">RF front-end circuits</a></li>'),
+    ('radar77-if-adc.html', '<li><a href="#ifadc">IF chain &amp; ADC</a></li>'),
+    ('radar77-dsp.html', '<li><a href="#dsp">Radar DSP &amp; data path</a></li>'),
+    ('radar77-safety.html', '<li><a href="#fusa">Functional safety</a></li>'),
     ('radar77-bist-loopback.html', '<li><a href="#checklist">Design checklist</a></li>'),
     ('radar77-continuity.html', '<li><a href="#data">Data &amp; test flow</a></li>'),
     ('radar77-dft-stress.html', '<li><a href="#checklist">DFT checklist</a></li>'),
@@ -35,6 +39,14 @@ PAGES = [
     ('radar77-pcm-wat-spc.html', '<li><a href="#pcm">PCM / WAT &amp; SPC</a></li>'),
     ('radar77-wafer-map.html', '<li><a href="#maps">Wafer map signatures</a></li>'),
     ('radar77-package.html', '<li><a href="#pkg">Package &amp; failure modes</a></li>'),
+    ('radar77-esd.html', '<li><a href="#esd">ESD &amp; latch-up</a></li>'),
+    ('radar77-reliability.html', '<li><a href="#rel">Reliability &amp; aging</a></li>'),
+    ('radar77-characterization.html', '<li><a href="#char">Characterization &amp; correlation</a></li>'),
+    ('radar77-yield.html', '<li><a href="#yield">Yield &amp; quality</a></li>'),
+    ('radar77-regulation.html', '<li><a href="#reg">Regulations &amp; interference</a></li>'),
+    ('radar77-worked-example.html', '<li><a href="#ex">Worked example</a></li>'),
+    ('radar77-standards.html', '<li><a href="#std">Standards</a></li>'),
+    ('radar77-changelog.html', '<li><a href="#log">Changelog</a></li>'),
 ]
 
 rd = lambda p: io.open(p, encoding='utf-8').read()
@@ -106,6 +118,21 @@ HOME_TAB = ('<a class="home-tab" href="index.html"><svg viewBox="0 0 24 24" fill
             'Main page</a>\n')
 
 
+GRAPH_TAB = ('<a class="home-tab graph-tab" href="radar77-knowledge-graph.html#p=%s"><svg viewBox="0 0 24 24" fill="none" '
+             'stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="8" r="2.5"/>'
+             '<circle cx="10" cy="18" r="2.5"/><path d="M8.3 6.6 15.6 7.6M7 8.3l2.2 7.3M16.4 10l-4.7 6.3"/></svg>Knowledge graph</a>\n')
+
+
+def ensure_graph_tab(s, fname):
+    """Content pages that have items in the knowledge graph get a tab that opens the graph on them."""
+    s = re.sub(r'<a class="home-tab graph-tab".*?</a>\n', '', s, flags=re.S)
+    key = next((k for k, (f, _) in graph.PAGES.items() if f == fname), None)
+    if not key:
+        return s
+    i = s.index('<header class="top">')
+    return s[:i] + GRAPH_TAB % key + s[i:]
+
+
 def ensure_home_tab(s):
     """Every content page gets a tab back to the landing page, above its header."""
     if 'class="home-tab"' in s:
@@ -166,9 +193,12 @@ def main():
         check_tokens(fname)
     # 0: knowledge graph data, connection tables and "mentioned in" lists
     print('knowledge graph: %d items, %d connections' % graph.refresh(rd, wr))
+    s = rd('radar77-changelog.html')
+    s = re.sub(r'<!--changelog-->.*?<!--/changelog-->', lambda m: '<!--changelog-->' + changelog.render() + '<!--/changelog-->', s, count=1, flags=re.S)
+    wr('radar77-changelog.html', s)
     # 1 + 2: search component and glossary
     for fname, toc_after in PAGES:
-        wr(fname, ensure_theme_init(ensure_home_tab(refresh_search(rd(fname)))))
+        wr(fname, ensure_theme_init(ensure_graph_tab(ensure_home_tab(refresh_search(rd(fname))), fname)))
         glossary.inject(fname, None, toc_after)
     # 3: site index
     pages, items = {}, []

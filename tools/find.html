@@ -181,5 +181,7 @@
     const cand=idx.filter(e=>(!scope||scope.contains(e.el))&&terms.every(x=>e.lt.includes(x))).sort((a,b)=>a.w-b.w);
     if(cand.length)setTimeout(()=>show(cand[0].el),350);
   }
+  // printing: open every collapsed table so it is on paper
+  addEventListener("beforeprint",()=>document.querySelectorAll("details").forEach(d=>d.open=true));
 })();
 </script>

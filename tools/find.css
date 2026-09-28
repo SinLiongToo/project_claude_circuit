@@ -46,3 +46,16 @@ nav.toc a.back::before{content:none}
 .toc-collapsed .toc-toggle span{display:none}
 .toc-collapsed .toc-toggle{padding:6px}
 @media (max-width:860px){.toc-collapsed .layout{grid-template-columns:minmax(0,1fr)}}
+.home-tab.graph-tab{margin-left:6px}
+@media print{
+  :root{--bg:#fff!important;--surface:#fff!important;--sunk:#f1f3f2!important;--ink:#000!important;--muted:#333!important;--line:#bbb!important;color-scheme:light!important}
+  .find-btn,.theme-btn,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
+  body{padding:0!important;font-size:11pt}
+  .layout{display:block!important}
+  .wrap{max-width:none}
+  .fig,.tbl,.card,.eq,.calc,figure,tr{break-inside:avoid}
+  .fig,.tbl,.eq{overflow:visible!important}
+  .fig.wide svg{min-width:0!important}
+  h2,h3{break-after:avoid}
+  a{color:inherit;text-decoration:none}
+}
