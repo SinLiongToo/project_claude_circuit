@@ -2,6 +2,7 @@
 
 Run after editing any page:  python tools/build.py
 
+0. Refreshes the knowledge-graph page from tools/graph.py.
 1. Refreshes the search component (tools/find.css + tools/find.html) in each page.
 2. Regenerates the glossary section and auto-link script (tools/glossary.py) and
    renumbers the sections.
@@ -17,10 +18,12 @@ DOCS = os.path.join(HERE, '..', 'docs')
 sys.path.insert(0, HERE)
 os.chdir(DOCS)
 import glossary  # noqa: E402  (uses cwd = docs)
+import graph  # noqa: E402
 from bs4 import BeautifulSoup  # noqa: E402
 
 # page file, TOC entry the glossary link goes after
 PAGES = [
+    ('radar77-knowledge-graph.html', '<li><a href="#graph">Knowledge graph</a></li>'),
     ('radar77-signal-chain.html', '<li><a href="#verify">Verification</a></li>'),
     ('radar77-synthesizer.html', '<li><a href="#pll">Frequency synthesizer</a></li>'),
     ('radar77-power.html', '<li><a href="#pwr">Power management</a></li>'),
@@ -161,6 +164,8 @@ INDEX = 'index.html'
 def main():
     for fname, _ in PAGES + [(INDEX, None)]:
         check_tokens(fname)
+    # 0: knowledge graph data, connection tables and "mentioned in" lists
+    print('knowledge graph: %d items, %d connections' % graph.refresh(rd, wr))
     # 1 + 2: search component and glossary
     for fname, toc_after in PAGES:
         wr(fname, ensure_theme_init(ensure_home_tab(refresh_search(rd(fname)))))
