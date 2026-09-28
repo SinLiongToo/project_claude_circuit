@@ -55,6 +55,9 @@ N = [
     ('mbist', 'Memory BIST', 'c', 'dft#mbist', 'On-chip March-algorithm tester for the radar data memories.', ['MBIST', 'memory BIST']),
     ('lbist', 'Logic BIST', 'c', 'dft#lbist', 'Pseudo-random self-test of the logic, also run in the field at key-on.', ['LBIST', 'logic BIST']),
     ('jtag', 'JTAG / IJTAG', 'c', 'dft#jtag', 'Test access port and instrument network that reach scan, BIST and trim registers.', ['JTAG', 'IJTAG']),
+    ('atb', 'Test mux / ATB', 'c', 'bist#mux', 'Analog test muxes and the analog test bus: connect each sub-block node to the aux ADC, main ADC or a test pin.', ['test mux', 'analog test bus', 'ATB', 'MUX']),
+    ('lbsw', 'Loopback switches', 'c', 'bist#mux', 'RF SP4T switches and splitter that choose which Tx feeds which Rx in the loopback.', ['loopback switch', 'SP4T', 'SPDT']),
+    ('dmux', 'Digital test muxes', 'c', 'dft#muxes', 'Scan, clock, reset, bypass and pin-sharing muxes that test mode controls.', ['clock mux', 'bypass', 'pin-sharing']),
     ('bistc', 'BIST controller', 'c', 'bist#arch', 'On-chip sequencer that sets up loopback paths, runs measurements and compares results with limits.', ['BIST controller', 'BIST engine']),
     # parameters
     ('nf', 'Noise figure', 'p', 'rf#lna', 'How much noise the receiver adds; set mostly by input loss and the LNA (Friis).', ['NF', 'noise figure']),
@@ -163,6 +166,12 @@ E = [
     ('trim', 'selects the sub-band of', 'vco'), ('bism', 'checks', 'lock'), ('bistc', 'provides in-field monitoring for', 'safety'),
     ('lbist', 'provides in-field test for', 'safety'), ('mbist', 'provides in-field test for', 'safety'), ('jtag', 'controls', 'bistc'),
     ('txl', 'is checked by', 'bism'),
+    # test muxes
+    ('bistc', 'sets the selects of', 'atb'), ('atb', 'brings nodes to', 'adc'), ('atb', 'reads', 'bg'), ('atb', 'reads', 'ldo'),
+    ('atb', 'reads the tuning voltage of', 'vco'), ('atb', 'reads', 'pdet'), ('atb', 'copies the bias current of', 'lna'),
+    ('ioff', 'leakage limits the accuracy of', 'atb'), ('atb', 'is locked off in the field for', 'safety'), ('bism', 'is routed by', 'atb'),
+    ('loop', 'is routed by', 'lbsw'), ('lbsw', 'taps the output of', 'pa'),
+    ('dmux', 'builds', 'scan'), ('dmux', 'switches the test clocks for', 'ats'), ('dmux', 'brings out', 'lock'), ('jtag', 'sets', 'dmux'),
     # digital test
     ('jtag', 'accesses', 'scan'), ('scan', 'tests the logic for', 'timing'), ('ats', 'uses', 'scan'), ('ats', 'catches slow paths in', 'timing'),
     ('iddq', 'uses scan states from', 'scan'), ('vlv', 'finds marginal', 'timing'), ('stress', 'is followed by', 'pat'), ('lbist', 'reuses', 'scan'),
