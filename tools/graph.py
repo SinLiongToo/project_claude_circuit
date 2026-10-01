@@ -122,6 +122,7 @@ N = [
     # added with the IF/ADC, DSP, safety, ESD, reliability, characterization, yield and regulation pages
     ('aaf', 'Anti-alias filter', 'c', 'ifadc#aaf', 'Low-pass filter before the ADC that stops signals near fs from folding into the band; relaxed with a CT-ΣΔ ADC.', ['AAF', 'anti-alias filter']),
     ('decim', 'Decimation filter', 'c', 'ifadc#decim', 'CIC and half-band FIR stages that turn the ΣΔ bit stream into 16-bit samples at 2× the IF bandwidth.', ['decimation filter', 'CIC', 'half-band']),
+    ('satdet', 'Saturation detector', 'c', 'ifadc#sat', 'Window comparators, peak detectors and ADC over-range flags that report clipping in each receive stage.', ['saturation detector', 'saturation', 'clipping', 'over-range']),
     ('jit', 'Clock jitter', 'p', 'ifadc#adc', 'Timing noise of the ADC clock; limits SNR at high IF frequencies.', ['jitter']),
     ('cube', 'Radar cube memory', 'c', 'dsp#cube', 'On-chip SRAM holding range × chirp × channel data for the Doppler and angle processing.', ['radar cube', 'cube']),
     ('cfar', 'CFAR detection', 's', 'dsp#cfar', 'Adaptive threshold that finds targets at a constant false-alarm rate.', ['CFAR', 'OS-CFAR', 'CA-CFAR']),
@@ -218,6 +219,8 @@ E = [
     ('syl', 'holds lots flagged by', 'bins'), ('fa', 'feeds corrective action into', 'flow'), ('dppm', 'is investigated by', 'fa'),
     ('eirp', 'caps', 'pout'), ('lin', 'keeps the chirp inside', 'eirp'), ('interf', 'raises the noise floor for', 'cfar'), ('interf', 'is detected in', 'dfe'),
     ('ramp', 'randomises chirps against', 'interf'),
+    ('satdet', 'flags clipping in', 'adc'), ('satdet', 'watches the output of', 'vga'), ('satdet', 'tells', 'agc'), ('satdet', 'reports a blind receiver to', 'safety'),
+    ('interf', 'trips', 'satdet'), ('keyon', 'self-tests', 'satdet'), ('iip3', 'sets the level that trips', 'satdet'),
     # test muxes
     ('bistc', 'sets the selects of', 'atb'), ('atb', 'brings nodes to', 'adc'), ('atb', 'reads', 'bg'), ('atb', 'reads', 'ldo'),
     ('atb', 'reads the tuning voltage of', 'vco'), ('atb', 'reads', 'pdet'), ('atb', 'copies the bias current of', 'lna'),

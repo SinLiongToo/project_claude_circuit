@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.17.0', '2026-10-02', ['IF &amp; ADC page: saturation detectors (where they sit, circuits, specifications, testing, problems); linked from the safety page and the knowledge graph.']),
     ('1.16.1', '2026-09-29', ['Knowledge graph: one-click full-screen button.']),
     ('1.16.0', '2026-09-28', [
         'New pages: IF chain &amp; ADC circuits, radar DSP &amp; data path, functional safety (ISO 26262), ESD &amp; latch-up, reliability &amp; aging, characterization &amp; correlation, yield &amp; quality analytics, regulations &amp; interference, standards &amp; references, worked example, and this changelog.',
