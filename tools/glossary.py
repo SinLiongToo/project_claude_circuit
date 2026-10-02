@@ -3,6 +3,18 @@ import io, re, html, sys
 
 G = [
 ("Radar system & ADAS", [
+ ("FCW","Forward Collision Warning","Warns of an imminent frontal collision; stage before AEB."),
+ ("FCTA","Front Cross-Traffic Alert","Front corner-radar function at junctions and driveways."),
+ ("RCTB","Rear Cross-Traffic Braking","Brakes automatically when RCTA detects cross traffic while reversing."),
+ ("DOW","Door-Opening Warning","Warns before a door is opened into an approaching cyclist or car."),
+ ("VRU","Vulnerable Road User","Pedestrians, cyclists and motorcyclists."),
+ ("TTC","Time To Collision","Range divided by closing speed; triggers warnings and braking."),
+ ("LRR","Long-Range Radar","Front radar, ≈ 200–300 m, narrow field of view."),
+ ("MRR","Mid-Range Radar","≈ 80–160 m, ±40–60° field of view."),
+ ("SRR","Short-Range Radar","Corner radar, ≈ 30–80 m, ±75–90° field of view."),
+ ("NCAP","New Car Assessment Programme","Consumer safety ratings (Euro NCAP, C-NCAP, IIHS …)."),
+ ("GSR","General Safety Regulation (EU) 2019/2144","Makes AEB and other assistance functions mandatory in the EU."),
+ ("CPD","Child Presence Detection","In-cabin sensing (often 60 GHz radar) that detects a child left in the car."),
  ("ACC","Adaptive Cruise Control","Keeps distance to the car ahead; uses long-range front radar."),
  ("ADAS","Advanced Driver-Assistance Systems","The vehicle functions the radar serves."),
  ("AEB","Autonomous Emergency Braking","Brakes automatically when a collision is imminent."),

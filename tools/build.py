@@ -25,6 +25,7 @@ from bs4 import BeautifulSoup  # noqa: E402
 # page file, TOC entry the glossary link goes after
 PAGES = [
     ('radar77-knowledge-graph.html', '<li><a href="#graph">Knowledge graph</a></li>'),
+    ('radar77-applications.html', '<li><a href="#app">ADAS applications</a></li>'),
     ('radar77-signal-chain.html', '<li><a href="#verify">Verification</a></li>'),
     ('radar77-synthesizer.html', '<li><a href="#pll">Frequency synthesizer</a></li>'),
     ('radar77-power.html', '<li><a href="#pwr">Power management</a></li>'),

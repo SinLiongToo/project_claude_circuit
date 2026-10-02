@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.18.0', '2026-10-02', ['New ADAS applications page: animated ACC, pedestrian AEB, BSD/LCA and RCTA scenarios with live point-cloud output and video export; functions, sensor classes, application-to-chip requirements, regulations and market trends.']),
     ('1.17.0', '2026-10-02', ['IF &amp; ADC page: saturation detectors (where they sit, circuits, specifications, testing, problems); linked from the safety page and the knowledge graph.']),
     ('1.16.1', '2026-09-29', ['Knowledge graph: one-click full-screen button.']),
     ('1.16.0', '2026-09-28', [

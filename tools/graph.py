@@ -30,6 +30,7 @@ PAGES = {
     'char': ('radar77-characterization.html', 'Characterization'),
     'yield': ('radar77-yield.html', 'Yield'),
     'reg': ('radar77-regulation.html', 'Regulations'),
+    'app': ('radar77-applications.html', 'Applications'),
 }
 TYPES = [('c', 'Circuit'), ('p', 'Parameter'), ('t', 'Test'), ('f', 'Fab & package'), ('s', 'System')]
 
@@ -122,6 +123,11 @@ N = [
     # added with the IF/ADC, DSP, safety, ESD, reliability, characterization, yield and regulation pages
     ('aaf', 'Anti-alias filter', 'c', 'ifadc#aaf', 'Low-pass filter before the ADC that stops signals near fs from folding into the band; relaxed with a CT-ΣΔ ADC.', ['AAF', 'anti-alias filter']),
     ('decim', 'Decimation filter', 'c', 'ifadc#decim', 'CIC and half-band FIR stages that turn the ΣΔ bit stream into 16-bit samples at 2× the IF bandwidth.', ['decimation filter', 'CIC', 'half-band']),
+    ('acc', 'ACC', 's', 'app#functions', 'Adaptive cruise control: keeps a time gap to the car ahead using the front long-range radar.', ['ACC', 'adaptive cruise']),
+    ('aeb', 'AEB', 's', 'app#functions', 'Automatic emergency braking for cars, pedestrians and cyclists, from time-to-collision.', ['AEB', 'emergency braking']),
+    ('bsd', 'BSD / LCA', 's', 'app#functions', 'Blind-spot detection and lane-change assist from the rear corner radars.', ['BSD', 'LCA', 'blind spot']),
+    ('rcta', 'RCTA / RCTB', 's', 'app#functions', 'Rear cross-traffic alert and braking when reversing.', ['RCTA', 'RCTB', 'cross-traffic']),
+    ('img4d', '4D imaging radar', 's', 'app#classes', 'High-channel radar that also measures elevation, for L2+ and L3 driving.', ['4D imaging', 'imaging radar']),
     ('satdet', 'Saturation detector', 'c', 'ifadc#sat', 'Window comparators, peak detectors and ADC over-range flags that report clipping in each receive stage.', ['saturation detector', 'saturation', 'clipping', 'over-range']),
     ('jit', 'Clock jitter', 'p', 'ifadc#adc', 'Timing noise of the ADC clock; limits SNR at high IF frequencies.', ['jitter']),
     ('cube', 'Radar cube memory', 'c', 'dsp#cube', 'On-chip SRAM holding range × chirp × channel data for the Doppler and angle processing.', ['radar cube', 'cube']),
@@ -219,6 +225,9 @@ E = [
     ('syl', 'holds lots flagged by', 'bins'), ('fa', 'feeds corrective action into', 'flow'), ('dppm', 'is investigated by', 'fa'),
     ('eirp', 'caps', 'pout'), ('lin', 'keeps the chirp inside', 'eirp'), ('interf', 'raises the noise floor for', 'cfar'), ('interf', 'is detected in', 'dfe'),
     ('ramp', 'randomises chirps against', 'interf'),
+    ('acc', 'needs long', 'range'), ('acc', 'assigns lanes with', 'angle'), ('aeb', 'must react within', 'ftti'), ('aeb', 'needs fine', 'res'),
+    ('aeb', 'detects with', 'cfar'), ('bsd', 'needs wide-FoV', 'ant'), ('rcta', 'needs wide-angle', 'angle'), ('img4d', 'needs many channels for', 'beam'),
+    ('img4d', 'streams data through', 'iface'), ('interf', 'degrades', 'aeb'), ('safety', 'covers', 'aeb'), ('satdet', 'protects pedestrian detection in', 'aeb'),
     ('satdet', 'flags clipping in', 'adc'), ('satdet', 'watches the output of', 'vga'), ('satdet', 'tells', 'agc'), ('satdet', 'reports a blind receiver to', 'safety'),
     ('interf', 'trips', 'satdet'), ('keyon', 'self-tests', 'satdet'), ('iip3', 'sets the level that trips', 'satdet'),
     # test muxes
