@@ -31,6 +31,7 @@ PAGES = {
     'yield': ('radar77-yield.html', 'Yield'),
     'reg': ('radar77-regulation.html', 'Regulations'),
     'app': ('radar77-applications.html', 'Applications'),
+    'otp': ('radar77-efuse-otp.html', 'eFuse &amp; OTP'),
 }
 TYPES = [('c', 'Circuit'), ('p', 'Parameter'), ('t', 'Test'), ('f', 'Fab & package'), ('s', 'System')]
 
@@ -123,6 +124,8 @@ N = [
     # added with the IF/ADC, DSP, safety, ESD, reliability, characterization, yield and regulation pages
     ('aaf', 'Anti-alias filter', 'c', 'ifadc#aaf', 'Low-pass filter before the ADC that stops signals near fs from folding into the band; relaxed with a CT-ΣΔ ADC.', ['AAF', 'anti-alias filter']),
     ('decim', 'Decimation filter', 'c', 'ifadc#decim', 'CIC and half-band FIR stages that turn the ΣΔ bit stream into 16-bit samples at 2× the IF bandwidth.', ['decimation filter', 'CIC', 'half-band']),
+    ('efuse', 'eFuse / OTP', 'c', 'otp#cell', 'One-time-programmable bits (poly eFuse, antifuse) that store trim codes, die ID and repair for life.', ['eFuse', 'OTP', 'antifuse', 'fuse']),
+    ('shadow', 'Shadow registers', 'c', 'otp#cell', 'Registers loaded from the fuses at boot; they drive the trim DACs and allow soft trim during test.', ['shadow register', 'soft trim']),
     ('acc', 'ACC', 's', 'app#functions', 'Adaptive cruise control: keeps a time gap to the car ahead using the front long-range radar.', ['ACC', 'adaptive cruise']),
     ('aeb', 'AEB', 's', 'app#functions', 'Automatic emergency braking for cars, pedestrians and cyclists, from time-to-collision.', ['AEB', 'emergency braking']),
     ('bsd', 'BSD / LCA', 's', 'app#functions', 'Blind-spot detection and lane-change assist from the rear corner radars.', ['BSD', 'LCA', 'blind spot']),
@@ -225,6 +228,9 @@ E = [
     ('syl', 'holds lots flagged by', 'bins'), ('fa', 'feeds corrective action into', 'flow'), ('dppm', 'is investigated by', 'fa'),
     ('eirp', 'caps', 'pout'), ('lin', 'keeps the chirp inside', 'eirp'), ('interf', 'raises the noise floor for', 'cfar'), ('interf', 'is detected in', 'dfe'),
     ('ramp', 'randomises chirps against', 'interf'),
+    ('trim', 'stores codes in', 'efuse'), ('efuse', 'loads at boot into', 'shadow'), ('shadow', 'sets', 'bg'), ('shadow', 'sets', 'ldo'),
+    ('em', 'is the mechanism that programs', 'efuse'), ('tddb', 'is the mechanism of antifuse', 'efuse'), ('keyon', 'checks the CRC of', 'efuse'),
+    ('mbist', 'stores repair addresses in', 'efuse'), ('htol', 'qualifies retention of', 'efuse'),
     ('acc', 'needs long', 'range'), ('acc', 'assigns lanes with', 'angle'), ('aeb', 'must react within', 'ftti'), ('aeb', 'needs fine', 'res'),
     ('aeb', 'detects with', 'cfar'), ('bsd', 'needs wide-FoV', 'ant'), ('rcta', 'needs wide-angle', 'angle'), ('img4d', 'needs many channels for', 'beam'),
     ('img4d', 'streams data through', 'iface'), ('interf', 'degrades', 'aeb'), ('safety', 'covers', 'aeb'), ('satdet', 'protects pedestrian detection in', 'aeb'),

@@ -162,6 +162,11 @@ G = [
  ("GND","Ground",""),
 ]),
 ("Test & production", [
+ ("eFuse","Electrically programmable fuse","Silicided poly link blown by current; stores trim, ID and repair bits."),
+ ("MTP","Multiple-Time Programmable memory","Small NVM that can be rewritten a few times."),
+ ("NVM","Non-Volatile Memory","Keeps data without power: eFuse, OTP, MTP, flash."),
+ ("VPP","Programming supply voltage","Supply used only to program fuses or OTP."),
+ ("CRC","Cyclic Redundancy Check","Checksum that detects corrupted data, e.g. trim words at boot."),
  ("RMA","Return Material Authorization","A customer return, analysed through the 8D process."),
  ("8D","Eight Disciplines","Structured problem solving: team, describe, contain, root cause, correct, verify, prevent, close."),
  ("MSA","Measurement System Analysis","Proves a measurement is precise and accurate enough (Gage R&amp;R, bias, stability)."),

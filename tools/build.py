@@ -34,6 +34,7 @@ PAGES = [
     ('radar77-dsp.html', '<li><a href="#dsp">Radar DSP &amp; data path</a></li>'),
     ('radar77-safety.html', '<li><a href="#fusa">Functional safety</a></li>'),
     ('radar77-bist-loopback.html', '<li><a href="#checklist">Design checklist</a></li>'),
+    ('radar77-efuse-otp.html', '<li><a href="#otp">eFuse, OTP &amp; trim</a></li>'),
     ('radar77-continuity.html', '<li><a href="#data">Data &amp; test flow</a></li>'),
     ('radar77-dft-stress.html', '<li><a href="#checklist">DFT checklist</a></li>'),
     ('radar77-test-flow.html', '<li><a href="#flow">Test flow</a></li>'),
