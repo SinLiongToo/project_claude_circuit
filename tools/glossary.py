@@ -337,6 +337,12 @@ G = [
  ("NBTI","Negative-Bias Temperature Instability","PMOS threshold drift."),
 ]),
 ("PCB, package & materials", [
+ ("TCB","Thermo-Compression Bonding","Flip-chip attach with heat and force per die; fine pitch, low warpage."),
+ ("MUF","Molded Underfill","Mold compound that also fills the gap under a flip-chip die."),
+ ("CSAM","C-mode Scanning Acoustic Microscopy","Ultrasound imaging of voids and delamination inside packages."),
+ ("AOI","Automated Optical Inspection","Camera inspection of RDL, bumps and balls in the assembly line."),
+ ("KGD","Known-Good Die","Die that passed wafer sort and is released for assembly."),
+ ("WLP","Wafer-Level Package","Package built on the whole wafer (fan-in) or a reconstituted wafer (fan-out)."),
  ("PCB","Printed Circuit Board",""),
  ("RDL","Redistribution Layer","Thin-film Cu wiring that routes die pads to balls (fan-out) or bumps."),
  ("UBM","Under-Bump Metallisation","Metal stack between die/RDL pad and the solder."),

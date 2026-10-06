@@ -38,6 +38,7 @@ PAGES = {
     'emc': ('radar77-emc-pi.html', 'EMC &amp; PI'),
     'dflow': ('radar77-design-flow.html', 'Design flow'),
     'tcost': ('radar77-test-cost.html', 'Test cost'),
+    'assy': ('radar77-assembly.html', 'Assembly'),
 }
 TYPES = [('c', 'Circuit'), ('p', 'Parameter'), ('t', 'Test'), ('f', 'Fab & package'), ('s', 'System')]
 
@@ -130,6 +131,8 @@ N = [
     # added with the IF/ADC, DSP, safety, ESD, reliability, characterization, yield and regulation pages
     ('aaf', 'Anti-alias filter', 'c', 'ifadc#aaf', 'Low-pass filter before the ADC that stops signals near fs from folding into the band; relaxed with a CT-ΣΔ ADC.', ['AAF', 'anti-alias filter']),
     ('decim', 'Decimation filter', 'c', 'ifadc#decim', 'CIC and half-band FIR stages that turn the ΣΔ bit stream into 16-bit samples at 2× the IF bandwidth.', ['decimation filter', 'CIC', 'half-band']),
+    ('assyflow', 'Assembly flow', 'f', 'assy#flows', 'Bumping, dicing, fan-out molding, RDL build-up, ball attach and singulation.', ['assembly', 'reconstituted wafer', 'compression mold']),
+    ('dieshift', 'Die shift / warpage', 'f', 'assy#defects', 'Die movement during molding and package bending at reflow; cause RDL misalignment and open joints.', ['die shift', 'warpage', 'head-in-pillow']),
     ('bringup', 'Bench bring-up', 't', 'bench#bringup', 'Step-by-step first-silicon test on the evaluation board, from continuity to system test.', ['bring-up', 'bench', 'evaluation board']),
     ('ota', 'OTA / chamber test', 't', 'bench#mmw', 'Over-the-air measurement in an anechoic chamber with reflectors and target simulators.', ['OTA', 'anechoic', 'corner reflector', 'target simulator']),
     ('radome', 'Radome / bumper', 'f', 'mod#radome', 'Plastic cover in front of the antennas; its thickness and paint set loss and reflections.', ['radome', 'bumper']),
@@ -243,6 +246,8 @@ E = [
     ('syl', 'holds lots flagged by', 'bins'), ('fa', 'feeds corrective action into', 'flow'), ('dppm', 'is investigated by', 'fa'),
     ('eirp', 'caps', 'pout'), ('lin', 'keeps the chirp inside', 'eirp'), ('interf', 'raises the noise floor for', 'cfar'), ('interf', 'is detected in', 'dfe'),
     ('ramp', 'randomises chirps against', 'interf'),
+    ('assyflow', 'builds', 'ewlb'), ('assyflow', 'patterns', 'rdl'), ('assyflow', 'forms', 'bump'), ('assyflow', 'takes known-good dies from', 'flow'),
+    ('dieshift', 'misaligns', 'rdl'), ('dieshift', 'causes opens found by', 'os'), ('dieshift', 'leads to', 'solder'), ('emsim', 'sets the line widths of', 'assyflow'),
     ('bringup', 'creates reference data for', 'corrl'), ('bringup', 'checks first', 'os'), ('ota', 'measures', 'ant'), ('ota', 'verifies', 'range'),
     ('radome', 'adds loss in front of', 'ant'), ('eolcal', 'calibrates', 'beam'), ('eolcal', 'is done through', 'ota'), ('radome', 'is corrected by', 'eolcal'),
     ('tj', 'lowers', 'pout'), ('tj', 'accelerates', 'htol'), ('tj', 'is read by', 'bism'), ('mission', 'sets the profile of', 'tj'),

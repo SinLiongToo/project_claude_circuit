@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.21.0', '2026-10-07', ['New assembly-flow page: flip-chip and fan-out flows, RDL build-up, bumps and balls, 77 GHz specifics, in-line inspection, assembly defects, MSL and test points, with an RDL microstrip calculator; linked from the package page. claude.ai mirrors removed; the site is published on GitHub Pages only.']),
     ('1.20.0', '2026-10-06', ['Six new pages: bench bring-up &amp; lab test, antenna &amp; radar module, thermal design, EMC &amp; power integrity, design flow &amp; verification, and test cost model; each with a calculator (OTA/reflector, MIMO array, junction temperature, ripple-to-spur, cost per good die), new knowledge-graph items and glossary terms.']),
     ('1.19.0', '2026-10-06', ['New eFuse, OTP &amp; trim page: NVM types, eFuse bit cell with sense amplifier and shadow register, trim flow, trim-word map, trim-bit calculator, reliability, safety and failure modes; linked from the BIST, reliability and worked-example pages.']),
     ('1.18.0', '2026-10-02', ['New ADAS applications page: animated ACC, pedestrian AEB, BSD/LCA and RCTA scenarios with live point-cloud output and video export; functions, sensor classes, application-to-chip requirements, regulations and market trends.']),
