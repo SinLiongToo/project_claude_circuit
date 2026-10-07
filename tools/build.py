@@ -60,7 +60,18 @@ PAGES = [
 ]
 
 rd = lambda p: io.open(p, encoding='utf-8').read()
-def wr(p, s): io.open(p, 'w', encoding='utf-8', newline='\n').write(s)
+def wr(p, s):
+    # OneDrive can hold a file for a moment while it syncs (Errno 22 / 13); retry before giving up
+    import time
+    for attempt in range(20):
+        try:
+            with io.open(p, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(s)
+            return
+        except OSError:
+            if attempt == 19:
+                raise
+            time.sleep(0.5)
 
 FIND_CSS = rd(os.path.join(HERE, 'find.css'))
 FIND_HTML = rd(os.path.join(HERE, 'find.html'))
