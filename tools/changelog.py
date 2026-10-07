@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.22.1', '2026-10-07', ['Qualification page: temperature-cycling profile, Coffin–Manson test-vs-field chart, read-point drift chart and a solder-ball cross-section drawing.']),
     ('1.22.0', '2026-10-07', ['New package qualification &amp; physical analysis page: AEC-Q100 grades, stress tests with conditions and sample sizes, setting conditions from the mission profile (with calculator), read-points, pass criteria, CSAM / X-ray / cross-section / SEM analysis, failure analysis and re-qualification; linked from the package and reliability pages.']),
     ('1.21.0', '2026-10-07', ['New assembly-flow page: flip-chip and fan-out flows, RDL build-up, bumps and balls, 77 GHz specifics, in-line inspection, assembly defects, MSL and test points, with an RDL microstrip calculator; linked from the package page. claude.ai mirrors removed; the site is published on GitHub Pages only.']),
     ('1.20.0', '2026-10-06', ['Six new pages: bench bring-up &amp; lab test, antenna &amp; radar module, thermal design, EMC &amp; power integrity, design flow &amp; verification, and test cost model; each with a calculator (OTA/reflector, MIMO array, junction temperature, ripple-to-spur, cost per good die), new knowledge-graph items and glossary terms.']),
