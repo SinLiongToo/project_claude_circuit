@@ -48,6 +48,7 @@ PAGES = [
     ('radar77-design-flow.html', '<li><a href="#flow">Design flow</a></li>'),
     ('radar77-test-cost.html', '<li><a href="#cost">Test cost model</a></li>'),
     ('radar77-assembly.html', '<li><a href="#assy">Assembly flow</a></li>'),
+    ('radar77-qualification.html', '<li><a href="#qual">Qualification</a></li>'),
     ('radar77-esd.html', '<li><a href="#esd">ESD &amp; latch-up</a></li>'),
     ('radar77-reliability.html', '<li><a href="#rel">Reliability &amp; aging</a></li>'),
     ('radar77-characterization.html', '<li><a href="#char">Characterization &amp; correlation</a></li>'),
