@@ -209,10 +209,38 @@ def stamp_index(total_terms):
 
 INDEX = 'index.html'
 
+SIDENAV_JS = ('<script>/*sidenav*/(function(){if(!window.IntersectionObserver)return;'
+              'const L={};document.querySelectorAll("nav.toc .tg").forEach(a=>L[a.getAttribute("href").slice(1)]=a);'
+              'const seen=new Map();const io=new IntersectionObserver(es=>{es.forEach(e=>seen.set(e.target.id,e.isIntersecting?e.intersectionRatio:0));'
+              'let best=null,r=0;document.querySelectorAll(".grp").forEach(g=>{const v=seen.get(g.id)||0;if(v>r){r=v;best=g.id}});'
+              'if(best)Object.keys(L).forEach(k=>L[k].classList.toggle("on",k===best));},{threshold:[0,.1,.25,.5,.75,1]});'
+              'document.querySelectorAll(".grp").forEach(g=>io.observe(g));})();</script>')
+
+
+def build_sidenav():
+    """Main page: left sidebar listing each card group and its pages, regenerated from the cards."""
+    s = rd(INDEX)
+    if '<!--sidenav-->' not in s:
+        return 0
+    items, n = [], 0
+    for gid, body in re.findall(r'<div class="grp" id="([^"]+)">(.*?)\n  </div>\n  </div>\n', s, re.S):
+        title = re.search(r'<h2 class="grp-h">(.*?) <span', body).group(1)
+        cards = re.findall(r'<a class="item" href="([^"]+)">.*?<h2>(.*?)</h2>', body, re.S)
+        n += len(cards)
+        items.append('<li><a class="tg" href="#%s">%s<span>%d</span></a><ul>%s</ul></li>'
+                     % (gid, title, len(cards), ''.join('<li><a href="%s">%s</a></li>' % c for c in cards)))
+        s = re.sub(r'(<div class="grp" id="%s">\n    <h2 class="grp-h">.*? <span class="grp-n">)\d+' % re.escape(gid),
+                   lambda m: m.group(1) + str(len(cards)), s, count=1)
+    nav = '<ol>%s</ol>%s' % (''.join(items), SIDENAV_JS)
+    s = re.sub(r'<!--sidenav-->.*?<!--/sidenav-->', lambda m: '<!--sidenav-->' + nav + '<!--/sidenav-->', s, count=1, flags=re.S)
+    wr(INDEX, s)
+    return n
+
 
 def main():
     for fname, _ in PAGES + [(INDEX, None)]:
         check_tokens(fname)
+    print('main-page sidebar: %d pages' % build_sidenav())
     # 0: knowledge graph data, connection tables and "mentioned in" lists
     print('knowledge graph: %d items, %d connections' % graph.refresh(rd, wr))
     s = rd('radar77-changelog.html')
