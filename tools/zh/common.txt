@@ -1,0 +1,6 @@
+# Blocks shared by several pages, and short items picked up after a page was done
+391943d6 熱設計
+21bee573 雜訊指數
+c8dcfca3 Rx 雜訊指數
+df4e6881 約 −90 到 −95 dBc/Hz
+2c21069d V_det = 斜率·(P_dBm − 截距)

@@ -194,8 +194,8 @@ G = [
  ("CRC","Cyclic Redundancy Check","Checksum that detects corrupted data, e.g. trim words at boot."),
  ("RMA","Return Material Authorization","A customer return, analysed through the 8D process."),
  ("8D","Eight Disciplines","Structured problem solving: team, describe, contain, root cause, correct, verify, prevent, close."),
- ("MSA","Measurement System Analysis","Proves a measurement is precise and accurate enough (Gage R&amp;R, bias, stability)."),
- ("GRR","Gage Repeatability and Reproducibility","%GRR &lt; 10 % of tolerance is good."),
+ ("MSA","Measurement System Analysis","Proves a measurement is precise and accurate enough (Gage R&R, bias, stability)."),
+ ("GRR","Gage Repeatability and Reproducibility","%GRR < 10 % of tolerance is good."),
  ("BIST","Built-In Self-Test","On-chip stimulus + measurement; result is pass/fail or a value checked against a limit."),
  ("BISM","Built-In Self-Measurement","Same on-chip hardware, but the result is a calibrated value (dB, °, MHz) used for trim, calibration and trend."),
  ("DFT","Design for Test",""),
@@ -228,7 +228,7 @@ G = [
  ("GPIB","General-Purpose Interface Bus","Instrument control bus (like LAN)."),
 ]),
 ("Safety, standards & regulation", [
- ("PMHF","Probabilistic Metric for random Hardware Failures","ISO 26262 residual failure rate; &lt; 100 FIT for ASIL B/C, &lt; 10 FIT for D."),
+ ("PMHF","Probabilistic Metric for random Hardware Failures","ISO 26262 residual failure rate; < 100 FIT for ASIL B/C, < 10 FIT for D."),
  ("SEooC","Safety Element out of Context","A part developed to ISO 26262 against assumed system requirements."),
  ("FMEA","Failure Mode and Effects Analysis","Qualitative analysis of failure modes; FMEDA adds rates and diagnostic coverage."),
  ("FIT","Failures In Time","Failures per 10⁹ device-hours."),
@@ -425,10 +425,12 @@ a.gl{color:inherit;text-decoration:underline dotted;text-decoration-color:var(--
 a.gl:hover{color:var(--rf);text-decoration-color:var(--rf)}
 """
 
-JS = r"""<script>
+JS = r"""<script>/*glossary*/
 (function(){
   const rows=[...document.querySelectorAll("#glossary tr[data-abbr]")];
   if(!rows.length)return;
+  // links the first use of each abbreviation per section; run again after the page switches language
+  window.glLink=function(){
   const map={};rows.forEach(r=>{map[r.dataset.abbr]=r});
   const keys=Object.keys(map).sort((a,b)=>b.length-a.length);
   const re=new RegExp("(?<![\\w/-])("+keys.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")(?:s)?(?![\\w])","g");
@@ -450,6 +452,8 @@ JS = r"""<script>
       if(f){f.appendChild(document.createTextNode(s.slice(last)));n.parentNode.replaceChild(f,n)}
     });
   });
+  };
+  window.glLink();
   const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.addEventListener("click",e=>{
     const a=e.target.closest("a.gl");if(!a)return;
@@ -476,8 +480,8 @@ def inject(path, after_section_id, toc_after):
         s = s.replace(toc_after, toc_after + '\n    <li><a href="#glossary">Glossary</a></li>')
     if '/* glossary */' not in s:
         i = s.index('</style>'); s = s[:i] + CSS + s[i:]
-    if 'a.className="gl"' not in s:
-        s = s.rstrip('\n') + '\n' + JS
+    s = re.sub(r'<script>(?:/\*glossary\*/)?\n\(function\(\)\{\n  const rows=\[\.\.\.document\.querySelectorAll\("#glossary tr\[data-abbr\]"\)\];.*?</script>\n', '', s, flags=re.S)
+    s = s.rstrip('\n') + '\n' + JS
     # renumber
     n = [0]
     def r(m):

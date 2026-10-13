@@ -37,6 +37,10 @@ nav.toc a.back::before{content:none}
 .theme-btn:hover{border-color:var(--rf)}
 .theme-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
 .theme-btn svg{width:16px;height:16px}
+.lang-btn{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));right:16px;z-index:40;min-width:44px;font:600 13px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.lang-btn:hover{border-color:var(--rf)}
+.lang-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.zh-wait .wrap{visibility:hidden}
 .toc-toggle{display:flex;align-items:center;gap:6px;margin:0 0 10px;font:500 12.5px var(--sans);color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 9px;cursor:pointer}
 .toc-toggle:hover{color:var(--ink);border-color:var(--rf)}
 .toc-toggle:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
@@ -49,7 +53,7 @@ nav.toc a.back::before{content:none}
 .home-tab.graph-tab{margin-left:6px}
 @media print{
   :root{--bg:#fff!important;--surface:#fff!important;--sunk:#f1f3f2!important;--ink:#000!important;--muted:#333!important;--line:#bbb!important;color-scheme:light!important}
-  .find-btn,.theme-btn,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
+  .find-btn,.theme-btn,.lang-btn,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
   body{padding:0!important;font-size:11pt}
   .layout{display:block!important}
   .wrap{max-width:none}

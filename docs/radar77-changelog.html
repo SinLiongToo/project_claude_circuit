@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Changelog</title>
-<script>/*theme-init*/try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("toc")==="collapsed")document.documentElement.classList.add("toc-collapsed")}catch(e){}</script>
+<script>/*theme-init*/try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("toc")==="collapsed")document.documentElement.classList.add("toc-collapsed");if(localStorage.getItem("lang")==="zh")document.documentElement.classList.add("zh-wait")}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
@@ -187,6 +187,10 @@ nav.toc a.back::before{content:none}
 .theme-btn:hover{border-color:var(--rf)}
 .theme-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
 .theme-btn svg{width:16px;height:16px}
+.lang-btn{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));right:16px;z-index:40;min-width:44px;font:600 13px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.lang-btn:hover{border-color:var(--rf)}
+.lang-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.zh-wait .wrap{visibility:hidden}
 .toc-toggle{display:flex;align-items:center;gap:6px;margin:0 0 10px;font:500 12.5px var(--sans);color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;padding:5px 9px;cursor:pointer}
 .toc-toggle:hover{color:var(--ink);border-color:var(--rf)}
 .toc-toggle:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
@@ -199,7 +203,7 @@ nav.toc a.back::before{content:none}
 .home-tab.graph-tab{margin-left:6px}
 @media print{
   :root{--bg:#fff!important;--surface:#fff!important;--sunk:#f1f3f2!important;--ink:#000!important;--muted:#333!important;--line:#bbb!important;color-scheme:light!important}
-  .find-btn,.theme-btn,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
+  .find-btn,.theme-btn,.lang-btn,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
   body{padding:0!important;font-size:11pt}
   .layout{display:block!important}
   .wrap{max-width:none}
@@ -244,6 +248,8 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
   <div class="sec-head"><span class="num">00</span><h2>Changelog</h2><span class="domain dig">Site</span></div>
   <p>What changed in each version of these notes. The version and build time of the current site are shown at the bottom of the main page.</p>
 <!--changelog-->
+  <h3 id="v1-26-0">Version 1.26.0 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-13</span></h3>
+  <ul><li>Traditional Chinese (繁體中文) display: a 中文 / EN button on every page switches the text, remembered per browser. Chinese text is loaded only when chosen (docs/zh/), and anything not yet translated stays in English. This version translates the main page, the glossary (all 376 terms) and the system and circuit pages: signal chain, synthesizer, power, RF front-end, IF/ADC, DSP, embedded SRAM, thermal, EMC and design flow; the remaining pages follow. Diagrams, equations and calculator results stay in English.</li><li>Glossary: three entries showed &amp;amp; and &amp;lt; as literal text; fixed.</li></ul>
   <h3 id="v1-25-1">Version 1.25.1 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-13</span></h3>
   <ul><li>Fixes from a site-wide check: signal-chain calculator read the wrong element for the I/Q setting (complex receivers were treated as real, halving the IF bandwidth and max range); CA-CFAR example corrected to α ≈ 21.9 (13.4 dB); duplicate SVG marker ids removed; escaped text in the knowledge-graph table.</li></ul>
   <h3 id="v1-25-0">Version 1.25.0 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-13</span></h3>
@@ -533,8 +539,8 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
       <tr id="g-CRC" data-abbr="CRC" data-full="Cyclic Redundancy Check (Checksum that detects corrupted data, e.g. trim words at boot.)"><td class="v">CRC</td><td>Cyclic Redundancy Check</td><td>Checksum that detects corrupted data, e.g. trim words at boot.</td></tr>
       <tr id="g-RMA" data-abbr="RMA" data-full="Return Material Authorization (A customer return, analysed through the 8D process.)"><td class="v">RMA</td><td>Return Material Authorization</td><td>A customer return, analysed through the 8D process.</td></tr>
       <tr id="g-8D" data-abbr="8D" data-full="Eight Disciplines (Structured problem solving: team, describe, contain, root cause, correct, verify, prevent, close.)"><td class="v">8D</td><td>Eight Disciplines</td><td>Structured problem solving: team, describe, contain, root cause, correct, verify, prevent, close.</td></tr>
-      <tr id="g-MSA" data-abbr="MSA" data-full="Measurement System Analysis (Proves a measurement is precise and accurate enough (Gage R&amp;amp;R, bias, stability).)"><td class="v">MSA</td><td>Measurement System Analysis</td><td>Proves a measurement is precise and accurate enough (Gage R&amp;amp;R, bias, stability).</td></tr>
-      <tr id="g-GRR" data-abbr="GRR" data-full="Gage Repeatability and Reproducibility (%GRR &amp;lt; 10 % of tolerance is good.)"><td class="v">GRR</td><td>Gage Repeatability and Reproducibility</td><td>%GRR &amp;lt; 10 % of tolerance is good.</td></tr>
+      <tr id="g-MSA" data-abbr="MSA" data-full="Measurement System Analysis (Proves a measurement is precise and accurate enough (Gage R&amp;R, bias, stability).)"><td class="v">MSA</td><td>Measurement System Analysis</td><td>Proves a measurement is precise and accurate enough (Gage R&amp;R, bias, stability).</td></tr>
+      <tr id="g-GRR" data-abbr="GRR" data-full="Gage Repeatability and Reproducibility (%GRR &lt; 10 % of tolerance is good.)"><td class="v">GRR</td><td>Gage Repeatability and Reproducibility</td><td>%GRR &lt; 10 % of tolerance is good.</td></tr>
       <tr id="g-BIST" data-abbr="BIST" data-full="Built-In Self-Test (On-chip stimulus + measurement; result is pass/fail or a value checked against a limit.)"><td class="v">BIST</td><td>Built-In Self-Test</td><td>On-chip stimulus + measurement; result is pass/fail or a value checked against a limit.</td></tr>
       <tr id="g-BISM" data-abbr="BISM" data-full="Built-In Self-Measurement (Same on-chip hardware, but the result is a calibrated value (dB, °, MHz) used for trim, calibration and trend.)"><td class="v">BISM</td><td>Built-In Self-Measurement</td><td>Same on-chip hardware, but the result is a calibrated value (dB, °, MHz) used for trim, calibration and trend.</td></tr>
       <tr id="g-DFT" data-abbr="DFT" data-full="Design for Test"><td class="v">DFT</td><td>Design for Test</td><td></td></tr>
@@ -571,7 +577,7 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
   <div class="tbl"><table class="gl-tbl">
     <thead><tr><th>Abbr.</th><th>Stands for</th><th>Note</th></tr></thead>
     <tbody>
-      <tr id="g-PMHF" data-abbr="PMHF" data-full="Probabilistic Metric for random Hardware Failures (ISO 26262 residual failure rate; &amp;lt; 100 FIT for ASIL B/C, &amp;lt; 10 FIT for D.)"><td class="v">PMHF</td><td>Probabilistic Metric for random Hardware Failures</td><td>ISO 26262 residual failure rate; &amp;lt; 100 FIT for ASIL B/C, &amp;lt; 10 FIT for D.</td></tr>
+      <tr id="g-PMHF" data-abbr="PMHF" data-full="Probabilistic Metric for random Hardware Failures (ISO 26262 residual failure rate; &lt; 100 FIT for ASIL B/C, &lt; 10 FIT for D.)"><td class="v">PMHF</td><td>Probabilistic Metric for random Hardware Failures</td><td>ISO 26262 residual failure rate; &lt; 100 FIT for ASIL B/C, &lt; 10 FIT for D.</td></tr>
       <tr id="g-SEooC" data-abbr="SEooC" data-full="Safety Element out of Context (A part developed to ISO 26262 against assumed system requirements.)"><td class="v">SEooC</td><td>Safety Element out of Context</td><td>A part developed to ISO 26262 against assumed system requirements.</td></tr>
       <tr id="g-FMEA" data-abbr="FMEA" data-full="Failure Mode and Effects Analysis (Qualitative analysis of failure modes; FMEDA adds rates and diagnostic coverage.)"><td class="v">FMEA</td><td>Failure Mode and Effects Analysis</td><td>Qualitative analysis of failure modes; FMEDA adds rates and diagnostic coverage.</td></tr>
       <tr id="g-FIT" data-abbr="FIT" data-full="Failures In Time (Failures per 10⁹ device-hours.)"><td class="v">FIT</td><td>Failures In Time</td><td>Failures per 10⁹ device-hours.</td></tr>
@@ -767,16 +773,17 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
   </div>
 </div>
 <button class="theme-btn" id="themeBtn" type="button" aria-label="Colour theme: Auto (follows your system). Click to change."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg><span id="themeLbl">Auto</span></button>
+<button class="lang-btn" id="langBtn" type="button" lang="zh-Hant" aria-label="切換為中文 (Switch to Chinese)">中文</button>
 <script>
 (function(){
   // collapsible contents panel, remembered per browser
   const nav=document.querySelector("nav.toc");if(!nav)return;
-  const root=document.documentElement;
+  const root=document.documentElement, T=s=>window.__t?window.__t(s):s;
   const b=document.createElement("button");b.type="button";b.className="toc-toggle";
   const icoHide='<path d="M15 6l-6 6 6 6"/>', icoShow='<path d="M4 6h16M4 12h16M4 18h16"/>';
   function paint(){
     const c=root.classList.contains("toc-collapsed");
-    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+(c?icoShow:icoHide)+'</svg><span>'+(c?"Show contents":"Hide contents")+'</span>';
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+(c?icoShow:icoHide)+'</svg><span>'+T(c?"Show contents":"Hide contents")+'</span>';
     b.setAttribute("aria-expanded",c?"false":"true");
     b.setAttribute("aria-label",c?"Show contents":"Hide contents");b.title=c?"Show contents":"Hide contents";
   }
@@ -800,7 +807,7 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
     mode=m;
     if(m==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",m);
     try{m==="auto"?localStorage.removeItem("theme"):localStorage.setItem("theme",m)}catch(e){}
-    b.querySelector("svg").innerHTML=icons[m];lbl.textContent=names[m];
+    b.querySelector("svg").innerHTML=icons[m];lbl.textContent=window.__t?window.__t(names[m]):names[m];
     b.setAttribute("aria-label","Colour theme: "+names[m]+(m==="auto"?" (follows your system)":"")+". Click to change.");
     if(announce)window.dispatchEvent(new Event("themechange"));
   }
@@ -810,11 +817,15 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
 (function(){
   const $=id=>document.getElementById(id);
   const ov=$("findOv"), q=$("findQ"), res=$("findRes"), meta=$("findMeta");
+  const T=s=>window.__t?window.__t(s):s;
   const HINT="Searches every section of all pages: text, tables, formulas, notes, diagram labels, glossary. ↑ ↓ to move, Enter to open.";
   const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   const norm=s=>s.replace(/\s+/g," ").trim();
   // --- this page: live DOM index ---
-  const idx=[];
+  // rebuilt when the page switches language
+  let idx=[];
+  function buildIdx(){
+  idx=[];
   const lede=document.querySelector("header.top .lede");
   if(lede)idx.push({el:lede,title:"Introduction",n:"",t:norm(lede.textContent),w:0});
   document.querySelectorAll("main section").forEach(sec=>{
@@ -834,6 +845,8 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
     });
   });
   idx.forEach(e=>e.lt=e.t.toLowerCase());
+  }
+  buildIdx();addEventListener("langchange",buildIdx);
   // --- other pages: static index embedded at build time ---
   let remote=[];
   try{
@@ -854,7 +867,7 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
     const v=q.value.trim().toLowerCase();
     terms=v.split(/\s+/).filter(Boolean);
     res.textContent="";sel=0;hits=[];
-    if(!terms.length){meta.textContent=HINT;return}
+    if(!terms.length){meta.textContent=T(HINT);return}
     const m=e=>terms.every(x=>e.lt.includes(x));
     const here=idx.filter(m).sort((a,b)=>b.w-a.w), there=remote.filter(m).sort((a,b)=>b.w-a.w);
     const nh=here.length, nt=there.length;
@@ -927,7 +940,7 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
     if(e.key==="Escape"){if(!ov.hidden)close();else clearHits();return}
     if(e.key==="/"&&ov.hidden&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)){e.preventDefault();open()}
   });
-  meta.textContent=HINT;
+  meta.textContent=T(HINT);
   // arriving from a result on another page: highlight the match inside the target section
   let j=null;try{j=JSON.parse(localStorage.getItem("findJump")||"null");localStorage.removeItem("findJump")}catch(e){}
   if(j&&Date.now()-j.t<20000&&j.q){
@@ -939,11 +952,76 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
   // printing: open every collapsed table so it is on paper
   addEventListener("beforeprint",()=>document.querySelectorAll("details").forEach(d=>d.open=true));
 })();
+(function(){
+  // language: English <-> 繁體中文, remembered per browser. Chinese text (docs/zh/<page>.js, built from
+  // tools/zh/*.txt) is loaded only when chosen; each block is matched by a hash of its English text.
+  const b=document.getElementById("langBtn");if(!b)return;
+  const root=document.documentElement;
+  const SEL="h1,h2,h3,h4,p,li,th,td,figcaption,summary,footer,dt,dd,option,.eyebrow,.note,.lede,nav.toc a,a.back,.row>span:first-child,.chart-legend span,span.domain,span.tag,.grp-h,.big-l,.k";
+  const UI={"Search":"搜尋","Main page":"主頁","Knowledge graph":"知識圖譜","Hide contents":"隱藏目錄","Show contents":"顯示目錄",
+    "Auto":"自動","Light":"淺色","Dark":"深色","Search all pages…":"搜尋所有頁面…",
+    "Searches every section of all pages: text, tables, formulas, notes, diagram labels, glossary. ↑ ↓ to move, Enter to open.":"搜尋所有頁面的每個段落：本頁可用中文或英文搜尋，其他頁面以英文內容索引。↑ ↓ 移動，Enter 開啟。"};
+  let lang="en";try{if(localStorage.getItem("lang")==="zh")lang="zh"}catch(e){}
+  window.ZH=window.ZH||{};window.ZH_ADD=o=>Object.assign(window.ZH,o);
+  window.__t=s=>lang==="zh"&&UI[s]?UI[s]:s;
+  const norm=s=>s.replace(/\s+/g," ").trim();
+  const fnv=s=>{let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return ("0000000"+h.toString(16)).slice(-8)};
+  const zh=s=>window.ZH[fnv(norm(s))];
+  function done(){root.classList.remove("zh-wait")}
+  function apply(){
+    root.lang="zh-Hant";
+    document.querySelectorAll("a.gl").forEach(a=>a.replaceWith(a.textContent));
+    const t=zh(document.title);if(t)document.title=t;
+    document.querySelectorAll(SEL).forEach(el=>{
+      if(!el.isConnected||el.closest("svg,script,style,pre,.eq,.find-ov"))return;
+      const z=zh(el.textContent);if(z===undefined)return;
+      if(el.tagName==="OPTION"){el.textContent=z;return}
+      if(el.querySelector("input,select,textarea,button,svg,canvas,script,[id]"))return;
+      el.innerHTML=z;el.setAttribute("data-zh","");
+    });
+    document.querySelectorAll("label").forEach(l=>{
+      const n=[...l.childNodes].find(c=>c.nodeType===3&&c.nodeValue.trim());
+      const z=n&&zh(n.nodeValue);if(z!==undefined&&n)n.nodeValue=z;
+    });
+    document.querySelectorAll("#glossary tr[data-abbr]").forEach(r=>{
+      const c=r.cells;if(c.length<3||!c[1].hasAttribute("data-zh"))return;
+      const note=norm(c[2].textContent);r.dataset.full=norm(c[1].textContent)+(note?"（"+note+"）":"");
+    });
+    document.querySelectorAll(".home-tab,.toc-toggle span,.find-btn span,.hero-find span,#themeLbl").forEach(el=>{
+      [...el.childNodes].forEach(n=>{if(n.nodeType===3&&UI[n.nodeValue.trim()])n.nodeValue=UI[n.nodeValue.trim()]});
+    });
+    const q=document.getElementById("findQ");if(q)q.placeholder="搜尋，例如 LDO PSRR、鎖相、March C";
+    if(window.glLink)window.glLink();
+    window.dispatchEvent(new Event("langchange"));
+    done();
+  }
+  function load(){
+    let f=location.pathname.split("/").pop();if(!/\.html$/.test(f))f="index.html";
+    const s=document.createElement("script");s.src="zh/"+f.slice(0,-5)+".js";
+    s.onload=()=>document.readyState==="loading"?document.addEventListener("DOMContentLoaded",apply):apply();
+    s.onerror=done;document.head.appendChild(s);
+    setTimeout(done,4000);
+  }
+  function paint(){
+    b.textContent=lang==="zh"?"EN":"中文";
+    b.lang=lang==="zh"?"en":"zh-Hant";
+    b.setAttribute("aria-label",lang==="zh"?"Switch to English (切換為英文)":"切換為中文 (Switch to Chinese)");
+    b.title=lang==="zh"?"Switch to English":"切換為繁體中文";
+  }
+  paint();
+  b.addEventListener("click",()=>{
+    if(lang==="zh"){try{localStorage.setItem("lang","en")}catch(e){}location.reload();return}
+    lang="zh";try{localStorage.setItem("lang","zh")}catch(e){}paint();load();
+  });
+  if(lang==="zh")load();
+})();
 </script>
-<script>
+<script>/*glossary*/
 (function(){
   const rows=[...document.querySelectorAll("#glossary tr[data-abbr]")];
   if(!rows.length)return;
+  // links the first use of each abbreviation per section; run again after the page switches language
+  window.glLink=function(){
   const map={};rows.forEach(r=>{map[r.dataset.abbr]=r});
   const keys=Object.keys(map).sort((a,b)=>b.length-a.length);
   const re=new RegExp("(?<![\\w/-])("+keys.map(k=>k.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")).join("|")+")(?:s)?(?![\\w])","g");
@@ -965,6 +1043,8 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
       if(f){f.appendChild(document.createTextNode(s.slice(last)));n.parentNode.replaceChild(f,n)}
     });
   });
+  };
+  window.glLink();
   const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.addEventListener("click",e=>{
     const a=e.target.closest("a.gl");if(!a)return;

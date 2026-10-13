@@ -12,16 +12,17 @@
   </div>
 </div>
 <button class="theme-btn" id="themeBtn" type="button" aria-label="Colour theme: Auto (follows your system). Click to change."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg><span id="themeLbl">Auto</span></button>
+<button class="lang-btn" id="langBtn" type="button" lang="zh-Hant" aria-label="切換為中文 (Switch to Chinese)">中文</button>
 <script>
 (function(){
   // collapsible contents panel, remembered per browser
   const nav=document.querySelector("nav.toc");if(!nav)return;
-  const root=document.documentElement;
+  const root=document.documentElement, T=s=>window.__t?window.__t(s):s;
   const b=document.createElement("button");b.type="button";b.className="toc-toggle";
   const icoHide='<path d="M15 6l-6 6 6 6"/>', icoShow='<path d="M4 6h16M4 12h16M4 18h16"/>';
   function paint(){
     const c=root.classList.contains("toc-collapsed");
-    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+(c?icoShow:icoHide)+'</svg><span>'+(c?"Show contents":"Hide contents")+'</span>';
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+(c?icoShow:icoHide)+'</svg><span>'+T(c?"Show contents":"Hide contents")+'</span>';
     b.setAttribute("aria-expanded",c?"false":"true");
     b.setAttribute("aria-label",c?"Show contents":"Hide contents");b.title=c?"Show contents":"Hide contents";
   }
@@ -45,7 +46,7 @@
     mode=m;
     if(m==="auto")root.removeAttribute("data-theme");else root.setAttribute("data-theme",m);
     try{m==="auto"?localStorage.removeItem("theme"):localStorage.setItem("theme",m)}catch(e){}
-    b.querySelector("svg").innerHTML=icons[m];lbl.textContent=names[m];
+    b.querySelector("svg").innerHTML=icons[m];lbl.textContent=window.__t?window.__t(names[m]):names[m];
     b.setAttribute("aria-label","Colour theme: "+names[m]+(m==="auto"?" (follows your system)":"")+". Click to change.");
     if(announce)window.dispatchEvent(new Event("themechange"));
   }
@@ -55,11 +56,15 @@
 (function(){
   const $=id=>document.getElementById(id);
   const ov=$("findOv"), q=$("findQ"), res=$("findRes"), meta=$("findMeta");
+  const T=s=>window.__t?window.__t(s):s;
   const HINT="Searches every section of all pages: text, tables, formulas, notes, diagram labels, glossary. ↑ ↓ to move, Enter to open.";
   const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
   const norm=s=>s.replace(/\s+/g," ").trim();
   // --- this page: live DOM index ---
-  const idx=[];
+  // rebuilt when the page switches language
+  let idx=[];
+  function buildIdx(){
+  idx=[];
   const lede=document.querySelector("header.top .lede");
   if(lede)idx.push({el:lede,title:"Introduction",n:"",t:norm(lede.textContent),w:0});
   document.querySelectorAll("main section").forEach(sec=>{
@@ -79,6 +84,8 @@
     });
   });
   idx.forEach(e=>e.lt=e.t.toLowerCase());
+  }
+  buildIdx();addEventListener("langchange",buildIdx);
   // --- other pages: static index embedded at build time ---
   let remote=[];
   try{
@@ -99,7 +106,7 @@
     const v=q.value.trim().toLowerCase();
     terms=v.split(/\s+/).filter(Boolean);
     res.textContent="";sel=0;hits=[];
-    if(!terms.length){meta.textContent=HINT;return}
+    if(!terms.length){meta.textContent=T(HINT);return}
     const m=e=>terms.every(x=>e.lt.includes(x));
     const here=idx.filter(m).sort((a,b)=>b.w-a.w), there=remote.filter(m).sort((a,b)=>b.w-a.w);
     const nh=here.length, nt=there.length;
@@ -172,7 +179,7 @@
     if(e.key==="Escape"){if(!ov.hidden)close();else clearHits();return}
     if(e.key==="/"&&ov.hidden&&!/^(INPUT|SELECT|TEXTAREA)$/.test(document.activeElement.tagName)){e.preventDefault();open()}
   });
-  meta.textContent=HINT;
+  meta.textContent=T(HINT);
   // arriving from a result on another page: highlight the match inside the target section
   let j=null;try{j=JSON.parse(localStorage.getItem("findJump")||"null");localStorage.removeItem("findJump")}catch(e){}
   if(j&&Date.now()-j.t<20000&&j.q){
@@ -183,5 +190,68 @@
   }
   // printing: open every collapsed table so it is on paper
   addEventListener("beforeprint",()=>document.querySelectorAll("details").forEach(d=>d.open=true));
+})();
+(function(){
+  // language: English <-> 繁體中文, remembered per browser. Chinese text (docs/zh/<page>.js, built from
+  // tools/zh/*.txt) is loaded only when chosen; each block is matched by a hash of its English text.
+  const b=document.getElementById("langBtn");if(!b)return;
+  const root=document.documentElement;
+  const SEL="h1,h2,h3,h4,p,li,th,td,figcaption,summary,footer,dt,dd,option,.eyebrow,.note,.lede,nav.toc a,a.back,.row>span:first-child,.chart-legend span,span.domain,span.tag,.grp-h,.big-l,.k";
+  const UI={"Search":"搜尋","Main page":"主頁","Knowledge graph":"知識圖譜","Hide contents":"隱藏目錄","Show contents":"顯示目錄",
+    "Auto":"自動","Light":"淺色","Dark":"深色","Search all pages…":"搜尋所有頁面…",
+    "Searches every section of all pages: text, tables, formulas, notes, diagram labels, glossary. ↑ ↓ to move, Enter to open.":"搜尋所有頁面的每個段落：本頁可用中文或英文搜尋，其他頁面以英文內容索引。↑ ↓ 移動，Enter 開啟。"};
+  let lang="en";try{if(localStorage.getItem("lang")==="zh")lang="zh"}catch(e){}
+  window.ZH=window.ZH||{};window.ZH_ADD=o=>Object.assign(window.ZH,o);
+  window.__t=s=>lang==="zh"&&UI[s]?UI[s]:s;
+  const norm=s=>s.replace(/\s+/g," ").trim();
+  const fnv=s=>{let h=0x811c9dc5;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,0x01000193)>>>0}return ("0000000"+h.toString(16)).slice(-8)};
+  const zh=s=>window.ZH[fnv(norm(s))];
+  function done(){root.classList.remove("zh-wait")}
+  function apply(){
+    root.lang="zh-Hant";
+    document.querySelectorAll("a.gl").forEach(a=>a.replaceWith(a.textContent));
+    const t=zh(document.title);if(t)document.title=t;
+    document.querySelectorAll(SEL).forEach(el=>{
+      if(!el.isConnected||el.closest("svg,script,style,pre,.eq,.find-ov"))return;
+      const z=zh(el.textContent);if(z===undefined)return;
+      if(el.tagName==="OPTION"){el.textContent=z;return}
+      if(el.querySelector("input,select,textarea,button,svg,canvas,script,[id]"))return;
+      el.innerHTML=z;el.setAttribute("data-zh","");
+    });
+    document.querySelectorAll("label").forEach(l=>{
+      const n=[...l.childNodes].find(c=>c.nodeType===3&&c.nodeValue.trim());
+      const z=n&&zh(n.nodeValue);if(z!==undefined&&n)n.nodeValue=z;
+    });
+    document.querySelectorAll("#glossary tr[data-abbr]").forEach(r=>{
+      const c=r.cells;if(c.length<3||!c[1].hasAttribute("data-zh"))return;
+      const note=norm(c[2].textContent);r.dataset.full=norm(c[1].textContent)+(note?"（"+note+"）":"");
+    });
+    document.querySelectorAll(".home-tab,.toc-toggle span,.find-btn span,.hero-find span,#themeLbl").forEach(el=>{
+      [...el.childNodes].forEach(n=>{if(n.nodeType===3&&UI[n.nodeValue.trim()])n.nodeValue=UI[n.nodeValue.trim()]});
+    });
+    const q=document.getElementById("findQ");if(q)q.placeholder="搜尋，例如 LDO PSRR、鎖相、March C";
+    if(window.glLink)window.glLink();
+    window.dispatchEvent(new Event("langchange"));
+    done();
+  }
+  function load(){
+    let f=location.pathname.split("/").pop();if(!/\.html$/.test(f))f="index.html";
+    const s=document.createElement("script");s.src="zh/"+f.slice(0,-5)+".js";
+    s.onload=()=>document.readyState==="loading"?document.addEventListener("DOMContentLoaded",apply):apply();
+    s.onerror=done;document.head.appendChild(s);
+    setTimeout(done,4000);
+  }
+  function paint(){
+    b.textContent=lang==="zh"?"EN":"中文";
+    b.lang=lang==="zh"?"en":"zh-Hant";
+    b.setAttribute("aria-label",lang==="zh"?"Switch to English (切換為英文)":"切換為中文 (Switch to Chinese)");
+    b.title=lang==="zh"?"Switch to English":"切換為繁體中文";
+  }
+  paint();
+  b.addEventListener("click",()=>{
+    if(lang==="zh"){try{localStorage.setItem("lang","en")}catch(e){}location.reload();return}
+    lang="zh";try{localStorage.setItem("lang","zh")}catch(e){}paint();load();
+  });
+  if(lang==="zh")load();
 })();
 </script>

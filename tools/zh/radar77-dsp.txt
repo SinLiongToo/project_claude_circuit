@@ -1,0 +1,108 @@
+64df6bb1 77 GHz 雷達 SoC · 數位處理
+39fd7846 雷達 DSP 與資料路徑
+8d411dcc 從 ADC 取樣到點雲：距離與都卜勒 FFT、雷達立方體記憶體、加窗、CFAR 偵測、角度估計、資料介面，以及數位路徑如何測試與保護。含立方體記憶體與訊框時間計算器。
+1f44a15d 雷達 DSP 與資料路徑
+a33bce47 ← IF 鏈與 ADC
+0e7274c9 ← 訊號鏈：處理
+a497db6f 數位端把 ADC 取樣變成偵測清單。每個 chirp 在取樣到達時就執行距離 FFT；結果填入晶片上記憶體中的<b>雷達立方體</b>。訊框結束後，都卜勒 FFT、CFAR 偵測與角度估計產生送往主機的<b>點雲</b>。鏈的前段見 <a href="radar77-if-adc.html">IF 與 ADC 頁面</a>；系統參數見<a href="radar77-signal-chain.html#dsp">訊號鏈</a>。
+8c6f25b8 從 ADC 到主機的資料路徑。立方體記憶體與 FFT 加速器佔了數位端大部分的晶片面積與功耗。
+3fc6d2b6 雷達立方體：記憶體與吞吐量
+5618f9a0 立方體與訊框計算器
+d074717c 虛擬通道
+fb2d7383 立方體記憶體
+2208da85 每個訊框的距離 FFT 數
+e244d3a1 訊框期間寫入的資料量
+29ec18a3 加窗
+5a2786ad 每個 FFT 的窗函數以解析度與 SNR 換取較低的旁瓣，讓強目標不會把相鄰 bin 的弱目標遮住。
+e78631fd 窗函數
+e3e671ad 峰值旁瓣
+3d17f007 主瓣寬度（−3 dB，bin）
+7394cc99 SNR 損失
+ba1c5c94 用途
+7db015fb 矩形
+76bf9188 僅用於剛好落在 bin 上的 BIST 測試音
+330bdfad 一般用途
+52ef3cd5 距離 FFT，近端旁瓣佳
+c42aa183 強目標旁邊有弱目標
+9ebf6d67 Chebyshev（−80 dB）
+24366287 雜波極強時的都卜勒 FFT
+a189f674 偵測：CFAR
+cdb53a38 CFAR 依每個單元周圍的雜訊設定局部門檻，讓虛警率在雜訊與雜波變化時保持固定。
+5472c775 CFAR 類型
+18a5dbb3 門檻如何設定
+de27352d 擅長
+649c34fe 弱點
+efdd9a91 CA-CFAR（單元平均）
+054a9a3a 受測單元周圍訓練單元的平均值 × α
+5e9c4573 均勻雜訊、運算便宜
+b22b3460 會遮住強目標旁的弱目標；雜波邊緣
+dcb23d82 OS-CFAR（排序統計）
+5c88bb47 訓練單元中第 k 小的值
+18319567 多個相近目標
+dba4ac46 運算較多（排序）
+a4e587d5 GO / SO-CFAR
+14bd94c3 取兩側較大者／較小者
+4ff564a6 雜波邊緣（GO）、相近目標（SO）
+1add57f0 各自在對方的情況下失效
+8aadf8b6 二維 CFAR
+b57e8b08 在距離與都卜勒上的訓練視窗
+ea2b2d76 距離-都卜勒圖
+81fc4f7b 記憶體頻寬
+1de8832b 角度估計
+c9c898b9 角度方法
+5bc0161a 運算量
+69e6b9af 角度 FFT（DBF）
+c63cc49f 約 2/N_virtual rad
+b1dd9521 低
+cb6f5e62 預設；補零做內插
+b93c1262 比 FFT 好
+49f56cca 中（矩陣反運算）
+f124813c 需要多個快照；對校正誤差敏感
+2bf18cb1 超解析
+18332c04 高（特徵分解）
+79cc7dbd 需要訊號源數目與良好的通道校正
+4ab556f1 IAA／稀疏法
+0232cbdc 少量快照即可超解析
+be0a061d 高
+33274818 可用單一快照
+a0b81173 <b>MIMO 解多工</b>（TDM、BPM 或 DDMA）在角度估計之前進行：每個虛擬通道都必須分離並做運動補償（TDM 都卜勒修正）。
+3d942d6c <b>通道校正</b>（每個虛擬通道的增益與相位，來自<a href="radar77-bist-loopback.html#recipes">迴路</a>與模組 EOL）在角度估計前套用；5° 的相位誤差就會明顯抬高旁瓣。
+988f7f37 資料介面
+7d000dd0 介面
+2eafe887 速率
+19c0e604 承載內容
+7ab193e0 每 lane 1–2.5 Gb/s，2–4 lane
+d57261d8 原始 ADC 資料或距離 FFT 輸出
+ae058a8e 串流；用於集中處理
+db69272b 車用乙太網路
+71bd8d33 100 Mb/s – 1 Gb/s（10 Gb/s 正在出現）
+693f4f10 點雲、物體
+956e47e1 區域式／中央式架構
+d82e9ce3 最高約 50–100 Mb/s
+d27761c2 設定、點雲（少量）
+97a8ff0c 也是 ATE 測試介面
+a5589548 物體清單、狀態
+bf4e101d 傳統智慧感測器輸出
+3f1edaa7 數位路徑的測試與安全
+0815494f 項目
+ec134e57 量產測試
+aaf52565 在現場
+88f8cb8c FFT / HWA 邏輯
+35da787a 掃描（固定型、轉態）、<a href="radar77-dft-stress.html#lbist">LBIST</a>
+94132cd5 上電 LBIST；黃金向量 FFT 檢查
+56da4f02 立方體與資料記憶體
+6c05e66b 帶修補的 <a href="radar77-dft-stress.html#mbist">MBIST</a>
+17ce97e5 上電 MBIST，ECC（SEC-DED）持續運作
+17bf7963 DSP / CPU 核心
+a09d417c 掃描、功能測試
+c1ba3811 Lockstep 比對、軟體測試函式庫
+6530a23e 資料介面
+1d8f704d 全速 PRBS 迴路
+4279dbb4 每個封包 CRC、訊框計數器
+3b959bb8 端到端
+5fa251ff 已知 IF 音 → 預期的 FFT bin 與位準
+e9b11bc6 每個訊框在備用距離 bin 中放入迴路目標
+ac37e135 數位路徑的安全機制彙整於<a href="radar77-safety.html">功能安全頁面</a>。
+be9d3bca 每個訊框的 chirp 數
+0a82872e Tx（作用中）
+689617a3 每個取樣的位元組數

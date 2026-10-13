@@ -8,6 +8,8 @@ Run after editing any page:  python tools/build.py
    renumbers the sections.
 3. Rebuilds the cross-page search index and embeds it in each page, so search
    covers every page without fetching anything at runtime.
+4. Writes docs/zh/<page>.js from tools/zh/*.txt: the Chinese text for each page, loaded
+   only when the reader presses 中文 (see tools/i18n.py).
 
 Requires: beautifulsoup4.
 """
@@ -20,6 +22,7 @@ os.chdir(DOCS)
 import glossary  # noqa: E402  (uses cwd = docs)
 import graph  # noqa: E402
 import changelog  # noqa: E402
+import i18n  # noqa: E402
 from bs4 import BeautifulSoup  # noqa: E402
 
 # page file, TOC entry the glossary link goes after
@@ -86,6 +89,8 @@ def refresh_search(s):
         i = s.index('</style>'); s = s[:i] + FIND_CSS + s[i:]
     # HTML + script: from the search button to the end of its script
     s = re.sub(r'\n?<script type="application/json" id="siteIndex".*?</script>\n', '\n', s, flags=re.S)
+    # copies of the language switch left by an older layout of the component (button + its own script)
+    s = re.sub(r'<button class="lang-btn".*?</button>\n<script>\n\(function\(\)\{\n  // language:.*?</script>\n', '', s, flags=re.S)
     m = re.search(r'\n<button class="find-btn".*?</script>\n', s, flags=re.S)
     if m:
         s = s[:m.start()] + FIND_HTML + s[m.end():]
@@ -180,7 +185,8 @@ def ensure_home_tab(s):
 
 THEME_INIT = ('<script>/*theme-init*/try{var t=localStorage.getItem("theme");'
               'if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);'
-              'if(localStorage.getItem("toc")==="collapsed")document.documentElement.classList.add("toc-collapsed")'
+              'if(localStorage.getItem("toc")==="collapsed")document.documentElement.classList.add("toc-collapsed");'
+              'if(localStorage.getItem("lang")==="zh")document.documentElement.classList.add("zh-wait")'
               '}catch(e){}</script>\n')
 
 
@@ -293,6 +299,12 @@ def main():
     print('%-28s index of all pages:   %5.1f kB' % (INDEX, len(blob.encode('utf-8')) / 1024))
     print('items:', len(items))
     print(stamp_index(sum(len(r) for _, r in glossary.G)))
+    # 4: Chinese translations per page (docs/zh/<page>.js), loaded only when the reader picks 中文
+    pool, done, total = i18n.load_pool(), 0, 0
+    for fname, _ in PAGES + [(INDEX, None)]:
+        d, t = i18n.write_page_js(fname, pool, wr)
+        done += d; total += t
+    print('Chinese: %d of %d page blocks translated (%d lines in tools/zh)' % (done, total, len(pool)))
 
 
 if __name__ == '__main__':

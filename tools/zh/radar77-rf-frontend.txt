@@ -1,0 +1,176 @@
+28cd37c2 77 GHz 雷達 SoC · RF 電路
+8d581ad6 RF 前端電路：LNA、混頻器、PA 與 VGA
+6622fda9 承載雷達訊號的四個電路，各附簡化電路圖、決定其行為的公式，以及關鍵參數的 77 GHz 典型值與限制因素；另有接收鏈串接計算器、晶片上量測、失效模式與 PCM/WAT 連結。
+651e7246 RF 前端電路
+469b2b0c ← 電源、LDO 與 UV/OV
+461a5412 這四個電路承載雷達訊號：<b>PA</b> 把 chirp 送出，<b>LNA</b> 與<b>混頻器</b>把微弱回波降到 IF，<b>VGA</b> 為 ADC 設定位準。在 77 GHz，每個電路都在接近電晶體極限（fT/fmax 數百 GHz）處運作，所以它們的參數決定了雷達的距離與動態範圍。本頁展示每個電路、其關鍵參數的典型值，以及如何量測與保護。系統觀點見<a href="radar77-signal-chain.html#rx">訊號鏈</a>；背後的電晶體見 <a href="radar77-pcm-wat-spc.html#small">PCM / WAT 頁面</a>。
+4093352e LNA：低雜訊放大器
+f0e27c7e 一級帶電感退化的疊接共源 LNA。L_s 與 L_g 讓輸入看起來是 50 Ω，而不必加入有雜訊的電阻；疊接的 M2 隔離輸入與輸出（S12 與穩定度較好）；L_D 讓輸出在 77 GHz 諧振。兩到三級即可提供足夠增益，蓋過混頻器的雜訊。
+a94d3be4 意義
+ef20a941 77 GHz 典型值
+95c5bdfa 限制因素
+1ff30b35 小訊號功率增益 S21
+da39d748 15–22 dB（2–3 級）
+0d5ef02c fmax、匹配損耗、穩定度
+1b400c2e 雜訊指數（NF）
+94fee44c 加入的雜訊，換算到輸入端
+e422102c 4–7 dB（僅 LNA）
+ba4abd36 Rg、gm/Cgs（fT）、輸入匹配與電感損耗、ESD 電容
+f4622da9 輸入匹配 S11
+d053ef45 Rx 錫球處的反射
+ecf7c6ee 76–81 GHz 內 &lt; −10 dB
+1ed4a9a1 Lg/Ls/Cgs 值、焊墊與 ESD 寄生
+6cd258c7 反向隔離 S12
+1173e481 洩漏回天線
+1a43ce9e Cgd（疊接有幫助）
+1a62a9a5 增益下降 1 dB 時的功率
+9431ff37 偏壓電流、電源餘裕
+bda14d0e 穩定因子 K
+429dd577 全頻率範圍的無條件穩定
+68d6e8ff 所有頻段與角落 K &gt; 1、Δ &lt; 1
+5c40f3e2 Cgd 回授、佈局耦合、電源去耦
+cb2ccd59 每通道 DC 功耗
+5a72fa6b NF／增益／線性度的取捨
+a9e9fe3f 混頻器：降頻到 IF
+64df1fdf 雙平衡被動混頻器加轉阻放大器。LO 讓開關對以反相方式開關，RF 電流以交替正負號流到 IF+ 與 IF−，等於把 RF 乘上 LO 而產生拍頻。開關中沒有 DC 電流，所以閃爍雜訊低；TIA 讓 IF 節點維持虛接地並把電流轉成電壓。I 與 Q 混頻器由正交 LO 驅動。
+c73e87d8 轉換增益
+133fb42f IF 輸出對 RF 輸入（含 TIA）
+db4f2a9a TIA 轉阻、開關 Ron
+84766c29 混頻器 + TIA 的 DSB NF
+106f0cd3 開關 Ron、TIA 雜訊、LO 驅動
+e95b9f33 閃爍（1/f）雜訊轉角
+fbd0c46b IF 處 1/f 雜訊與白雜訊相交的頻率
+1f1bcb6a 被動混頻器（開關無 DC 電流）、大尺寸 TIA 元件
+db6f67f8 對強回波與 Tx 洩漏的線性度
+46229763 IIP3 0…+5 dBm；IP1dB −10…−5 dBm
+33491b4d 開關線性度、TIA 迴路增益
+4d8a1bff LO-RF 隔離
+d1dc423e LO 洩漏到天線／LNA
+b3a8d00e 四開關平衡、佈局對稱
+97577dd3 DC 偏移
+208251cf LO 洩漏自混頻 → IF 端的 DC
+e101f8c5 由 HPF 去除
+30e5b164 LO 洩漏、元件失配
+4ff3fc57 I 與 Q 混頻器之間的增益／相位誤差
+b11b6abd &lt; 0.5 dB / &lt; 3°（IRR &gt; 30 dB）
+10cee89f 正交 LO 準確度、匹配（<a href="radar77-signal-chain.html#iq">I/Q 段落</a>）
+e5a8009e PA：功率放大器
+f46feeb4 Tx 鏈與差動輸出級。變壓器（初級中心抽頭接 VDD）合併兩半電晶體、把差動轉為單端送到錫球，並把天線的 50 Ω 轉換成電晶體所需的低最佳負載。弱耦合器抽頭接到功率偵測器，供 <a href="radar77-signal-chain.html#txpower">Tx 功率迴路</a>與 BIST 使用。
+ea0ba550 輸出 P1dB / Psat
+21093686 線性與飽和輸出功率
+e61adbe7 VDD、BVdss／氧化層限制、負載線、合成器損耗
+20b08b2b 增益（驅動級 + PA）
+4d00bcff 從旋轉器輸出到錫球
+cb53b690 fmax、級數
+b806d7cd 功率附加效率 (Pout − Pin) / P_DC
+ac966a66 變壓器／平衡器損耗、元件 fmax
+0fa918e0 輸出匹配 S22
+a40b458d 與 Tx 錫球匹配
+cdd36afe 變壓器設計
+acf1403f 諧波
+9c857cea 2f、3f 洩漏到天線
+23e07d3c 差動對稱、調諧負載
+437b86cf 相位隨驅動變化
+f9444bd9 每 dB 數度
+72619af3 非線性電容（連到 <a href="radar77-signal-chain.html#txpower">Tx 功率迴路</a>）
+75aa0908 穩定度
+8f5ec65b 任何天線負載（VSWR）下都不振盪
+1abb3a81 VSWR 3:1 以內 K &gt; 1
+3a9589fa 經 Cgd、電源與地阻抗的回授
+701dc288 可靠度餘裕
+95e11416 汲極峰值電壓對崩潰電壓
+10632d61 V_peak &lt; BVdss 並保留餘裕
+b382956f 15 年間的閘極氧化層與熱載子劣化
+6e7cca8f VGA：可變增益 IF 放大器
+0444bda9 電阻可程式 PGA。開關短路二進位加權的回授電阻，讓增益 −R_f/R_in 以固定 dB 步階改變。增益只在 chirp 之間改變；準確度由電阻比例（而非絕對值）決定，所以匹配比片電阻更重要。
+78365db8 可程式 IF 增益
+ac11ad2c 24–48 dB，每步 1–2 dB
+6745a86f 電阻比範圍、運算放大器增益
+6f6ee9ec 步階準確度
+b208c250 每個增益步階的誤差
+62fe068c ±0.2–0.5 dB，單調
+20edb912 電阻匹配、開關 Ron
+1c0d7d7b 最大增益時的 −3 dB 頻寬
+bc7bd864 ≥ IF 頻帶的 2 倍（10–40 MHz）
+78decf98 運算放大器增益頻寬積
+da84585b VGA 輸入端的雜訊密度
+691ce1a5 數 nV/√Hz
+baeb578a R_in 熱雜訊、運算放大器雜訊
+b110859c 線性度
+96a1f9b5 滿刻度輸出時的 HD2 / HD3
+0f33a327 運算放大器迴路增益、輸出擺幅
+8995c7ea 偏移
+4bfa7c77 輸出端的 DC
+eb67404d 相對 ADC 範圍很小（其餘由 HPF 去除）
+e31747af 運算放大器失配
+a28480a5 增益改變後的安定
+b6bf48a9 碼改變時的安定時間
+eb3ff455 &lt; 1 µs，在 chirp 之間
+156d3e2b 迴路頻寬、開關電荷注入
+1c510594 接收鏈串接計算器
+192cb02b Friis 公式把各級組合起來：第一級的雜訊完全計入，後級則除以前面的增益；線性度剛好相反，所以通常是後級限制 IIP3。輸入每一級（封裝／ESD 等損耗請用負增益，其 NF 等於損耗）。
+480835f2 接收器雜訊指數
+ef80cee0 總增益
+6689b64e 輸入 IIP3
+9f40eeb9 NF 佔比（損耗 / LNA / 混頻器 / VGA）
+bb35b0c9 IIP3 主要受限於
+89e0461f 各參數如何在晶片上量測
+006add84 BIST / BISM 方法
+8c77b439 Rx 增益與相位（LNA + 混頻器 + VGA）
+69b0bb69 RF 迴路音通過整個接收器，每通道取 FFT 振幅與相位（<a href="radar77-bist-loopback.html#recipes">BIST 做法</a>）
+3b91329d 迴路關閉時的雜訊底除以量得的增益；或用冷熱雜訊源
+914bd633 Rx 壓縮 / IIP3
+fbdd29af 掃描迴路衰減器；由 SSB 調變器產生雙音量測互調
+b5908bcb 混頻器 I/Q 不平衡
+b8bb603c SSB 迴路音在 −f_m 的鏡像
+e398ed68 VGA 步階準確度、IF 響應
+19f1e56c IF 測試音 DAC 掃描頻率與增益碼
+cef5e33f PA 輸出功率、增益碼
+e97578ff 每個 Tx 的耦合器 + 功率偵測器（以及錫球斷裂時的反射功率）
+ef912a86 PA 相位 / AM-PM
+c499c73c Tx → Rx 迴路相位對增益碼（提供給旋轉器表）
+bb805162 成因／修正
+2083c734 振盪
+65d72710 雜散、接收器飽和、發熱
+4700b95b Cgd 回授、接地電感；疊接、在所有角落與負載下做穩定度分析
+900a1501 NF 劣化
+1fd6d5ea 偵測距離變短、NF BIST 失敗
+68953365 Rx 焊墊的 ESD 損傷、電感 Q 損失、偏壓漂移；ESD 管制、NF 篩選
+37bbfe76 DC 偏移／飽和
+f1294f09 近距時 IF 鏈截波
+861d1e96 LO 自混頻、Tx 洩漏；HPF、偏移抵消、隔離
+1324d5fb 閃爍雜訊高
+e946c810 短距靈敏度差
+e34565d7 主動混頻器或小尺寸元件；改用被動混頻器、加大 TIA 輸入元件
+ae7b087e 輸出功率隨壽命漂移
+067502e8 Tx 功率迴路超出範圍
+940d1336 高汲極擺幅造成熱載子／氧化層劣化；堆疊、電壓降額
+8a6fb812 接到不良天線負載時不穩定
+51f152d9 雜散、違反 EIRP
+52e3a4ad 在規定 VSWR 內做負載牽引穩定度檢查；類隔離器的平衡器設計
+b9cf741d 牽引 VCO
+9d16504c Tx 開關期間 chirp 上出現 FM
+4b261f0c 耦合回 LO；緩衝器、佈局分離（<a href="radar77-synthesizer.html#issues">合成器問題</a>）
+9fe8450e 非單調步階
+2387396d AGC 來回追逐、步階準確度失敗
+d3d1b589 電阻失配、開關 Ron；匹配佈局、微調 LUT
+c2a2f0d4 重要的 PCM / WAT 項目
+1ceecb7d fT、fmax、Rg、Cgd（RF WAT）
+0f286fdc LNA、PA、驅動級
+d3cb8c47 每級增益、NF、PA 增益與效率
+44c0f0d1 電感／變壓器 Q、頂層金屬厚度
+211d1eb4 匹配網路、L_D、PA 變壓器
+21bc7e61 NF（輸入損耗）、PA 輸出損耗與 PAE
+1b945828 PA、LNA 偏壓
+f396d13d 輸出功率、增益、偏壓點
+1ca51896 BVdss、閘極氧化層 Vbd
+90957d9d PA 輸出級
+eec53992 允許的汲極擺幅、長期可靠度
+252fc9a7 開關 Ron、Vt 匹配
+a0810b1d 混頻器四開關
+1a22bd17 轉換增益、NF、DC 偏移、I/Q 平衡
+b7e8affe 電阻匹配、MIM/MOM
+4df90958 VGA、TIA、濾波器
+fc50d72d 增益步階準確度、頻寬
+1bcf1664 數值為 77 GHz RFCMOS 雷達前端的典型值，用於規劃；電路圖已簡化。實際電路與規格取決於製程與產品。
+a73ae80f 增益 (dB)
