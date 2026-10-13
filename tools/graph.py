@@ -40,6 +40,7 @@ PAGES = {
     'tcost': ('radar77-test-cost.html', 'Test cost'),
     'assy': ('radar77-assembly.html', 'Assembly'),
     'qualp': ('radar77-qualification.html', 'Qualification'),
+    'mem': ('radar77-memory.html', 'Memory'),
 }
 TYPES = [('c', 'Circuit'), ('p', 'Parameter'), ('t', 'Test'), ('f', 'Fab & package'), ('s', 'System')]
 
@@ -132,6 +133,10 @@ N = [
     # added with the IF/ADC, DSP, safety, ESD, reliability, characterization, yield and regulation pages
     ('aaf', 'Anti-alias filter', 'c', 'ifadc#aaf', 'Low-pass filter before the ADC that stops signals near fs from folding into the band; relaxed with a CT-ΣΔ ADC.', ['AAF', 'anti-alias filter']),
     ('decim', 'Decimation filter', 'c', 'ifadc#decim', 'CIC and half-band FIR stages that turn the ΣΔ bit stream into 16-bit samples at 2× the IF bandwidth.', ['decimation filter', 'CIC', 'half-band']),
+    ('sram', 'Embedded SRAM', 'c', 'mem#cell', '6T-cell SRAM macros for radar cube, DSP and CPU; densest structure on the die.', ['SRAM', '6T', 'bitcell']),
+    ('memfault', 'Memory faults / bitmap', 'f', 'mem#process', 'Stuck-at, coupling, retention and disturb faults; their bitmap shape points to the process cause.', ['bitmap', 'retention fault', 'coupling fault']),
+    ('memrep', 'Redundancy &amp; repair', 't', 'mem#flow', 'Spare rows and columns allocated by BIRA and stored in fuses.', ['redundancy', 'repair', 'BIRA']),
+    ('ser', 'Soft errors / ECC', 'f', 'mem#ser', 'Particle-induced bit flips corrected by SEC-DED ECC and scrubbing.', ['soft error', 'SEU', 'ECC', 'scrubbing']),
     ('pkgqual', 'Package qualification', 't', 'qualp#tests', 'AEC-Q100 stress tests of the packaged chip: preconditioning, TC, HAST/THB, autoclave, HTSL, HTOL, with read-points and pass criteria.', ['qualification', 'preconditioning', 'HAST', 'THB', 'autoclave', 'HTSL']),
     ('dpa', 'Cross-section / DPA', 't', 'qualp#pa', 'Physical analysis after stress: CSAM, X-ray, cross-sections, SEM/EDX and shear tests.', ['cross-section', 'DPA', 'CSAM', 'SEM', 'EDX', 'dye and pry']),
     ('assyflow', 'Assembly flow', 'f', 'assy#flows', 'Bumping, dicing, fan-out molding, RDL build-up, ball attach and singulation.', ['assembly', 'reconstituted wafer', 'compression mold']),
@@ -249,6 +254,9 @@ E = [
     ('syl', 'holds lots flagged by', 'bins'), ('fa', 'feeds corrective action into', 'flow'), ('dppm', 'is investigated by', 'fa'),
     ('eirp', 'caps', 'pout'), ('lin', 'keeps the chirp inside', 'eirp'), ('interf', 'raises the noise floor for', 'cfar'), ('interf', 'is detected in', 'dfe'),
     ('ramp', 'randomises chirps against', 'interf'),
+    ('sram', 'stores', 'cube'), ('mbist', 'tests', 'sram'), ('mbist', 'produces', 'memfault'), ('vth', 'mismatch limits Vmin of', 'sram'),
+    ('memfault', 'is repaired by', 'memrep'), ('memrep', 'stores addresses in', 'efuse'), ('wmap', 'is overlaid with', 'memfault'), ('vlv', 'finds weak cells in', 'sram'),
+    ('ser', 'flips bits in', 'sram'), ('ser', 'counts toward', 'spfm'), ('bti', 'raises Vmin of', 'sram'),
     ('pkgqual', 'is part of', 'qual'), ('pkgqual', 'includes', 'tc'), ('pkgqual', 'includes', 'htol'), ('mission', 'sets the conditions of', 'pkgqual'),
     ('pkgqual', 'is inspected by', 'dpa'), ('dpa', 'finds cracks in', 'solder'), ('dpa', 'checks', 'rdl'), ('dpa', 'feeds', 'fa'), ('assyflow', 'is qualified by', 'pkgqual'),
     ('assyflow', 'builds', 'ewlb'), ('assyflow', 'patterns', 'rdl'), ('assyflow', 'forms', 'bump'), ('assyflow', 'takes known-good dies from', 'flow'),

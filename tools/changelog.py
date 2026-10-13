@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.24.0', '2026-10-13', ['New embedded SRAM page: 6T bitcell, design margins and assists, ECC and redundancy, cell-sigma calculator, fault models, March algorithms, process causes with fail-bitmap signatures, Vmin shmoo, repair flow, soft errors and memory PCM items; linked from the DFT page.']),
     ('1.23.0', '2026-10-08', ['ESD page: CDM test subsection — field-induced CDM setup, discharge waveforms by package size, test procedure, JS-002 classes and automotive requirements, package factors, design for CDM and failure signatures; linked from the qualification and assembly pages.']),
     ('1.22.1', '2026-10-07', ['Qualification page: temperature-cycling profile, Coffin–Manson test-vs-field chart, read-point drift chart and a solder-ball cross-section drawing.']),
     ('1.22.0', '2026-10-07', ['New package qualification &amp; physical analysis page: AEC-Q100 grades, stress tests with conditions and sample sizes, setting conditions from the mission profile (with calculator), read-points, pass criteria, CSAM / X-ray / cross-section / SEM analysis, failure analysis and re-qualification; linked from the package and reliability pages.']),

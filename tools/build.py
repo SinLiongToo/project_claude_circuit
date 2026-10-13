@@ -37,6 +37,7 @@ PAGES = [
     ('radar77-efuse-otp.html', '<li><a href="#otp">eFuse, OTP &amp; trim</a></li>'),
     ('radar77-continuity.html', '<li><a href="#data">Data &amp; test flow</a></li>'),
     ('radar77-dft-stress.html', '<li><a href="#checklist">DFT checklist</a></li>'),
+    ('radar77-memory.html', '<li><a href="#mem">Embedded SRAM</a></li>'),
     ('radar77-test-flow.html', '<li><a href="#flow">Test flow</a></li>'),
     ('radar77-pcm-wat-spc.html', '<li><a href="#pcm">PCM / WAT &amp; SPC</a></li>'),
     ('radar77-wafer-map.html', '<li><a href="#maps">Wafer map signatures</a></li>'),
