@@ -366,7 +366,7 @@ def refresh(docs_read, docs_write):
     pages = ''.join('<a data-p="%s" href="%s"></a>' % (k, f) for k, (f, _) in PAGES.items())
     rows = ''.join('<tr><td>%s</td><td>%s</td><td>%s</td></tr>' % (_esc(lab[a]), _esc(r), _esc(lab[b])) for a, r, b in E)
     items = ''.join('<tr><td><a href="%s#%s">%s</a></td><td>%s</td><td>%s</td></tr>'
-                    % (PAGES[n[3].split('#')[0]][0], n[3].split('#')[1], _esc(n[1]), tname[n[2]], _esc(n[4])) for n in nodes)
+                    % (PAGES[n[3].split('#')[0]][0], n[3].split('#')[1], _esc(n[1]), _esc(tname[n[2]]), _esc(n[4])) for n in nodes)
     s = docs_read(GRAPH)
     rep = [
         ('graph-data', '<script type="application/json" id="gData">%s</script>' % blob),

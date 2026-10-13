@@ -155,6 +155,20 @@ def ensure_graph_tab(s, fname):
     return s[:i] + GRAPH_TAB % key + s[i:]
 
 
+def dedupe_markers(s):
+    """Each generated figure defines the same arrowhead <marker id=...>; keep the first, drop identical repeats
+    (ids must be unique in a page; the remaining url(#id) references resolve to the first)."""
+    seen = {}
+    def keep(m):
+        mid, whole = m.group(1), m.group(0)
+        if mid not in seen:
+            seen[mid] = whole
+            return whole
+        return '' if seen[mid] == whole else whole
+    s = re.sub(r'<marker id="([^"]+)".*?</marker>', keep, s, flags=re.S)
+    return re.sub(r'<defs></defs>', '', s)
+
+
 def ensure_home_tab(s):
     """Every content page gets a tab back to the landing page, above its header."""
     if 'class="home-tab"' in s:
@@ -248,7 +262,7 @@ def main():
     wr('radar77-changelog.html', s)
     # 1 + 2: search component and glossary
     for fname, toc_after in PAGES:
-        wr(fname, ensure_theme_init(ensure_graph_tab(ensure_home_tab(refresh_search(rd(fname))), fname)))
+        wr(fname, dedupe_markers(ensure_theme_init(ensure_graph_tab(ensure_home_tab(refresh_search(rd(fname))), fname))))
         glossary.inject(fname, None, toc_after)
     # 3: site index
     pages, items = {}, []
