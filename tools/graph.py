@@ -135,7 +135,7 @@ N = [
     ('decim', 'Decimation filter', 'c', 'ifadc#decim', 'CIC and half-band FIR stages that turn the ΣΔ bit stream into 16-bit samples at 2× the IF bandwidth.', ['decimation filter', 'CIC', 'half-band']),
     ('sram', 'Embedded SRAM', 'c', 'mem#cell', '6T-cell SRAM macros for radar cube, DSP and CPU; densest structure on the die.', ['SRAM', '6T', 'bitcell']),
     ('memfault', 'Memory faults / bitmap', 'f', 'mem#process', 'Stuck-at, coupling, retention and disturb faults; their bitmap shape points to the process cause.', ['bitmap', 'retention fault', 'coupling fault']),
-    ('memrep', 'Redundancy &amp; repair', 't', 'mem#flow', 'Spare rows and columns allocated by BIRA and stored in fuses.', ['redundancy', 'repair', 'BIRA']),
+    ('memrep', 'Redundancy & repair', 't', 'mem#flow', 'Spare rows and columns allocated by BIRA and stored in fuses.', ['redundancy', 'repair', 'BIRA']),
     ('ser', 'Soft errors / ECC', 'f', 'mem#ser', 'Particle-induced bit flips corrected by SEC-DED ECC and scrubbing.', ['soft error', 'SEU', 'ECC', 'scrubbing']),
     ('pkgqual', 'Package qualification', 't', 'qualp#tests', 'AEC-Q100 stress tests of the packaged chip: preconditioning, TC, HAST/THB, autoclave, HTSL, HTOL, with read-points and pass criteria.', ['qualification', 'preconditioning', 'HAST', 'THB', 'autoclave', 'HTSL']),
     ('dpa', 'Cross-section / DPA', 't', 'qualp#pa', 'Physical analysis after stress: CSAM, X-ray, cross-sections, SEM/EDX and shear tests.', ['cross-section', 'DPA', 'CSAM', 'SEM', 'EDX', 'dye and pry']),

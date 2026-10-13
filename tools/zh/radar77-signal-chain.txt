@@ -471,7 +471,7 @@ f064bd54 C66x/C7x DSP 或向量 DSP + Cortex-R5F lockstep
 651692df 多核 ARM-A + DSP 叢集
 8dc784bc 安全 MCU
 6cfb64fc Lockstep R5F，所有 RAM 皆有 ECC
-cd0c4a3b 同上
+cd0c4a3b 相同
 019ec222 晶片上記憶體往往比 RF 更早限制 chirp 設定。壓縮（區塊浮點）或在距離 bin 到達時即處理，可讓立方體保持夠小。
 8805adc7 監測與內建自我測試
 3bcb1d00 安全 · ASIL-B

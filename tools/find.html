@@ -216,7 +216,11 @@
       const z=zh(el.textContent);if(z===undefined)return;
       if(el.tagName==="OPTION"){el.textContent=z;return}
       if(el.querySelector("input,select,textarea,button,svg,canvas,script,[id]"))return;
-      el.innerHTML=z;el.setAttribute("data-zh","");
+      // the same text can be a link on one page and plain on another: keep this element's own link (or none)
+      const solo=n=>n.children.length===1&&n.firstElementChild.tagName==="A"&&norm(n.firstElementChild.textContent)===norm(n.textContent)?n.firstElementChild:null;
+      const a0=solo(el), tmp=document.createElement("div");tmp.innerHTML=z;const za=solo(tmp);
+      if(a0)a0.innerHTML=za?za.innerHTML:z;else el.innerHTML=za?za.innerHTML:z;
+      el.setAttribute("data-zh","");
     });
     document.querySelectorAll("label").forEach(l=>{
       const n=[...l.childNodes].find(c=>c.nodeType===3&&c.nodeValue.trim());

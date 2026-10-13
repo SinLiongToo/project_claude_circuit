@@ -1,0 +1,474 @@
+f889e330 77 GHz 雷達筆記 · 全部頁面地圖
+edddd9e8 把其他頁面上的每個關鍵電路、參數、測試與晶圓廠或封裝項目，連成一張圖。選一個項目，就能看到什麼驅動它、它影響什麼、哪個測試涵蓋它，以及哪一頁說明它。
+1831bed3 頻率合成器
+4314d6fa BIST 與迴路
+666f640b 開路／短路與 Cres
+71358fea DFT、掃描與應力
+f7f9382d 知識圖譜：電路、參數與測試如何相連
+e5cba2bc 全部頁面
+b2b06a82 每一頁的關鍵項目及其相依關係的地圖，就像個人知識庫的圖譜檢視。共有 <!--graph-count-->141 個項目與 295 條連結<!--/graph-count-->。點選項目可看它連到什麼、為什麼，打開說明它的段落，並看到提及它的其他段落。用類型按鈕隱藏群組，用 <b>Focus</b> 只顯示所選項目的鄰近範圍。
+a49f1270 整張圖
+cfbea7a6 1 步
+4087140a 2 步
+5ca189c9 閱讀方式：箭頭從起點讀到終點就是一句話，例如 <i>LNA → 主導 → 雜訊指數</i>。項目越大代表連結越多。每種類型除了顏色也有自己的形狀，所以列印時或對色盲讀者，群組也能分清楚。
+088ca8f3 所有項目表格
+065b8fa0 是什麼
+13849eb0 <a href="radar77-signal-chain.html#antenna">天線</a>
+2e0fdbfa Tx 與 Rx 天線以及晶片到天線的轉接；其損耗直接加到雜訊指數上，並從 Tx 功率中扣除。
+a8c5ca52 功率放大器：經變壓器平衡器把 chirp 送進 Tx 天線。
+191c1bc0 低雜訊放大器：接收器的第一個增益級；其雜訊與增益決定接收器雜訊指數。
+8211cdd5 <a href="radar77-rf-frontend.html#mixer">混頻器 + TIA</a>
+f54a551a 帶轉阻放大器的被動雙平衡混頻器：把回波乘上 LO，得到 IF 拍頻訊號。
+a1e78a2f <a href="radar77-if-adc.html#hpf">IF 濾波器 / HPF</a>
+f35c08c5 IF 鏈中的高通與抗混疊濾波器：抑制近距洩漏，並在 ADC 前設定 IF 頻帶。
+9c86b33e 以開關切換回授電阻的可程式 IF 增益放大器；為 ADC 設定訊號位準。
+2c4f0f64 把 IF 拍頻訊號轉為數位；BIST 也用它量測晶片上的偵測器。
+0f65c143 數位前端：雷達處理前的降頻取樣、濾波與資料格式化。
+ca50679f <a href="radar77-dsp.html#dsp">雷達 DSP（FFT）</a>
+519f059c 距離與都卜勒 FFT、CFAR 偵測與角度估計。
+24e3f728 為波束導向與 MIMO 編碼設定每個 Tx 通道的相位；由 I/Q 向量加總構成。
+478cf0fc 為相位旋轉器的 I 與 Q 向量加權的電流 DAC；其 INL/DNL 與 bow 決定相位準確度。
+406b2490 Tx 輸出耦合器上的二極體或平方律偵測器；其 DC 輸出告訴晶片 Tx 功率。
+3e65d2da <a href="radar77-synthesizer.html#blocks">PFD + 電荷泵</a>
+9fd4461f 相位頻率偵測器與電荷泵：比較參考與除頻後的 VCO，把電流打入迴路濾波器。
+964c6643 <a href="radar77-synthesizer.html#blocks">迴路濾波器</a>
+05802e70 把電荷泵電流轉成 VCO 調諧電壓的 RC 網路，決定迴路頻寬與穩定度。
+9700a565 具開關電容子頻段的 LC 諧振腔壓控振盪器（約 19–20 GHz，再 ×4）。
+89e4b5d2 <a href="radar77-synthesizer.html#blocks">除頻器 / ΣΔ</a>
+bfe7cfb8 由 ΣΔ 調變器驅動、做分數 N 除頻的多模數除頻器。
+b4440a8a 逐步改變分數除頻比以掃頻的數位 chirp 產生器。
+9d67a5e5 <a href="radar77-synthesizer.html#blocks">×4 倍頻器</a>
+afcdf1f1 從 VCO 頻段倍頻到 76–81 GHz。
+60f576f6 <a href="radar77-signal-chain.html#lo">LO 分配</a>
+ab3fe6e8 把 77 GHz LO 送到每個 Tx 旋轉器與 Rx 混頻器的緩衝器與傳輸線。
+2ebc0455 為每個區塊提供乾淨就近電源的低壓降穩壓器。
+a0dff484 供 LDO、監測器、ADC 與偏壓電流使用的溫度穩定電壓參考。
+662ac392 <a href="radar77-power.html#uvov">UV / OV 監測</a>
+69b8e5bb 為功能安全標記每個電源欠壓與過壓的視窗比較器。
+173aac2a <a href="radar77-power.html#seq">POR 與上電時序</a>
+9cb98eeb 上電重置，以及電源、參考與時脈啟動的順序。
+203b7349 <a href="radar77-esd.html#network">ESD 二極體</a>
+cfa5161f 每個腳位上的保護二極體；開路／短路測試讓它們順偏來檢查導通。
+0f3a48d6 <a href="radar77-dft-stress.html#scan">掃描鏈</a>
+4bd9437e 串成移位暫存器的正反器，讓測試機能控制與觀察數位邏輯。
+34ca3c7c 雷達資料記憶體的晶片上 March 演算法測試器。
+6ddf8a98 邏輯的偽隨機自我測試，也在現場上電時執行。
+aab8314c 通往掃描、BIST 與微調暫存器的測試存取埠與儀器網路。
+618512a3 <a href="radar77-bist-loopback.html#mux">測試多工器 / ATB</a>
+337c5634 類比測試多工器與類比測試匯流排：把每個子區塊節點接到輔助 ADC、主 ADC 或測試腳。
+fdc7efdc <a href="radar77-bist-loopback.html#mux">迴路開關</a>
+14bbca42 選擇迴路中由哪個 Tx 餵給哪個 Rx 的 RF SP4T 開關與分配器。
+5210e27f <a href="radar77-dft-stress.html#muxes">數位測試多工器</a>
+e9f0d91e 由測試模式控制的掃描、時脈、重置、旁路與腳位共用多工器。
+be7a677d <a href="radar77-bist-loopback.html#arch">BIST 控制器</a>
+226d17a6 設定迴路路徑、執行量測並與限值比較的晶片上序列器。
+f2fc2f78 接收器加入多少雜訊；主要由輸入損耗與 LNA 決定（Friis）。
+8c28a06e <a href="radar77-rf-frontend.html#cascade">Rx 增益</a>
+a289ff53 從天線到 ADC 的總接收增益；LNA 增益高可蓋過後級雜訊。
+6b8deac7 接收鏈的線性度；通常由後級（混頻器、VGA）限制。
+7d054ad4 Tx 錫球處的功率，通常每通道 10–14 dBm。
+44cdc098 PA 的功率附加效率；決定發熱與電源電流。
+b0159cba <a href="radar77-synthesizer.html#specs">相位雜訊</a>
+eb0582b4 LO 相位上的雜訊；限制強目標旁弱目標的偵測。
+bf5f5664 <a href="radar77-synthesizer.html#specs">Chirp 線性度</a>
+a83f90ff 頻率斜坡有多直；非線性會讓距離峰值模糊。
+de35c820 <a href="radar77-synthesizer.html#lock">鎖定時間／鎖定偵測</a>
+91124ca7 PLL 多快安定，以及晶片如何知道它已鎖定。
+01d29209 <a href="radar77-synthesizer.html#vco">KVCO／調諧範圍</a>
+ca6c2e51 VCO 增益（MHz/V）與每個子頻段的頻率範圍。
+420464b8 I 與 Q 路徑之間的增益與相位失配；產生鏡像（鬼影）目標。
+9805a016 ADC 的有效解析度；決定數位端的動態範圍。
+c23712d1 旋轉器 DAC 的線性度；bow（二階 INL）變成相位與振幅誤差。
+346cb78e 穩壓器或電路抑制電源雜訊的能力；PSRR 差會以雜散呈現。
+b8a607e9 <a href="radar77-power.html#ldo">壓降／負載調整率</a>
+63897fc4 LDO 上的最小餘裕，以及其輸出隨負載電流的變化。
+66991069 電晶體臨界電壓；會偏移速度、偏壓點與漏電。
+45090d05 電晶體截止頻率與最高振盪頻率；決定在 77 GHz 的餘裕。
+3aaa9e31 轉導與飽和電流：電晶體的驅動強度。
+cd87550a <a href="radar77-pcm-wat-spc.html#params">Ioff／漏電</a>
+1da9cd9b 電晶體關閉狀態電流；決定待機電流與 IDDQ 基線。
+577ed56a <a href="radar77-pcm-wat-spc.html#bv">崩潰電壓</a>
+3c8c441d 接面、氧化層與汲極崩潰限制；限制 PA 擺幅與應力測試位準。
+b2d02852 <a href="radar77-pcm-wat-spc.html#params">片電阻／匹配</a>
+905933a2 電阻與電容值及其匹配；決定增益步階、濾波器轉角與微調範圍。
+02258177 探針或測試座的接觸電阻；隨探針磨耗而漂移，導致參數測試誤判失敗。
+609cd7fc <a href="radar77-signal-chain.html#spec">最大距離／SNR</a>
+8ceda8b1 由雷達方程式得到的偵測距離：Tx 功率、天線增益、NF 與積分時間。
+a1e60a3a c / 2B：由 chirp 頻寬決定。
+b0b3ae35 製程能力：平均值到最近限值的距離，以 3σ 為單位。
+828fc21a <a href="radar77-continuity.html#method">開路／短路測試</a>
+11afb494 經每個腳位的 ESD 二極體施加電流，在其他測試前找出開路與短路。
+972fc2f5 一次讓一個腳位進入三態，找出腳位間短路與漏電。
+5eac991f 多個掃描狀態下的靜態電源電流；數值升高代表有橋接與閘極氧化層缺陷。
+b4da49c8 以功能時脈執行的轉態與路徑延遲掃描圖樣，抓出慢路徑。
+0c0155ae <a href="radar77-dft-stress.html#stress">HVST／預燒</a>
+7438621c 高電壓應力與預燒在出貨前把脆弱的氧化層與金屬缺陷加速到失效。
+7fc8aaaf 極低電壓測試：在低於標稱電源下執行邏輯與記憶體，揭露邊緣單元與電阻性缺陷。
+115f7526 <a href="radar77-bist-loopback.html#arch">RF 迴路</a>
+4f6d8801 在晶片上把 Tx 訊號導回 Rx，不需毫米波儀器就能測試整條 RF 路徑。
+e37b997d <a href="radar77-bist-loopback.html#meas">晶片上量測</a>
+0d47564e 偵測器、計數器與 ADC 在晶片內量測功率、頻率、增益與相位（BISM）。
+d07a4977 <a href="radar77-bist-loopback.html#feedback">微調與校正</a>
+4fc8bdc6 量得的誤差寫回為微調碼：能隙、LDO、VCO 頻段、I/Q、相位、增益。
+17aab13b 針測前在每片晶圓上量測的切割道測試結構：Vth、Idsat、漏電、片電阻、崩潰。
+d913c77c 讓每個 WAT 參數保持受控的管制圖與判異規則。
+7a757790 離群篩選：為車用零缺陷而做的零件平均測試與壞鄰居中的好晶粒剔除。
+05915555 車用驗證：HTOL、溫度循環、ESD、閂鎖等。
+de0a8a79 從晶圓針測到最終測試與系統測試的測試站順序。
+08e557da 每顆失效晶粒被分到哪裡；bin 資料驅動良率分析。
+833f77f1 <a href="radar77-pcm-wat-spc.html#corners">角落與失配</a>
+f514cab4 晶圓廠與封裝
+e4ee4a07 設計必須撐過的製程角落（SS/FF/SF/FS）與局部失配。
+af2482ea <a href="radar77-wafer-map.html#maps">晶圓圖特徵</a>
+b8e9c1be 指向某個製程機台或設定的失效晶粒空間圖樣。
+6ca5cde0 化學機械研磨：研磨墊磨耗、研磨液或壓力分區造成的中心／邊緣環。
+bed312fe <a href="radar77-wafer-map.html#table">光罩／微影</a>
+43f4f15c 在晶圓上每個曝光場都重複出現的曝光與光罩問題。
+8030b13c <a href="radar77-package.html#types">扇出型（eWLB）</a>
+5196bab4 77 GHz 雷達常用的扇出型晶圓級封裝：低損耗 RDL、沒有打線。
+044b9633 <a href="radar77-package.html#types">天線封裝整合</a>
+51f3807a 做在封裝中的天線，省去 PCB 上的 RF 饋出。
+98f76659 把晶粒焊墊繞到錫球並承載毫米波轉接的重佈線層。
+132e72a5 <a href="radar77-package.html#dims">凸塊／錫球</a>
+fb29a855 錫凸塊與錫球：間距、高度與凸塊下金屬。
+54f7af95 <a href="radar77-package.html#failures">銲點疲勞</a>
+46a29be1 溫度循環讓銲點破裂；車用中最主要的封裝失效。
+d65e9f17 −40/+125 °C（或 −55/+150 °C）循環加速疲勞與脫層。
+a0a6d0a6 <a href="radar77-if-adc.html#aaf">抗混疊濾波器</a>
+e2186508 ADC 前的低通濾波器，防止 fs 附近的訊號折進頻帶；使用 CT-ΣΔ ADC 時可放寬。
+bf04ddc0 <a href="radar77-if-adc.html#decim">降頻濾波器</a>
+f2b7caa4 把 ΣΔ 位元流轉成 IF 頻寬 2 倍速率 16 位元取樣的 CIC 與半頻帶 FIR 級。
+b3cb6e54 用於雷達立方體、DSP 與 CPU 的 6T 單元 SRAM 巨集；晶粒上最密集的結構。
+c6c14ed9 <a href="radar77-memory.html#process">記憶體故障／位元圖</a>
+45382d99 固定型、耦合、資料保持與干擾故障；其位元圖形狀指向製程成因。
+b65c4846 由 BIRA 分配並存於熔絲的備用列與行。
+18fd0528 <a href="radar77-memory.html#ser">軟錯誤 / ECC</a>
+9f1e55db 由 SEC-DED ECC 與刷新更正的粒子引起位元翻轉。
+b902e5de <a href="radar77-qualification.html#tests">封裝驗證</a>
+a048602b 對封裝後晶片的 AEC-Q100 應力測試：預處理、TC、HAST/THB、autoclave、HTSL、HTOL，含讀取點與通過準則。
+a86633e7 <a href="radar77-qualification.html#pa">切片 / DPA</a>
+587c6d10 應力後的物理分析：CSAM、X 光、切片、SEM/EDX 與剪力測試。
+dd8670e7 凸塊、切割、扇出模封、RDL 建構、植球與單顆化。
+69bb6e0d <a href="radar77-assembly.html#defects">晶粒偏移／翹曲</a>
+77fb10d1 模封時的晶粒移動與回焊時的封裝彎曲；造成 RDL 對位偏差與銲點開路。
+323efab4 在評估板上逐步測試首批矽晶，從導通到系統測試。
+1e2279a6 <a href="radar77-bench-test.html#mmw">OTA／暗室測試</a>
+a1bc4c98 在無反射暗室中以反射器與目標模擬器做空中量測。
+8e56dbbd <a href="radar77-module.html#radome">雷達罩／保險桿</a>
+9c581434 天線前方的塑膠罩；其厚度與烤漆決定損耗與反射。
+190d4379 <a href="radar77-module.html#eol">模組 EOL 校正</a>
+ab3813d4 完成品模組的天線增益與相位校正及視軸對位。
+edb8db52 由功率與熱路徑決定的晶粒溫度；驅動 RF 性能與老化。
+6d074d56 <a href="radar77-emc-pi.html#pi">電源分配 / PI</a>
+d09c3bb3 穩壓器、電源層與去耦；這裡的電源雜訊會變成 LO 雜散。
+dfdf0a79 <a href="radar77-emc-pi.html#stds">EMC 測試</a>
+479c4289 模組的 CISPR 25 發射與 ISO 11452 抗擾度測試。
+751a30b8 <a href="radar77-design-flow.html#stages">電磁／佈局後模擬</a>
+411b0370 在下線前預測毫米波性能的電磁模型與寄生萃取。
+d01ba386 <a href="radar77-test-cost.html#model">測試成本</a>
+20d4d858 由測試機費率、測試時間、site 數與良率算出的每顆良品晶粒成本。
+ed26040d 終身保存微調碼、晶粒 ID 與修補資訊的一次性可程式位元（多晶矽 eFuse、反熔絲）。
+c4211aaf <a href="radar77-efuse-otp.html#cell">影子暫存器</a>
+152361c2 開機時從熔絲載入的暫存器；驅動微調 DAC，並允許測試時做軟微調。
+2b1173f8 主動式定速巡航：用前向長距雷達與前車保持時距。
+b9c7a428 依碰撞時間對汽車、行人與自行車做自動緊急煞車。
+49a8d678 由後角雷達做盲點偵測與變換車道輔助。
+cbdffa01 倒車時的後方橫向來車警示與煞車。
+ffe9828b <a href="radar77-applications.html#classes">4D 成像雷達</a>
+8662a664 也量測仰角的高通道數雷達，用於 L2+ 與 L3 駕駛。
+60bd3e94 回報每個接收級截波的視窗比較器、峰值偵測器與 ADC 超範圍旗標。
+7190facd <a href="radar77-if-adc.html#adc">時脈抖動</a>
+0c27aa11 ADC 時脈的時序雜訊；在高 IF 頻率限制 SNR。
+5258e317 <a href="radar77-dsp.html#cube">雷達立方體記憶體</a>
+3addd792 存放距離 × chirp × 通道資料、供都卜勒與角度處理的晶片上 SRAM。
+75baf244 <a href="radar77-dsp.html#cfar">CFAR 偵測</a>
+d4455eaa 以恆定虛警率找出目標的自適應門檻。
+bff7a1a1 在虛擬陣列上估計到達方向：FFT 波束成形或超解析。
+f565a07d 到主機的 CSI-2、車用乙太網路、SPI 或 CAN-FD 鏈路。
+b10c723c 容錯時間間隔：偵測與反應必須在其內完成。
+fc4d88f3 FMEDA 必須達到該 ASIL 的 ISO 26262 硬體指標。
+c95bcb5b <a href="radar77-safety.html#keyon">上電測試</a>
+642d98e4 對邏輯、記憶體與監測器本身做開機自我測試，抓潛伏故障。
+20f7a3a1 <a href="radar77-esd.html#network">ESD 電源箝位</a>
+771ba884 電源之間承載 ESD 電流、RC 觸發的大 NMOS。
+b331c61a ESD 驗證應力：人體放電與元件充電模型。
+341fb246 寄生閘流體導通並短路電源。
+a4faaf48 熱載子注入：汲極端損傷，隨壽命降低增益與輸出功率。
+4fa773e3 高溫下閘極偏壓造成的臨界電壓偏移；讓邏輯變慢並偏移類比偏壓。
+a9070f50 時間相依的閘極氧化層崩潰。
+2baa6d06 被電流密度推動的金屬原子；造成電源線開路與短路。
+1694b93f 高溫工作壽命測試，以及由它推得的失效率。
+e603626e 決定老化與 FIT 預算的 15 年溫度、電壓與開機時間剖面。
+60fadc88 <a href="radar77-characterization.html#gb">保護帶／測試限值</a>
+b756f968 規格與測試限值之間，為量測誤差、溫度與老化預留的餘裕。
+71b493ff <a href="radar77-characterization.html#corr">實驗室–ATE 相關性</a>
+5e0204d5 在實驗室與測試機上量測黃金樣品，讓量產結果對齊。
+30a005c2 量測系統的重複性與再現性。
+437ec6ff <a href="radar77-yield.html#components">晶粒良率（D0）</a>
+01e3f5f7 好晶粒的比例，由缺陷密度與面積，加上參數餘裕決定。
+e51df9c3 <a href="radar77-yield.html#dppm">DPPM／漏失</a>
+10ca4fdc 通過測試的每百萬顆不良數；車用目標低於 1。
+fe194a59 暫扣異常批的統計良率與 bin 限值。
+7e731074 <a href="radar77-yield.html#rma">失效分析 / 8D</a>
+5b97a0ff 退貨的根因分析與 8D 矯正措施流程。
+4192e539 <a href="radar77-regulation.html#bands">EIRP／頻段限制</a>
+658268ba 各市場的法規功率與頻段邊界限制。
+687c8fa9 <a href="radar77-regulation.html#interf">雷達干擾</a>
+c3ddcdc6 其他雷達穿過 chirp；抬高雜訊底或產生鬼影。
+9c4ceb46 線性頻率斜坡；Tx 與回波之間的拍頻給出距離。
+fe4eae3e <a href="radar77-signal-chain.html#rotator">波束導向 / MIMO</a>
+96521b97 Tx 相位用來導向波束或為通道編碼，讓接收器能分開它們（虛擬陣列）。
+1979ccb3 讓 Tx 功率在溫度與老化下保持固定的偵測器、ADC 與數位控制。
+5ee4b763 自動增益控制：選擇 VGA 增益，讓強回波不會讓 ADC 截波。
+8db6bb06 <a href="radar77-power.html#pwr">供電樹</a>
+672a515c 電池或 PMIC 電源分成各電源域與本地 LDO。
+d510fec0 ISO 26262 / ASIL：在容錯時間內偵測故障的現場監測與自我測試。
+5a397d33 <a href="radar77-pcm-wat-spc.html#digital">數位時序</a>
+e584886a 邏輯的建立與保持餘裕；角落與失配可能破壞它們。
+873581cc 所有連結表格
+18743595 從
+b4b329c1 關係
+41f59644 到
+6a8b6e1f 把回波送到
+e53d8cd3 放大後送入
+4b82d578 IF 輸出到
+f51dddfb 為其濾波
+3675bade 為其設定位準
+6b28a00b 為其取樣
+14c4ae5f 為其降頻取樣
+8ea9712a 輸出被其相乘
+e454184c 驅動
+cf2b549b 作為其 LO
+ee916753 經由其輻射
+b618090d 設定其相位
+15f3d187 使其可行
+17273b80 被其取樣
+db101962 餵給
+4d491715 調整其驅動
+e46be41d 穩壓供應
+0d50ebf8 被其讀取
+d1d68ae7 調變
+bd211daa 回授到
+48a7fa1e 把電荷打入
+fe5aaca0 調諧
+1b6f883b 被其除頻
+89561039 由其產生
+fb3e26d1 主導
+737406e0 決定大部分的
+76cfe090 貢獻於
+ae8358b5 常限制
+41824ca3 失配造成
+283100f9 正交誤差造成
+ef4d3348 以其評等
+384af890 受其限制
+5f70b550 決定
+83d3fed8 決定遠端的
+1a8eb5d5 頻寬決定近端的
+1f541127 頻寬決定
+d91522f2 頻寬限制
+d1f55770 以其表徵
+4eeb7aef 決定
+55840ac5 限制
+6d1dbf75 損耗降低
+7b6b2a2d 遮住弱目標，限制
+53094edd 讓峰值模糊，劣化
+ba44909a 在其中產生鬼影目標
+32698e8b 變成其相位誤差
+841f6336 限制其動態範圍
+fd20ce17 控制
+729017f7 防止其截波
+c5ce9a6e 決定強回波何時需要
+105ea5af 在其之前去除近距洩漏
+294c21d0 限制其增益與雜訊
+8eb52808 限制其輸出功率
+2e8c9f7f 限制其調諧
+cfae7f16 決定其雜訊底
+61046a1f 與 Cgs 一起決定
+727abadc 偏移
+2ed95aad 被其分散
+b957cfb3 偏移其頻段
+b0d3c892 可能破壞
+4fa56c4b 決定其基線
+e8f80bda 在 FF 角落使其上升
+53c86341 決定其增益步階
+845011de 決定其微調範圍
+4711e3bf 決定其轉角
+805121b7 失配限制
+75150e8a 限制其擺幅
+3b1d932e 決定其位準
+08ffeac4 量測
+e7bed1f6 為其建模
+4561a2a3 被其監測
+c3b446be 以其表示能力
+a08598a5 與其相關
+42e6a2a6 在其中造成環
+8976b4bf 在其中造成重複
+815fe9e2 厚度偏移
+b1e192df CD 偏移
+e7127506 在其之後開始
+2308b4b1 分支到
+c6ecc874 是其參考
+fc6cec51 決定其門檻
+23a5dd42 向其回報故障
+f9f16781 排序
+d2a6728e 等待
+b41c2f76 供電給
+fa419392 電源雜訊變成其雜散
+e6a9298f 限制其餘裕
+aceae80c 監看
+9518015d 設定
+1a32ed3b 執行
+31dab179 測試其 Rx 路徑
+9680f187 測試其 Tx 路徑
+af0f65dc 檢查
+61786085 使用
+78d525a4 以其量測
+15648e21 計數其頻率
+f11337e5 結果驅動
+42b906e3 校正
+f74c3aa6 修正
+d25a05ce 微調
+fb079fa6 選擇其子頻段
+cf367b24 為其提供現場監測
+5e6616ee 為其提供現場測試
+9ef35ce5 被其檢查
+86b6a86d 保護
+7f25e738 串流進入
+18be8117 把取樣交給
+1ffc7b45 讀寫
+5b22cf22 測試
+87c41645 為其設定虛警率
+43aac57c 依賴其通道校正
+3f7bf559 經其送出點雲
+50eace3a 必須在其內反應
+ec493838 由其證明
+2b9ca47b 為其找出潛伏故障
+1717c4b3 作為其一部分執行
+466bf4ce 由其自我測試
+8b1958c5 經其放電
+790edc09 施加應力於
+c5b5a206 決定其設計視窗
+1c37e817 是其一部分
+670838f1 在其中測試
+7135c78f 對其匹配增加電容
+cc373abe 降低其功率
+4cf82591 減慢
+8fc50e79 出現在
+1812896f 限制其電流
+a4707039 加速
+353a0316 決定其應力
+c62beec4 決定其 TDDB 餘裕
+3155b086 決定其不確定度
+ab802de3 使用其分布
+99a88203 以其與實驗室對齊
+eb0f0194 在其中損失
+37f07afd 解釋
+6e1c72fc 降低
+56cc5ab6 暫扣其標記的批次
+20226bc6 把矯正措施回饋到
+fefaa7df 由其調查
+a52309d8 限制上限
+d48c598a 讓 chirp 保持在其內
+e4dd27a4 抬高其雜訊底
+3fea3258 在其中被偵測
+fd55f9c4 隨機化 chirp 以對抗
+0ecd8667 儲存
+4fe83694 產生
+800db15c 失配限制其 Vmin
+6c5a7614 由其修補
+579ce47a 把位址存在
+6c01bf3d 與其疊合
+390cb8df 在其中找出弱單元
+3e007320 翻轉其位元
+e5c2aedc 計入
+02421073 提高其 Vmin
+cfdb2d7c 包含
+0c46834c 決定其條件
+b8e634ed 由其檢查
+bf2d6b79 找出其中的裂痕
+a2706128 由其驗證
+be7f3d70 建構
+3f0920ae 圖形化
+7fc196dc 形成
+45f76697 取用其已知良好晶粒
+38eb8f6a 使其對位偏差
+8502bf75 造成被其找到的開路
+1f050575 導致
+aef4c179 決定其線寬
+a02a3fb6 為其建立參考資料
+275d542a 先檢查
+ab86c6f0 驗證
+7de76e71 在其前方增加損耗
+42955b6e 經由其完成
+34ddf9a7 由其修正
+e5ae886b 降低
+6f62fc37 決定其剖面
+b7061701 保護 LO 不受其影響
+435b4891 雜訊造成其雜散
+adcb6f2c 測試模組的
+e723ae1b 預測
+d981a89c 為其轉接建模
+c808a306 與其比較
+fcd93e8a 被其降低
+d7168369 取決於
+92eb27f2 決定其中的測試站
+ff229364 把碼存在
+933523a5 開機時載入到
+4cb431fd 是燒錄的機制，對象為
+92594071 是反熔絲的機制，對象為
+2e1bae6e 檢查其 CRC
+369da7d7 把修補位址存在
+c89e5073 驗證其資料保持
+9c472b28 需要長的
+5a4d91ba 以其判定車道
+e421bc56 需要精細的
+1a82649d 以其偵測
+8fa4a3af 需要寬視野的
+cb793517 需要大角度的
+05e0f564 需要大量通道以達成
+5b62600b 經其串流資料
+abd36f92 劣化
+03beca89 涵蓋
+4873d128 在其中保護行人偵測
+48e087d1 標記其中的截波
+741f85fd 監看其輸出
+a8bb1e03 告知
+307a1622 向其回報接收器失明
+d24d39db 觸發
+be387c1f 自我測試
+a29a95b2 決定觸發位準
+e5f39f3b 設定其選擇
+d53d47ea 把節點帶到
+600eb782 讀取
+99e5be15 讀取其調諧電壓
+d4ad9922 複製其偏壓電流
+a4e583d6 漏電限制其準確度
+ad39af77 在現場被鎖住以保護
+06bb7efd 由其路由
+199f9162 抽取其輸出
+ec955d9a 為其切換測試時脈
+77a479bc 引出
+9d8d6efb 存取
+a67cc204 測試其邏輯
+23dae968 在其中抓出慢路徑
+ada149ec 使用其掃描狀態
+ac4543e2 找出邊緣的
+eca44fa8 之後接著
+a5ca8ae0 重複使用
+4ace913a 加速被其看到的氧化層缺陷
+b62b1650 使其順偏
+9d85d64e 延伸
+5de796e2 受其保護
+fb855c61 找出其中的開路
+8846e8d9 以其開始
+e5047e85 把晶粒分到
+b261aaa0 把離群值移到
+f3cc2afa 依其記錄
+36a7f0ca 經其路由
+e95677bf 連到
+7a2aa5a7 失效方式為
+21439a69 整合
+816b930a 建構於其上
+fd4dffea 轉接損耗降低
+748105a8 連結是從其他頁面整理而來；「被提及於」清單在建置網站時自動找出，所以會隨頁面變動而更新。
+bc57b1b3 Focus

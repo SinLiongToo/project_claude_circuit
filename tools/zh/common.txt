@@ -4,3 +4,6 @@
 c8dcfca3 Rx 雜訊指數
 df4e6881 約 −90 到 −95 dBc/Hz
 2c21069d V_det = 斜率·(P_dBm − 截距)
+0fa0c268 溫度循環
+6b5ed1b1 <a href="radar77-memory.html#flow">冗餘與修補</a>
+d5d9c4cd V_out / I_load
