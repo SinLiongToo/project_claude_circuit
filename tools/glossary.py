@@ -483,6 +483,16 @@ def inject(path, after_section_id, toc_after):
     def r(m):
         v = "%02d" % n[0]; n[0] += 1; return '<span class="num">%s</span>' % v
     s = re.sub(r'<span class="num">[^<]*</span>', r, s)
-    io.open(path, 'w', encoding='utf-8', newline='\n').write(s)
+    # OneDrive can hold the file for a moment while it syncs; retry before giving up
+    import time
+    for attempt in range(20):
+        try:
+            with io.open(path, 'w', encoding='utf-8', newline='\n') as f:
+                f.write(s)
+            break
+        except OSError:
+            if attempt == 19:
+                raise
+            time.sleep(0.5)
     print(path, "sections", n[0], "entries", sum(len(r) for _, r in G))
 
