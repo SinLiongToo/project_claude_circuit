@@ -402,8 +402,10 @@ def gid(a): return "g-" + re.sub(r'[^A-Za-z0-9]+', '-', a).strip('-')
 
 def section():
     out = ['<section id="glossary">',
-           '  <div class="sec-head"><span class="num">--</span><h2>Glossary of abbreviations</h2></div>',
-           '  <p>Abbreviations are underlined with dots the first time they appear in each section. Hover to see the meaning; click to jump here. Use Search (Ctrl+K) to find an abbreviation anywhere on the page.</p>']
+           '  <div class="sec-head"><span class="num">--</span><h2>Glossary of abbreviations</h2>'
+           '<button type="button" class="gl-toggle" id="glToggle" aria-controls="glBody" aria-expanded="false">Show all terms</button></div>',
+           '  <p>Abbreviations are underlined with dots the first time they appear in each section. Hover to see the meaning; click to jump here. Use Search (Ctrl+K) to find an abbreviation anywhere on the page.</p>',
+           '  <div class="gl-body" id="glBody">']
     for cat, rows in G:
         out.append('  <h3>%s</h3>' % html.escape(cat))
         out.append('  <div class="tbl"><table class="gl-tbl">')
@@ -415,6 +417,7 @@ def section():
                 html.escape(a), html.escape(full), html.escape(note)))
         out.append('    </tbody>')
         out.append('  </table></div>')
+    out.append('  </div>')
     out.append('</section>')
     return "\n".join(out) + "\n"
 
@@ -455,10 +458,20 @@ JS = r"""<script>/*glossary*/
   };
   window.glLink();
   const reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // the term tables are collapsed by default (remembered per browser); jumping to a term opens them
+  const root=document.documentElement, tg=document.getElementById("glToggle"), T=s=>window.__t?window.__t(s):s;
+  function paint(){if(!tg)return;const c=root.classList.contains("gl-closed");
+    tg.textContent=T(c?"Show all terms":"Hide terms")+(c?" ("+rows.length+")":"");tg.setAttribute("aria-expanded",c?"false":"true")}
+  window.glOpen=function(){root.classList.remove("gl-closed");paint()};
+  if(tg)tg.addEventListener("click",()=>{const c=root.classList.toggle("gl-closed");
+    try{c?localStorage.removeItem("gl"):localStorage.setItem("gl","open")}catch(e){}paint()});
+  addEventListener("langchange",paint);addEventListener("beforeprint",window.glOpen);
+  if(/^#g-/.test(location.hash)){window.glOpen();const t=document.getElementById(location.hash.slice(1));if(t)setTimeout(()=>t.scrollIntoView({block:"center"}),50)}
+  paint();
   document.addEventListener("click",e=>{
     const a=e.target.closest("a.gl");if(!a)return;
     const r=document.getElementById(a.getAttribute("href").slice(1));if(!r)return;
-    e.preventDefault();
+    e.preventDefault();window.glOpen();
     r.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
     r.classList.remove("find-flash");void r.offsetWidth;r.classList.add("find-flash");
     setTimeout(()=>r.classList.remove("find-flash"),1900);

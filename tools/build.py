@@ -186,7 +186,8 @@ def ensure_home_tab(s):
 THEME_INIT = ('<script>/*theme-init*/try{var t=localStorage.getItem("theme");'
               'if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);'
               'if(localStorage.getItem("toc")==="collapsed")document.documentElement.classList.add("toc-collapsed");'
-              'if(localStorage.getItem("lang")==="zh")document.documentElement.classList.add("zh-wait")'
+              'if(localStorage.getItem("lang")==="zh")document.documentElement.classList.add("zh-wait");'
+              'if(localStorage.getItem("gl")!=="open")document.documentElement.classList.add("gl-closed")'
               '}catch(e){}</script>\n')
 
 

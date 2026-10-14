@@ -152,6 +152,7 @@
     });
   }
   function show(el){
+    if(el.closest("#glossary")&&window.glOpen)window.glOpen();
     clearHits();highlight(el);
     el.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"});
     el.classList.remove("find-flash");void el.offsetWidth;el.classList.add("find-flash");
@@ -198,7 +199,7 @@
   const root=document.documentElement;
   const SEL="h1,h2,h3,h4,p,li,th,td,figcaption,summary,footer,dt,dd,option,.eyebrow,.note,.lede,nav.toc a,a.back,.row>span:first-child,.chart-legend span,span.domain,span.tag,.grp-h,.big-l,.k";
   const UI={"Search":"搜尋","Main page":"主頁","Knowledge graph":"知識圖譜","Hide contents":"隱藏目錄","Show contents":"顯示目錄",
-    "Auto":"自動","Light":"淺色","Dark":"深色","Search all pages…":"搜尋所有頁面…",
+    "Auto":"自動","Light":"淺色","Dark":"深色","Search all pages…":"搜尋所有頁面…","Show all terms":"展開全部詞條","Hide terms":"收合詞條",
     "Searches every section of all pages: text, tables, formulas, notes, diagram labels, glossary. ↑ ↓ to move, Enter to open.":"搜尋所有頁面的每個段落：本頁可用中文或英文搜尋，其他頁面以英文內容索引。↑ ↓ 移動，Enter 開啟。"};
   let lang="en";try{if(localStorage.getItem("lang")==="zh")lang="zh"}catch(e){}
   window.ZH=window.ZH||{};window.ZH_ADD=o=>Object.assign(window.ZH,o);
