@@ -1,0 +1,108 @@
+f85e84a5 Chirp 模擬器
+c2fde12b 77 GHz 雷達 · FMCW 基礎
+4bc58505 FMCW chirp 如何運作
+e0311c84 整條 FMCW 鏈的互動式模擬器：chirp 與其回波、混頻後的拍頻訊號、距離 FFT，以及距離-都卜勒圖。改變 chirp 設定與目標，觀察距離、解析度、模糊與模糊化（smearing）如何變化。
+bf76402c Chirp 如何運作
+549a7799 合成器：產生 chirp
+70e800e2 DSP：距離與都卜勒 FFT
+8df88d3f Chirp
+c4f5e41b FMCW 雷達不發射脈衝，而是發射 <b>chirp</b>：頻率在數十微秒內線性上升的單音。目標的回波就是同一個 chirp，延遲了來回的時間。接收器把回波乘上當下正在發射的 chirp，所以兩個頻率的差會以固定的低頻<b>拍頻音</b>出現，而這個頻率與距離成正比。對拍頻音取樣並做 FFT 就得到距離；chirp 與 chirp 之間的微小相位步階則得到速度。
+9dc3024d 五個步驟看懂原理
+6fce36d9 <b>斜坡。</b>PLL 在斜坡時間 T_ramp 內把 LO 掃過頻寬 B，所以斜率 S = B / T_ramp（<a href="radar77-synthesizer.html">合成器</a>）。
+c5e04a0b <b>延遲。</b>距離 R 處的回波晚 τ = 2R / c 到達：就是時間上平移的一份 chirp。在 100 m 處，τ 只有 0.67 µs。
+68dc9b57 <b>混頻。</b>混頻器輸出差頻 f_b = S·τ = 2·S·R / c，再加上小的都卜勒項 2v / λ。在兩個斜坡重疊期間它是固定的，所以每個目標產生一個單音（<a href="radar77-rf-frontend.html#mixer">混頻器</a>）。
+edf3b141 <b>距離 FFT。</b>ADC 在 ADC 視窗內以 F_s 取 N 個樣本。FFT 第 k 個 bin 對應距離 R = k·c·F_s / (2·S·N)；兩個目標相距超過 ΔR = c / (2·B_adc) 就能分開，其中 B_adc = S·N / F_s 是取樣期間掃過的頻寬（<a href="radar77-if-adc.html">IF 與 ADC</a>）。
+e3a2bca0 <b>都卜勒 FFT。</b>兩個 chirp 之間，移動目標移動了 v·T_c，所以其拍頻音相位每個 chirp 轉 4π·v·T_c / λ。對一個訊框的 M 個 chirp 做 FFT 得到速度，只有在 |v| &lt; λ / (4·T_c) 時不模糊（<a href="radar77-dsp.html">DSP</a>）。
+3c55cdad 模擬器
+25425fff 一切都在你的瀏覽器中以簡化模型計算：單一接收通道、理想 LO（可選擇加入弓形斜坡非線性）、回波振幅以電壓 1/R² 下降（功率 R⁻⁴），以及白雜訊。速度為正代表目標遠離。
+65f59097 Chirp 與接收器
+b8e25ae9 只用實數
+60e47df0 啟用
+682843b4 距離 (m)
+8b8bf58a 速度 (m/s)
+bc4be3fc RCS (dBsm)
+66fef081 <i style="background:var(--c2)"></i>汽車
+9affc268 <i style="background:var(--test)"></i>卡車
+35f7b7dc <i style="background:var(--rf)"></i>行人
+742ab24e 距離解析度 ΔR
+d151f049 Chirp 斜率 S
+c737abcc ADC 視窗 / 取樣期間掃過的頻寬
+18557f26 各目標的拍頻
+dc04419a 訊框時間（M 個 chirp）
+fc181ceb 1 · 頻率對時間：chirp 與回波
+e329c24f 2 · 混頻後的拍頻訊號（一個 chirp）
+1d1dd091 3 · 距離 FFT（一個 chirp）
+3cc9cb4f 4 · 距離-都卜勒圖（跨 chirp 的 FFT）
+28be7908 <b>如何看這些圖。</b>圖 1 中 chirp 與回波之間的垂直距離就是拍頻；延遲被放大畫出以便看見。圖 2 是游標掃過時 ADC 取樣的實部；注意移動目標的波形在 chirp 之間如何微微平移。圖 3 是一個 chirp 的 FFT，三角形標示真實距離。圖 4 再加上跨所有 chirp 的 FFT；圓圈標示真實的距離與速度。
+e9e54330 動手試試
+fc49f84b 把行人從 31 m 移到 30.5 m：它微弱的峰值被卡車的峰值吞沒。把 B 設為 2000 MHz、ADC 速率 20 Msps、N 設為 512：取樣期間掃過的頻寬加倍、ΔR 減半，行人又出現了。
+9b7afbb3 把卡車放到 70 m：超過 IF 限制後，它會出現在錯誤的、被折疊的距離。把 IF 切成只用實數，限制減半；每個目標還會多一個鏡像。
+28d6629c 給汽車 −25 m/s：它比最大不模糊速度還快，會繞到都卜勒軸的另一側。縮短閒置時間可以提高這個上限。
+6e07af1e 把斜坡非線性設為 0.2 %：遠處目標最先模糊，因為誤差隨延遲 τ 累積。
+0a512928 把窗函數切成矩形：強卡車的旁瓣蓋住旁邊微弱的行人。
+644a0300 每個 chirp 參數決定什麼，又受什麼限制
+aa3897fd 公式
+9f15f6d3 頻段法規允許的掃頻頻寬（<a href="radar77-regulation.html">76–81 GHz</a>）、VCO 調諧範圍、斜坡線性度（<a href="radar77-synthesizer.html">合成器</a>）
+2d3dd1be R_max = F_s·c / (2·S)（複數），實數則減半
+a5430466 ADC 速率、IF 頻寬與抗混疊濾波器（<a href="radar77-if-adc.html">IF 與 ADC</a>）；實務上還有 SNR（<a href="radar77-signal-chain.html#calc">鏈路預算</a>）
+d68d3627 拍頻
+4e1ed961 必須落在 IF 頻帶內，且高於 HPF 轉角
+496bd61c 包含 PLL 安定所需閒置時間的 chirp 週期；TDM MIMO 會再除以 Tx 數
+e856dfc9 訊框時間、雷達立方體記憶體（<a href="radar77-dsp.html#cube">DSP</a>）、目標加速度
+657b78af 這個模擬器是教學模型：單一通道、不做角度估計、沒有相位雜訊、沒有 HPF 或 AGC，也不考慮一個訊框內的距離遷移。實際的 chirp 設定來自產品的鏈路預算、頻段法規與 DSP 資源。
+95585947 起始頻率 (GHz)
+1c85d46c 掃頻頻寬 B (MHz)
+e6e065a9 斜坡時間 (µs)
+da5bd8a8 chirp 之間的閒置時間 (µs)
+649906d7 ADC 速率 F_s (Msps)
+96b0cae5 每個 chirp 的取樣數 N
+05dea0e9 每個訊框的 chirp 數 M
+c7e85d20 IF 基頻
+b4e469e6 斜坡非線性（B 的 %）
+fd732134 雜訊位準 (dB)
+a47b0585 ADC 輸入電壓要求
+9722d0b7 ADC 規格書的這部分定義了 IF 鏈在 ADC 輸入端可以、也必須提供的電壓。這些數字把 PGA 輸出擺幅、AGC 位準規劃、ESD 結構與雜訊預算串在一起。以下為 RFCMOS 中 1.8 V 類比電源的連續時間 ΣΔ ADC 典型值；SAR ADC 的項目相同，只是輸入是開關電容。
+e392f501 原因／決定因素
+f6f40086 滿刻度輸入範圍（0 dBFS）
+2eb81a0d 差動 1.0–2.0 Vpp，例如 1.6 Vpp（±0.8 V）
+abc60d7e 參考電壓 × 設計增益；滿刻度越大，在相同雜訊下 SNR 越高，但需要更大的 PGA 擺幅
+89a8cc9e 輸入共模電壓
+34061b7a 約 VDDA/2 或固定 0.6–0.9 V，±50–100 mV
+d7329dcf 由 PGA 輸出共模迴路設定；誤差會吃掉餘裕並增加偏移
+63caea42 每腳單端擺幅
+f041fbff V_cm ± FS/4，距各電源軌 ≥ 0.2–0.3 V
+9044c0c8 PGA 輸出級與 ADC 輸入開關或電阻的線性度
+3f96a634 輸入端絕對最大值
+0ca50f0c −0.3 V 到 VDDA + 0.3 V
+07c22f69 超過後 ESD 二極體開始導通；PGA、測試多工器與測試音 DAC 都絕不能驅動超過它（<a href="radar77-esd.html">ESD</a>）
+872b8d0c 不損壞的過載與恢復
+e919808b 最高約 +6 dBFS；&lt; 1 µs 內回到範圍內
+3a1ece39 近距強回波與干擾突發；由<a href="#sat">飽和偵測器</a>標記
+f8ff196f 輸入阻抗
+4ad99422 CT-ΣΔ：差動 1–5 kΩ（電阻性）；SAR：1–5 pF 取樣電容
+b9566844 PGA 必須能驅動它，且沒有增益誤差或安定問題
+772495cd IF 頻帶內的輸入參考雜訊
+396782bb 約 150–300 µV rms（1.6 Vpp 時 SNR 65–72 dB）
+36f5df33 輸入電阻與回授 DAC 的熱雜訊、參考雜訊、時脈抖動
+8b01dd98 &lt; ±2–5 mV（約 −50 dBFS）
+2674286c 由 HPF 與 DFE 的 DC 修正去除；偏移大會損失餘裕
+e7be5c51 增益誤差／通道匹配
+18a38af5 絕對值 ±2–5 %；校正前 Rx 通道之間 ±0.2–0.5 dB
+7a86c08d 參考準確度與電阻匹配；其餘由迴路校正修正（<a href="radar77-bist-loopback.html#recipes">BIST</a>）
+64c66674 參考電壓
+d68b5b8f 經緩衝、源自能隙；微調後 ±1 %，頻帶內雜訊數 µV rms
+8d840b77 滿刻度隨它縮放；參考雜訊會乘在訊號上（<a href="radar77-power.html#bg">能隙</a>）
+6c4af188 類比電源
+21ec214c VDDA 1.8 V ± 5 %（或 1.2 V），IF 頻帶內漣波 &lt; 1 mV，PSRR &gt; 50–60 dB
+5db188f1 頻率 f 的漣波會以雜散出現，也就是固定距離的鬼影（<a href="radar77-emc-pi.html">EMC 與 PI</a>）
+ce82648b <b>位準規劃。</b>AGC 設定 PGA，讓預期最強的回波位於滿刻度以下 6–10 dB，為干擾突發保留空間，同時讓 ADC 輸入端的雜訊遠高於量化雜訊。例：差動 1.6 Vpp 滿刻度，滿刻度正弦波為 0.57 V rms；若頻帶內 SNR 為 70 dB，雜訊底約 0.57 V / 3160 ≈ 180 µV rms。
+55df4d16 <b>如何驗證。</b>DC：經 ADC 輸入多工器送入短路、VREF 與已知的 ATB 電壓，量測偏移、增益與滿刻度（<a href="radar77-bist-loopback.html#mux">測試多工器</a>）。動態：−1 dBFS 的 IF 測試 DAC 音給出 SNR、SFDR 與滿刻度檢查；更大的測試音檢查過載恢復與飽和旗標。共模與擺幅在實驗台上做特性量測；絕對最大值由 ESD 與閂鎖驗證涵蓋。
+25eb3297 系統與安全<span>5</span>
+efe82e45 FMCW Chirp 如何運作
+df5bd4e7 系統與安全 <span class="grp-n">5</span>
+c437e490 互動 · FMCW 基礎
+96d207c2 Chirp 模擬器：斜坡與其回波、混頻後的拍頻訊號、距離 FFT 與距離-都卜勒圖，可調整 chirp 設定與三個目標。展示解析度、最大距離與速度、折疊、實數與複數 IF、斜坡非線性與加窗。
+50b28eb0 每一頁的關鍵項目及其相依關係的地圖，就像個人知識庫的圖譜檢視。共有 <!--graph-count-->143 個項目與 299 條連結<!--/graph-count-->。點選項目可看它連到什麼、為什麼，打開說明它的段落，並看到提及它的其他段落。用類型按鈕隱藏群組，用 <b>Focus</b> 只顯示所選項目的鄰近範圍。
+1c5a9781 混頻後發射 chirp 與回波之間的差頻：f_b = 2SR/c 加上都卜勒項；其頻率給出距離。
+5358c0e3 <a href="radar77-chirp.html#sim">距離-都卜勒圖</a>
+5d55dcdf 每個 chirp 做距離 FFT，再跨 chirp 做 FFT：每個目標在其距離與速度處形成一個點。

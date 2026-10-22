@@ -41,6 +41,7 @@ PAGES = {
     'assy': ('radar77-assembly.html', 'Assembly'),
     'qualp': ('radar77-qualification.html', 'Qualification'),
     'mem': ('radar77-memory.html', 'Memory'),
+    'chirp': ('radar77-chirp.html', 'Chirp simulator'),
 }
 TYPES = [('c', 'Circuit'), ('p', 'Parameter'), ('t', 'Test'), ('f', 'Fab & package'), ('s', 'System')]
 
@@ -185,6 +186,8 @@ N = [
     ('eirp', 'EIRP / band limits', 'p', 'reg#bands', 'Regulatory power and band-edge limits in each market.', ['EIRP', 'ETSI', 'FCC']),
     ('interf', 'Radar interference', 's', 'reg#interf', 'Other radars crossing the chirp; raises the noise floor or creates ghosts.', ['interference', 'interferer']),
     # system
+    ('beat', 'Beat frequency', 'p', 'chirp#steps', 'Difference between the transmitted chirp and the echo after the mixer: f_b = 2SR/c plus the Doppler term; its frequency gives range.', ['beat frequency', 'beat tone', 'beat signal']),
+    ('rdmap', 'Range–Doppler map', 's', 'chirp#sim', 'Range FFT per chirp followed by an FFT across chirps: one spot per target at its range and velocity.', ['range-Doppler', 'range–Doppler', 'Doppler FFT']),
     ('fmcw', 'FMCW chirp', 's', 'sc#chain', 'A linear frequency ramp; the beat frequency between Tx and echo gives range.', ['FMCW', 'chirp', 'chirps']),
     ('beam', 'Beam steering / MIMO', 's', 'sc#rotator', 'Tx phases steer the beam or code the channels so the receiver can separate them (virtual array).', ['beam steering', 'MIMO', 'beamforming']),
     ('txl', 'Tx power loop', 's', 'sc#txpower', 'Detector, ADC and digital control that hold the Tx power constant over temperature and ageing.', ['Tx power loop', 'power control']),
@@ -195,6 +198,7 @@ N = [
 ]
 
 E = [
+    ('fmcw', 'produces', 'beat'), ('beat', 'is sampled by', 'adc'), ('dsp', 'produces', 'rdmap'), ('rdmap', 'feeds', 'cfar'),
     # Rx chain
     ('ant', 'feeds the echo to', 'lna'), ('lna', 'amplifies into', 'mixer'), ('mixer', 'IF output to', 'hpf'),
     ('hpf', 'filters for', 'vga'), ('vga', 'sets the level for', 'adc'), ('adc', 'samples for', 'dfe'), ('dfe', 'decimates for', 'dsp'),
