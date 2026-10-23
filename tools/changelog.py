@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.31.0', '2026-10-23', ['Chirp simulator: new scene view (plot 0) with the radar, the road and each target at its range and speed, the transmitted wave going out and each echo coming back; car, truck and pedestrian are named in the frequency-time legend, the range FFT and the range-Doppler map.']),
     ('1.30.1', '2026-10-22', ['IF &amp; ADC page: reference circuits for the ADC input requirements: block diagram of the input path (driver, AAF, input mux, CT-ΣΔ modulator, reference buffer, VCM, overload comparators), the circuit of the first ΣΔ integrator, the SAR input alternative, and a table of which block sets which spec.']),
     ('1.30.0', '2026-10-22', ['New page: How an FMCW chirp works, with an interactive simulator (frequency vs time with echoes, beat signal, range FFT and range-Doppler map; adjustable chirp, ADC, window, nonlinearity, noise and three targets) and the formulas and limits of each chirp parameter. Card in System &amp; safety; two new knowledge-graph items.', 'IF &amp; ADC page: ADC input voltage requirements (full scale, common mode, swing, absolute maximum, overload, input impedance, noise, offset, gain, reference, supply), the level plan and how they are verified.']),
     ('1.29.0', '2026-10-15', ['Glossary on every page is collapsed by default with a one-click Show / Hide button (remembered per browser). It opens by itself when an underlined abbreviation or a search result jumps to a term, and when printing.']),
