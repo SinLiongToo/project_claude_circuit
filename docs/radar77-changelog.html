@@ -191,6 +191,19 @@ nav.toc a.back::before{content:none}
 .lang-btn:hover{border-color:var(--rf)}
 .lang-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
 .zh-wait .wrap{visibility:hidden}
+main figure,main .plot{position:relative}
+.fig-zoom{position:absolute;top:8px;right:8px;z-index:3;width:30px;height:30px;display:grid;place-items:center;padding:0;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:6px;cursor:pointer;opacity:.75}
+.fig-zoom svg{width:16px;height:16px}
+.fig-zoom:hover,.fig-zoom:focus-visible{opacity:1;color:var(--rf);border-color:var(--rf)}
+.fig-zoom:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.fig-max{position:fixed!important;inset:0;z-index:60;margin:0!important;max-width:none!important;border-radius:0!important;background:var(--bg);padding:24px 28px 18px;display:flex;flex-direction:column;overflow:auto}
+.fig-max .fig,.fig-max .wm-svg{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;max-width:none}
+.fig-max .fig svg,.fig-max .wm-svg svg{width:100%;height:100%;max-width:none;max-height:calc(100vh - 140px)}
+.fig-max .fig-zoom{position:fixed;top:14px;right:16px;opacity:1}
+.fig-max figcaption{max-width:90ch;margin:12px auto 0}
+.plot.fig-max canvas{height:calc(100vh - 110px)!important}
+.fig-open{overflow:hidden}
+.fig-open .cbar,.fig-open .topbar{display:none}
 nav.toc a::before{color:var(--rf);font-weight:600}
 .cbar{position:fixed;top:0;left:0;right:0;z-index:35;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.08);padding:9px 20px;transform:translateY(-110%);transition:transform .2s ease}
 .cbar.on{transform:none}
@@ -225,7 +238,7 @@ nav.toc a::before{color:var(--rf);font-weight:600}
 .home-tab.graph-tab{margin-left:6px}
 @media print{
   :root{--bg:#fff!important;--surface:#fff!important;--sunk:#f1f3f2!important;--ink:#000!important;--muted:#333!important;--line:#bbb!important;color-scheme:light!important}
-  .find-btn,.theme-btn,.lang-btn,.gl-toggle,.cbar,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
+  .find-btn,.theme-btn,.lang-btn,.gl-toggle,.cbar,.fig-zoom,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
   body{padding:0!important;font-size:11pt}
   .layout{display:block!important}
   .wrap{max-width:none}
@@ -270,6 +283,8 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
   <div class="sec-head"><span class="num">00</span><h2>Changelog</h2><span class="domain dig">Site</span></div>
   <p>What changed in each version of these notes. The version and build time of the current site are shown at the bottom of the main page.</p>
 <!--changelog-->
+  <h3 id="v1-36-0">Version 1.36.0 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-23</span></h3>
+  <ul><li>Every figure, chart, wafer map and simulator plot has a square button that enlarges it to the whole window; Esc or the same button closes it. Plots of the chirp simulator redraw at the larger size.</li></ul>
   <h3 id="v1-35-1">Version 1.35.1 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-23</span></h3>
   <ul><li>Contents panel: section numbers were drawn in the border colour and hard to read in both themes; now in the accent colour.</li></ul>
   <h3 id="v1-35-0">Version 1.35.0 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-23</span></h3>
@@ -1008,7 +1023,7 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
   const root=document.documentElement;
   const SEL="h1,h2,h3,h4,p,li,th,td,figcaption,summary,footer,dt,dd,option,.eyebrow,.note,.lede,nav.toc a,a.back,.row>span:first-child,.chart-legend span,span.domain,span.tag,.grp-h,.big-l,.k";
   const UI={"Search":"搜尋","Main page":"主頁","Knowledge graph":"知識圖譜","Hide contents":"隱藏目錄","Show contents":"顯示目錄",
-    "Auto":"自動","Light":"淺色","Dark":"深色","Search all pages…":"搜尋所有頁面…","Show all terms":"展開全部詞條","Hide terms":"收合詞條",
+    "Auto":"自動","Light":"淺色","Dark":"深色","Search all pages…":"搜尋所有頁面…","Show all terms":"展開全部詞條","Hide terms":"收合詞條","Enlarge figure":"放大圖形","Close":"關閉",
     "Searches every section of all pages: text, tables, formulas, notes, diagram labels, glossary. ↑ ↓ to move, Enter to open.":"搜尋所有頁面的每個段落：本頁可用中文或英文搜尋，其他頁面以英文內容索引。↑ ↓ 移動，Enter 開啟。"};
   let lang="en";try{if(localStorage.getItem("lang")==="zh")lang="zh"}catch(e){}
   window.ZH=window.ZH||{};window.ZH_ADD=o=>Object.assign(window.ZH,o);
@@ -1089,6 +1104,23 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
   function upd(){const v=hdr.getBoundingClientRect().bottom<0;if(v===on)return;on=v;bar.classList.toggle("on",v);root.classList.toggle("bar-on",v);
     bar.setAttribute("aria-hidden",v?"false":"true");foc.forEach(e=>e.tabIndex=v?0:-1)}
   addEventListener("scroll",upd,{passive:true});addEventListener("resize",upd);upd();
+})();
+(function(){
+  // every figure and simulator plot gets a square button that enlarges it to the whole window (Esc or the button closes it)
+  const T=s=>window.__t?window.__t(s):s,root=document.documentElement;
+  const IO='<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',IC='<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>';
+  let open=null;
+  function set(b,on){b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+(on?IC:IO)+'</svg>';
+    const l=T(on?"Close":"Enlarge figure");b.setAttribute("aria-label",l);b.title=l;b.setAttribute("aria-expanded",on?"true":"false")}
+  function toggle(el,b){const on=!el.classList.contains("fig-max");if(open&&open[0]!==el)toggle(open[0],open[1]);
+    el.classList.toggle("fig-max",on);root.classList.toggle("fig-open",on);set(b,on);open=on?[el,b]:null;
+    window.dispatchEvent(new Event("resize"));b.focus()}
+  document.querySelectorAll("main figure,main .plot").forEach(el=>{
+    if(el.querySelector(".fig-zoom")||!el.querySelector("svg,canvas,img,.mermaid"))return;
+    const b=document.createElement("button");b.type="button";b.className="fig-zoom";set(b,false);
+    b.addEventListener("click",e=>{e.stopPropagation();toggle(el,b)});el.appendChild(b)});
+  addEventListener("keydown",e=>{if(e.key==="Escape"&&open&&!document.querySelector(".find-ov:not([hidden])"))toggle(open[0],open[1])});
+  addEventListener("langchange",()=>document.querySelectorAll(".fig-zoom").forEach(b=>set(b,b.getAttribute("aria-expanded")==="true")));
 })();
 </script>
 <script>/*glossary*/

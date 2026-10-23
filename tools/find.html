@@ -199,7 +199,7 @@
   const root=document.documentElement;
   const SEL="h1,h2,h3,h4,p,li,th,td,figcaption,summary,footer,dt,dd,option,.eyebrow,.note,.lede,nav.toc a,a.back,.row>span:first-child,.chart-legend span,span.domain,span.tag,.grp-h,.big-l,.k";
   const UI={"Search":"搜尋","Main page":"主頁","Knowledge graph":"知識圖譜","Hide contents":"隱藏目錄","Show contents":"顯示目錄",
-    "Auto":"自動","Light":"淺色","Dark":"深色","Search all pages…":"搜尋所有頁面…","Show all terms":"展開全部詞條","Hide terms":"收合詞條",
+    "Auto":"自動","Light":"淺色","Dark":"深色","Search all pages…":"搜尋所有頁面…","Show all terms":"展開全部詞條","Hide terms":"收合詞條","Enlarge figure":"放大圖形","Close":"關閉",
     "Searches every section of all pages: text, tables, formulas, notes, diagram labels, glossary. ↑ ↓ to move, Enter to open.":"搜尋所有頁面的每個段落：本頁可用中文或英文搜尋，其他頁面以英文內容索引。↑ ↓ 移動，Enter 開啟。"};
   let lang="en";try{if(localStorage.getItem("lang")==="zh")lang="zh"}catch(e){}
   window.ZH=window.ZH||{};window.ZH_ADD=o=>Object.assign(window.ZH,o);
@@ -280,5 +280,22 @@
   function upd(){const v=hdr.getBoundingClientRect().bottom<0;if(v===on)return;on=v;bar.classList.toggle("on",v);root.classList.toggle("bar-on",v);
     bar.setAttribute("aria-hidden",v?"false":"true");foc.forEach(e=>e.tabIndex=v?0:-1)}
   addEventListener("scroll",upd,{passive:true});addEventListener("resize",upd);upd();
+})();
+(function(){
+  // every figure and simulator plot gets a square button that enlarges it to the whole window (Esc or the button closes it)
+  const T=s=>window.__t?window.__t(s):s,root=document.documentElement;
+  const IO='<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',IC='<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>';
+  let open=null;
+  function set(b,on){b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'+(on?IC:IO)+'</svg>';
+    const l=T(on?"Close":"Enlarge figure");b.setAttribute("aria-label",l);b.title=l;b.setAttribute("aria-expanded",on?"true":"false")}
+  function toggle(el,b){const on=!el.classList.contains("fig-max");if(open&&open[0]!==el)toggle(open[0],open[1]);
+    el.classList.toggle("fig-max",on);root.classList.toggle("fig-open",on);set(b,on);open=on?[el,b]:null;
+    window.dispatchEvent(new Event("resize"));b.focus()}
+  document.querySelectorAll("main figure,main .plot").forEach(el=>{
+    if(el.querySelector(".fig-zoom")||!el.querySelector("svg,canvas,img,.mermaid"))return;
+    const b=document.createElement("button");b.type="button";b.className="fig-zoom";set(b,false);
+    b.addEventListener("click",e=>{e.stopPropagation();toggle(el,b)});el.appendChild(b)});
+  addEventListener("keydown",e=>{if(e.key==="Escape"&&open&&!document.querySelector(".find-ov:not([hidden])"))toggle(open[0],open[1])});
+  addEventListener("langchange",()=>document.querySelectorAll(".fig-zoom").forEach(b=>set(b,b.getAttribute("aria-expanded")==="true")));
 })();
 </script>
