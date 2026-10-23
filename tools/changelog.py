@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.35.0', '2026-10-23', ['eFuse, OTP &amp; trim page: life-cycle states (RAW, TEST, PROD, IN-FIELD, RMA) with a state diagram and one-way OTP encoding, what each state opens and locks, fail-secure decoding, order in the test flow, how the life cycle is tested, and typical problems.']),
     ('1.34.0', '2026-10-23', ['Chirp simulator: animated top-view road scene like the applications page (ego car with the radar and its field of view, two lanes and a sidewalk); with "Moving targets" on, the car, truck and pedestrian drive at their set speeds and all plots update live.']),
     ('1.33.0', '2026-10-23', ['Every content page: a slim bar fixed at the top after scrolling, with Main page, the page title (back to top), Knowledge graph and Search; anchor jumps and the contents panel stop below it.']),
     ('1.32.0', '2026-10-23', ['Main page: compact header (title and description left, search right) and a slim bar with the title and search that stays fixed at the top after scrolling; the sidebar and topic jumps stop below it, and the language button sits next to the theme button while the bar shows.']),
