@@ -41,6 +41,7 @@ nav.toc a.back::before{content:none}
 .lang-btn:hover{border-color:var(--rf)}
 .lang-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
 .zh-wait .wrap{visibility:hidden}
+nav.toc a::before{color:var(--rf);font-weight:600}
 .cbar{position:fixed;top:0;left:0;right:0;z-index:35;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.08);padding:9px 20px;transform:translateY(-110%);transition:transform .2s ease}
 .cbar.on{transform:none}
 .cbar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:10px;padding-right:190px}
