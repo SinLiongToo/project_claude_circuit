@@ -41,6 +41,22 @@ nav.toc a.back::before{content:none}
 .lang-btn:hover{border-color:var(--rf)}
 .lang-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
 .zh-wait .wrap{visibility:hidden}
+.cbar{position:fixed;top:0;left:0;right:0;z-index:35;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.08);padding:9px 20px;transform:translateY(-110%);transition:transform .2s ease}
+.cbar.on{transform:none}
+.cbar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:10px;padding-right:190px}
+.cbar .home-tab{margin:0;flex:none}
+.cbar-title{margin:0 6px;min-width:0;flex:1;font:700 17px/1.25 var(--cond,var(--sans));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:none}
+.cbar-title a{color:var(--ink);text-decoration:none}
+.cbar-title a:hover{color:var(--rf)}
+.cbar-find{flex:none;display:flex;align-items:center;gap:8px;font:500 13px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 10px 6px 12px;cursor:pointer}
+.cbar-find svg{width:15px;height:15px}
+.cbar-find:hover{border-color:var(--rf)}
+.cbar-find:focus-visible,.cbar a:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.bar-on .lang-btn{top:calc(14px + env(safe-area-inset-top,0px));right:112px}
+.cbar-page{scroll-padding-top:72px}
+.bar-on nav.toc{top:calc(env(safe-area-inset-top,0px) + 72px)}
+@media (prefers-reduced-motion: reduce){.cbar{transition:none}}
+@media (max-width:700px){.cbar-title{display:none}.cbar-in{padding-right:150px}.cbar .home-tab{font-size:0;gap:0;padding:7px}.cbar-find kbd{display:none}}
 .gl-closed #glBody{display:none}
 #glossary .sec-head{flex-wrap:wrap}
 .gl-toggle{margin-left:auto;font:500 13px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
@@ -58,7 +74,7 @@ nav.toc a.back::before{content:none}
 .home-tab.graph-tab{margin-left:6px}
 @media print{
   :root{--bg:#fff!important;--surface:#fff!important;--sunk:#f1f3f2!important;--ink:#000!important;--muted:#333!important;--line:#bbb!important;color-scheme:light!important}
-  .find-btn,.theme-btn,.lang-btn,.gl-toggle,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
+  .find-btn,.theme-btn,.lang-btn,.gl-toggle,.cbar,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
   body{padding:0!important;font-size:11pt}
   .layout{display:block!important}
   .wrap{max-width:none}

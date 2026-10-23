@@ -191,6 +191,22 @@ nav.toc a.back::before{content:none}
 .lang-btn:hover{border-color:var(--rf)}
 .lang-btn:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
 .zh-wait .wrap{visibility:hidden}
+.cbar{position:fixed;top:0;left:0;right:0;z-index:35;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 2px 10px rgba(0,0,0,.08);padding:9px 20px;transform:translateY(-110%);transition:transform .2s ease}
+.cbar.on{transform:none}
+.cbar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:10px;padding-right:190px}
+.cbar .home-tab{margin:0;flex:none}
+.cbar-title{margin:0 6px;min-width:0;flex:1;font:700 17px/1.25 var(--cond,var(--sans));white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:none}
+.cbar-title a{color:var(--ink);text-decoration:none}
+.cbar-title a:hover{color:var(--rf)}
+.cbar-find{flex:none;display:flex;align-items:center;gap:8px;font:500 13px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 10px 6px 12px;cursor:pointer}
+.cbar-find svg{width:15px;height:15px}
+.cbar-find:hover{border-color:var(--rf)}
+.cbar-find:focus-visible,.cbar a:focus-visible{outline:2px solid var(--rf);outline-offset:2px}
+.bar-on .lang-btn{top:calc(14px + env(safe-area-inset-top,0px));right:112px}
+.cbar-page{scroll-padding-top:72px}
+.bar-on nav.toc{top:calc(env(safe-area-inset-top,0px) + 72px)}
+@media (prefers-reduced-motion: reduce){.cbar{transition:none}}
+@media (max-width:700px){.cbar-title{display:none}.cbar-in{padding-right:150px}.cbar .home-tab{font-size:0;gap:0;padding:7px}.cbar-find kbd{display:none}}
 .gl-closed #glBody{display:none}
 #glossary .sec-head{flex-wrap:wrap}
 .gl-toggle{margin-left:auto;font:500 13px/1 var(--sans);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:7px 14px;cursor:pointer}
@@ -208,7 +224,7 @@ nav.toc a.back::before{content:none}
 .home-tab.graph-tab{margin-left:6px}
 @media print{
   :root{--bg:#fff!important;--surface:#fff!important;--sunk:#f1f3f2!important;--ink:#000!important;--muted:#333!important;--line:#bbb!important;color-scheme:light!important}
-  .find-btn,.theme-btn,.lang-btn,.gl-toggle,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
+  .find-btn,.theme-btn,.lang-btn,.gl-toggle,.cbar,.home-tab,.find-ov,.toc-toggle,nav.toc,.g-bar,.g-hint{display:none!important}
   body{padding:0!important;font-size:11pt}
   .layout{display:block!important}
   .wrap{max-width:none}
@@ -253,6 +269,8 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
   <div class="sec-head"><span class="num">00</span><h2>Changelog</h2><span class="domain dig">Site</span></div>
   <p>What changed in each version of these notes. The version and build time of the current site are shown at the bottom of the main page.</p>
 <!--changelog-->
+  <h3 id="v1-33-0">Version 1.33.0 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-23</span></h3>
+  <ul><li>Every content page: a slim bar fixed at the top after scrolling, with Main page, the page title (back to top), Knowledge graph and Search; anchor jumps and the contents panel stop below it.</li></ul>
   <h3 id="v1-32-0">Version 1.32.0 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-23</span></h3>
   <ul><li>Main page: compact header (title and description left, search right) and a slim bar with the title and search that stays fixed at the top after scrolling; the sidebar and topic jumps stop below it, and the language button sits next to the theme button while the bar shows.</li></ul>
   <h3 id="v1-31-1">Version 1.31.1 <span style="font:12px var(--mono);color:var(--muted)">· 2026-10-23</span></h3>
@@ -1015,7 +1033,7 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
       const c=r.cells;if(c.length<3||!c[1].hasAttribute("data-zh"))return;
       const note=norm(c[2].textContent);r.dataset.full=norm(c[1].textContent)+(note?"（"+note+"）":"");
     });
-    document.querySelectorAll(".home-tab,.toc-toggle span,.find-btn span,.hero-find span,#themeLbl").forEach(el=>{
+    document.querySelectorAll(".home-tab,.toc-toggle span,.find-btn span,.hero-find span,.cbar-find span,#themeLbl").forEach(el=>{
       [...el.childNodes].forEach(n=>{if(n.nodeType===3&&UI[n.nodeValue.trim()])n.nodeValue=UI[n.nodeValue.trim()]});
     });
     const q=document.getElementById("findQ");if(q)q.placeholder="搜尋，例如 LDO PSRR、鎖相、March C";
@@ -1042,6 +1060,28 @@ svg .rf{stroke:var(--rf)} svg .lo{stroke:var(--lo)} svg .if{stroke:var(--if)} sv
     lang="zh";try{localStorage.setItem("lang","zh")}catch(e){}paint();load();
   });
   if(lang==="zh")load();
+})();
+(function(){
+  // content pages: a slim bar (main page, page title, knowledge graph, search) fixed at the top once the header scrolls away;
+  // the main page builds its own bar (#topbar)
+  const hdr=document.querySelector("header.top"),home=document.querySelector("a.home-tab:not(.graph-tab)");
+  if(!hdr||!home||document.getElementById("topbar"))return;
+  const root=document.documentElement,bar=document.createElement("div"),inn=document.createElement("div");
+  bar.className="cbar";bar.setAttribute("aria-hidden","true");inn.className="cbar-in";bar.appendChild(inn);
+  inn.appendChild(home.cloneNode(true));
+  const h1=hdr.querySelector("h1"),t=document.createElement("p"),ta=document.createElement("a");
+  t.className="cbar-title";ta.href="#";ta.textContent=h1?h1.textContent:document.title;t.appendChild(ta);inn.appendChild(t);
+  ta.addEventListener("click",e=>{e.preventDefault();scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})});
+  const g=document.querySelector("a.home-tab.graph-tab");if(g)inn.appendChild(g.cloneNode(true));
+  const sb=document.createElement("button");sb.type="button";sb.className="cbar-find";
+  sb.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg><span>Search</span><kbd>Ctrl K</kbd>';
+  sb.addEventListener("click",()=>{const f=document.getElementById("findOpen");if(f)f.click()});inn.appendChild(sb);
+  document.body.appendChild(bar);root.classList.add("cbar-page");
+  const foc=bar.querySelectorAll("a,button");foc.forEach(e=>e.tabIndex=-1);
+  let on=null;
+  function upd(){const v=hdr.getBoundingClientRect().bottom<0;if(v===on)return;on=v;bar.classList.toggle("on",v);root.classList.toggle("bar-on",v);
+    bar.setAttribute("aria-hidden",v?"false":"true");foc.forEach(e=>e.tabIndex=v?0:-1)}
+  addEventListener("scroll",upd,{passive:true});addEventListener("resize",upd);upd();
 })();
 </script>
 <script>/*glossary*/

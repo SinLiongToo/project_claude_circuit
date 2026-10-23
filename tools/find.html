@@ -231,7 +231,7 @@
       const c=r.cells;if(c.length<3||!c[1].hasAttribute("data-zh"))return;
       const note=norm(c[2].textContent);r.dataset.full=norm(c[1].textContent)+(note?"（"+note+"）":"");
     });
-    document.querySelectorAll(".home-tab,.toc-toggle span,.find-btn span,.hero-find span,#themeLbl").forEach(el=>{
+    document.querySelectorAll(".home-tab,.toc-toggle span,.find-btn span,.hero-find span,.cbar-find span,#themeLbl").forEach(el=>{
       [...el.childNodes].forEach(n=>{if(n.nodeType===3&&UI[n.nodeValue.trim()])n.nodeValue=UI[n.nodeValue.trim()]});
     });
     const q=document.getElementById("findQ");if(q)q.placeholder="搜尋，例如 LDO PSRR、鎖相、March C";
@@ -258,5 +258,27 @@
     lang="zh";try{localStorage.setItem("lang","zh")}catch(e){}paint();load();
   });
   if(lang==="zh")load();
+})();
+(function(){
+  // content pages: a slim bar (main page, page title, knowledge graph, search) fixed at the top once the header scrolls away;
+  // the main page builds its own bar (#topbar)
+  const hdr=document.querySelector("header.top"),home=document.querySelector("a.home-tab:not(.graph-tab)");
+  if(!hdr||!home||document.getElementById("topbar"))return;
+  const root=document.documentElement,bar=document.createElement("div"),inn=document.createElement("div");
+  bar.className="cbar";bar.setAttribute("aria-hidden","true");inn.className="cbar-in";bar.appendChild(inn);
+  inn.appendChild(home.cloneNode(true));
+  const h1=hdr.querySelector("h1"),t=document.createElement("p"),ta=document.createElement("a");
+  t.className="cbar-title";ta.href="#";ta.textContent=h1?h1.textContent:document.title;t.appendChild(ta);inn.appendChild(t);
+  ta.addEventListener("click",e=>{e.preventDefault();scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"})});
+  const g=document.querySelector("a.home-tab.graph-tab");if(g)inn.appendChild(g.cloneNode(true));
+  const sb=document.createElement("button");sb.type="button";sb.className="cbar-find";
+  sb.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg><span>Search</span><kbd>Ctrl K</kbd>';
+  sb.addEventListener("click",()=>{const f=document.getElementById("findOpen");if(f)f.click()});inn.appendChild(sb);
+  document.body.appendChild(bar);root.classList.add("cbar-page");
+  const foc=bar.querySelectorAll("a,button");foc.forEach(e=>e.tabIndex=-1);
+  let on=null;
+  function upd(){const v=hdr.getBoundingClientRect().bottom<0;if(v===on)return;on=v;bar.classList.toggle("on",v);root.classList.toggle("bar-on",v);
+    bar.setAttribute("aria-hidden",v?"false":"true");foc.forEach(e=>e.tabIndex=v?0:-1)}
+  addEventListener("scroll",upd,{passive:true});addEventListener("resize",upd);upd();
 })();
 </script>

@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.33.0', '2026-10-23', ['Every content page: a slim bar fixed at the top after scrolling, with Main page, the page title (back to top), Knowledge graph and Search; anchor jumps and the contents panel stop below it.']),
     ('1.32.0', '2026-10-23', ['Main page: compact header (title and description left, search right) and a slim bar with the title and search that stays fixed at the top after scrolling; the sidebar and topic jumps stop below it, and the language button sits next to the theme button while the bar shows.']),
     ('1.31.1', '2026-10-23', ['Chirp simulator page: simulator moved to the top (settings in a full-width row, targets and results side by side, then the scene and plots), the five-step explanation after it, and no repeated page title.']),
     ('1.31.0', '2026-10-23', ['Chirp simulator: new scene view (plot 0) with the radar, the road and each target at its range and speed, the transmitted wave going out and each echo coming back; car, truck and pedestrian are named in the frequency-time legend, the range FFT and the range-Doppler map.']),
