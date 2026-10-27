@@ -140,3 +140,40 @@ becfbf16 此站良率 (%)
 a4f54788 測試座導通（RF 錫球邏輯相反）、縮減的掃描、MBIST、LBIST、在該溫度的 BIST/BISM：Tx 功率迴路與旋轉器 LUT；經迴路量測 Rx 增益、相位、NF 與通道匹配
 bf4e963e <a href="radar77-signal-chain.html#txpower">Tx 功率</a> · <a href="radar77-signal-chain.html#rotator">旋轉器</a> · <a href="radar77-bist-loopback.html#recipes">Rx 迴路</a>
 24dd2981 <b>為什麼最終測試要再測一次接收器。</b>晶圓針測時，Rx 是在封裝前、25 °C 下透過晶片上迴路量測。封裝之後多了 Rx 錫球、封裝轉接，以及 LNA 輸入端受到 ESD（CDM）損傷的風險；而且 Rx 增益與雜訊指數會隨溫度變化。所以最終測試會在低溫與高溫下重做迴路的 Rx 增益、相位、NF 與通道匹配量測。量產時沒有外部 77 GHz 訊號源：經頻率偏移的 Tx 訊號就是 Rx 的激勵（<a href="radar77-bist-loopback.html#stim">迴路</a>）；若負載板把 Tx 錫球迴接到 Rx 錫球，封裝路徑也一併涵蓋。CDM 造成的 LNA 輸入損傷會在這裡以增益下降、NF 上升呈現（<a href="radar77-esd.html#cdm">CDM</a>）。
+1bb76810 連續性、漏電、walking-Z、IO 直流電位、scan chain + stuck-at（CPU、DSP、匯流排）、IDDQ/HVST、所有 SRAM 的 MBIST + 修復、ROM CRC、VLV、參考電壓修調、RF BIST/BISM、eFuse
+e39aacce 測試座連續性（RF 錫球以反向邏輯檢查）、精簡 scan、MBIST、LBIST、MCU 開機與 lockstep 自我測試、介面全速測試、各溫度下的 BIST/BISM：Tx 功率迴路與 rotator LUT；經由 loopback 量測 Rx 增益、相位、NF 與通道匹配
+bcde98d1 <a href="#digital">MCU / 記憶體 / IO</a> · <a href="radar77-signal-chain.html#txpower">Tx 功率</a> · <a href="radar77-signal-chain.html#rotator">Rotator</a> · <a href="radar77-bist-loopback.html#recipes">Rx loopback</a>
+424c489f MCU、記憶體與介面 IO
+6090b97f 雷達 SoC 不只是 RF 前端：它還包含 MCU（通常是一對 lockstep 的即時 CPU 核心）、DSP 與 FFT 加速器、存放 radar cube 的數 MB SRAM、ROM 與 OTP，以及連到車上其他部分的介面。這些部分與 RF 在相同的測試站別中測試，但用各自的方法。Scan 與 MBIST 提供覆蓋率；簡短的功能測試則檢查 scan 看不到的部分，例如開機、安全機制與介面的全速運作。
+5d5e66bc 最終測試（低溫與高溫）
+8bb95777 抓到的問題
+973aa13e MCU 核心（lockstep CPU）
+dfa44316 Stuck-at scan、IDDQ；125 °C 下的全速 transition scan
+d25d4071 精簡 scan、<a href="radar77-dft-stress.html#lbist">LBIST</a>；從 ROM 開機；注入故障檢查 lockstep 比對；watchdog 與時脈監測觸發
+f48f5f94 Stuck-at 與延遲故障，以及不會反應的安全機制（<a href="radar77-safety.html#sm">安全機制</a>）
+52d4c6da DSP / FFT 加速器
+c1205c00 Scan（stuck-at、transition）
+697d265d LBIST；已知輸入向量 → 預期的 FFT checksum
+2e4e588a 資料路徑上的邏輯與時序故障（<a href="radar77-dsp.html#dsptest">DSP 測試</a>）
+a5bee959 記憶體：radar cube SRAM、L2、TCM、cache
+1bb8d8fa <a href="radar77-dft-stress.html#mbist">MBIST</a> march 測試、以備用列 / 行修復、VLV 與資料保持
+6bff39f9 −40 °C 與 125 °C 下的 MBIST；ECC 單位元與雙位元錯誤注入
+72fbc405 記憶胞、位址與耦合故障，低電壓下的弱記憶胞（<a href="radar77-memory.html#march">march 測試</a>）
+deecfb9d ROM 與 OTP
+6ae03465 ROM 讀取並比對 CRC；OTP 空白檢查、燒錄與讀取餘裕
+1d62880e ROM CRC；OTP 讀取餘裕與生命週期狀態
+fdfc0f7b 程式碼錯誤、熔絲位元偏弱或翻轉（<a href="radar77-efuse-otp.html#test">OTP 測試</a>）
+f0b3179d 介面 IO：SPI / QSPI、CSI-2、Ethernet、CAN-FD、UART、GPIO
+4129eeb4 直流參數：額定電流下的 VOH / VOL、VIH / VIL、漏電、上拉 / 下拉、遲滯
+32f1a7d2 全速：以位元錯誤計數器做 PRBS loopback（晶片內部或在 load board 上）、SPI 以最高時脈、CAN-FD Tx → Rx loopback、nERROR 腳位
+22a9d938 驅動能力不足、ESD 單元受損、pad 速度太慢（<a href="radar77-dsp.html#iface">介面</a>）
+4d021515 除錯與安全
+8ad9cfe7 JTAG 鏈完整性（IDCODE、boundary scan）
+885a3450 設定生命週期狀態後，JTAG / 除錯已鎖定
+0804d982 出貨時除錯存取仍開放的零件（<a href="radar77-efuse-otp.html#lifecycle">生命週期</a>）
+fe0d861c <b>為什麼不直接在測試機上跑應用程式？</b>功能程式碼每顆要花數毫秒到數秒，故障覆蓋率也很難量化；scan 與 MBIST 只要一小部分時間就能達到 &gt; 95–99 % 覆蓋率。所以測試機以結構測試取得覆蓋率，只跑少數簡短的功能測試（開機、lockstep 自我測試、介面 loopback）來驗證結構測試無法證明的部分。完整韌體只在選配的系統級測試（SLT）中執行，使用類似真實模組的測試板。高速介面不由 ATE 腳位電路以全速驅動：晶片用 PRBS 產生器與檢查器在 loopback 中自我檢查，測試機只讀取錯誤計數器。
+925cf0da Scan chain、stuck-at、transition、LBIST、lockstep 比對、從 ROM 開機
+1eac1d04 MBIST 無法修復、資料保持、ROM CRC、ECC 注入
+1370df0f 介面 / IO
+0cc0b1ff VOH/VOL、VIH/VIL、PRBS 位元錯誤、SPI 時序、CAN-FD loopback、JTAG 未鎖定
+efba8383 檢查 pad、ESD 與 load board 訊號完整性；對時序做 shmoo

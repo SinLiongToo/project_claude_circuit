@@ -2,6 +2,7 @@
 into radar77-changelog.html. Minor version = new content, patch = fixes."""
 
 LOG = [
+    ('1.37.0', '2026-10-27', ['Production test flow: MCU, memory and interface IO tests. The flowchart now names the CPU lockstep scan, every SRAM and ROM under MBIST, IO DC levels at wafer sort, and an MCU functional step (boot, lockstep fault injection, watchdog) and an interface step (SPI, CSI-2 and Ethernet PRBS, CAN-FD, nERROR, JTAG lock) at final test. New table of what each digital block gets at wafer sort and final test, a note on why the tester does not run the application, and a new Interface / IO fail bin.']),
     ('1.36.1', '2026-10-27', ['Production test flow: final test now lists the receiver as well (loopback Rx gain, phase, NF and channel match at cold and hot), with a note on why the Rx is retested after assembly.']),
     ('1.36.0', '2026-10-23', ['Every figure, chart, wafer map and simulator plot has a square button that enlarges it to the whole window; Esc or the same button closes it. Plots of the chirp simulator redraw at the larger size.']),
     ('1.35.1', '2026-10-23', ['Contents panel: section numbers were drawn in the border colour and hard to read in both themes; now in the accent colour.']),
