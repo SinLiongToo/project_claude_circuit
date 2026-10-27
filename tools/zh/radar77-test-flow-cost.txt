@@ -137,3 +137,6 @@ ef0abd94 每次下針的換料時間 (s)
 128ed44b site 數（並行）
 f473d53d 多 site 效率 (%)
 becfbf16 此站良率 (%)
+a4f54788 測試座導通（RF 錫球邏輯相反）、縮減的掃描、MBIST、LBIST、在該溫度的 BIST/BISM：Tx 功率迴路與旋轉器 LUT；經迴路量測 Rx 增益、相位、NF 與通道匹配
+bf4e963e <a href="radar77-signal-chain.html#txpower">Tx 功率</a> · <a href="radar77-signal-chain.html#rotator">旋轉器</a> · <a href="radar77-bist-loopback.html#recipes">Rx 迴路</a>
+24dd2981 <b>為什麼最終測試要再測一次接收器。</b>晶圓針測時，Rx 是在封裝前、25 °C 下透過晶片上迴路量測。封裝之後多了 Rx 錫球、封裝轉接，以及 LNA 輸入端受到 ESD（CDM）損傷的風險；而且 Rx 增益與雜訊指數會隨溫度變化。所以最終測試會在低溫與高溫下重做迴路的 Rx 增益、相位、NF 與通道匹配量測。量產時沒有外部 77 GHz 訊號源：經頻率偏移的 Tx 訊號就是 Rx 的激勵（<a href="radar77-bist-loopback.html#stim">迴路</a>）；若負載板把 Tx 錫球迴接到 Rx 錫球，封裝路徑也一併涵蓋。CDM 造成的 LNA 輸入損傷會在這裡以增益下降、NF 上升呈現（<a href="radar77-esd.html#cdm">CDM</a>）。
