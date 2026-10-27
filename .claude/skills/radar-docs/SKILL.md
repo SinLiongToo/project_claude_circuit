@@ -32,6 +32,7 @@ https://sinliongtoo.github.io/project_claude_circuit/. Publish to GitHub only: n
 - Wrap in `<figure><div class="fig wide"><svg viewBox=... role="img" aria-label="...">` + `<figcaption>`. Every `main figure` and `.plot` automatically gets the square enlarge button.
 - Check labels for overlap in a screenshot and fix positions before publishing; keep labels inside boxes.
 - Calculators: `div.calc` with `div.panel` + `form.fields` (`label` text first, then the input) and a result panel of `.row` spans; recompute on input; verify the numbers by hand.
+- Mermaid (test-flow page): every `pre.mermaid` is rendered and re-rendered on theme change. Each chart appears twice (rendered + `pre.eq` source block), so edit both copies. Stage colours are light hex values in the source (`style`/`classDef`); the page's `DARK` map swaps them in dark mode, so a new colour needs a `DARK` entry and a `.sk-*` legend class. Colour = test temperature: green 25 °C, orange hot, blue cold, violet cold + hot, grey-brown assembly, teal module; dashed border = removed later.
 - Canvas plots: redraw on `themechange`, `langchange` and ResizeObserver; respect `prefers-reduced-motion` (no autoplay).
 
 ## Chinese (Traditional, Taiwan terms; abbreviations stay English)
