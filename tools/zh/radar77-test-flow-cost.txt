@@ -177,3 +177,36 @@ fe0d861c <b>為什麼不直接在測試機上跑應用程式？</b>功能程式�
 1370df0f 介面 / IO
 0cc0b1ff VOH/VOL、VIH/VIL、PRBS 位元錯誤、SPI 時序、CAN-FD loopback、JTAG 未鎖定
 efba8383 檢查 pad、ESD 與 load board 訊號完整性；對時序做 shmoo
+48af77d6 加 guard band 的全速 scan、高溫漏電、高溫 IDDQ 與待機 IDD、與 25 °C 比較的 BIST 漂移檢查
+c7b2838f 晶圓圖上的 DPAT、GDBN、NNR（也用於 IDDQ）；墨點標記離群晶粒
+a201ffd8 測試座連續性（RF 錫球以反向邏輯檢查）、精簡 scan、MBIST、LBIST、IDDQ、MCU 開機與 lockstep 自我測試、介面全速測試、各溫度下的 BIST/BISM：Tx 功率迴路與 rotator LUT；經由 loopback 量測 Rx 增益、相位、NF 與通道匹配
+1baf91e4 客戶要求時做動態 burn-in，前後各量一次 IDDQ；選配的系統級測試；在 RF 測試機上做 QA 抽樣稽核
+b6d4a89d 整個流程中的 IDDQ
+5b3d8d0a IDDQ 不只量一次，而是在多個測試站別量測，每次回答不同的問題。方法每次都一樣：用 scan 載入狀態、停止時脈、關閉類比與 RF 偏壓、旁路晶片內 LDO，量測核心電源軌電流。由於 28 / 22 nm 的漏電是 mA 等級，且隨製程角落與溫度變化，限值是拿每顆晶粒和自己或和鄰近晶粒比較（ΔIDDQ、電流比、NNR），而不是用單一固定值。方法與限值見 <a href="radar77-dft-stress.html#iddq">DFT 頁的 IDDQ 章節</a>。
+dd9c6483 量測內容
+d8964ad4 限值
+f63254f1 晶圓測試 1，25 °C
+d696fcd8 每個數位電源域（CPU、DSP、SRAM 周邊）5–50 個 ATPG 向量；每個類比 / RF 電源域另外在偏壓開啟下量靜態 IDD
+c605bb49 每顆晶粒的 ΔIDDQ 與最大 / 最小比；絕對限值只做粗略檢查
+a9be5c79 邏輯測試抓不到的橋接、閘極氧化層短路、常開電晶體
+417beaac HVST 前後（晶圓測試 1）
+9d3a75bc 在高電壓應力之前與之後立刻用相同向量量測
+6cb68618 應力後 IDDQ 上升
+ff6089c0 被應力轉變成漏電的潛在氧化層缺陷
+62e5d2d7 晶圓測試 2，125 °C
+2ab919b1 少數向量的高溫 IDDQ；待機（睡眠模式）IDD
+6a8a73d6 批次分佈；每顆晶粒的 25 / 125 °C 比值
+ac72ce50 漏電角落的離群晶粒；待機電流規格
+59d18622 每顆晶粒的 IDDQ 與晶圓上鄰近晶粒比較
+b002b088 NNR、DPAT
+115f3cc3 在規格內、但以其在晶圓上的位置來看異常的晶粒
+9706a493 最終測試，低溫
+0a837235 封裝後以少數向量量測 IDDQ
+9fa1377e 與同一顆晶粒在晶圓測試時的值比較（透過 ECID 對應）
+57b7ee05 封裝造成的損傷：CDM、晶粒裂痕、凸塊應力
+cb9b9934 Burn-in
+e7044ef2 Burn-in 前後量測 IDDQ
+6a9c5dc2 ΔIDDQ 限值
+bcd47878 被 burn-in 激發的早期失效缺陷
+d836c91a <b>為什麼 IDDQ 早測、而且在 25 °C 測。</b>它用少數向量就很快、不需要 RF，而且能在修調與 eFuse 花測試時間在壞晶粒之前就抓到缺陷。25 °C 時漏電基準小且穩定，所以數十 µA 的缺陷電流仍然明顯。高溫 IDDQ 主要用於漏電分佈與待機電流規格，因為 125 °C 時漏電基準高出數倍，會掩蓋小缺陷。IDDQ 失敗歸入 bin 3（短路 / 漏電）。
+2a6534df 開路/短路、電源短路、IIL/IIH、IOZ、IDDQ、HVST 或 burn-in 後的 ΔIDDQ
