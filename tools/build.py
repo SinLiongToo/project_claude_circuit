@@ -50,6 +50,7 @@ PAGES = [
     ('radar77-module.html', '<li><a href="#module">Antenna &amp; module</a></li>'),
     ('radar77-thermal.html', '<li><a href="#thermal">Thermal design</a></li>'),
     ('radar77-temp-sensor.html', '<li><a href="#ts">Temperature sensors</a></li>'),
+    ('radar77-power-detector.html', '<li><a href="#pd">Power detectors</a></li>'),
     ('radar77-emc-pi.html', '<li><a href="#emc">EMC &amp; power integrity</a></li>'),
     ('radar77-design-flow.html', '<li><a href="#flow">Design flow</a></li>'),
     ('radar77-test-cost.html', '<li><a href="#cost">Test cost model</a></li>'),

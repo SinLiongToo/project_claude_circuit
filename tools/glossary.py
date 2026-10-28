@@ -86,6 +86,7 @@ G = [
  ("Cpl","Coupler (directional coupler)","Taps a small, known fraction (−15…−20 dB) of a signal for detection or loopback."),
  ("PD","Power Detector","Diode or square-law RF-to-DC converter."),
  ("APC","Automatic Power Control","Closed loop from the power detector to the VGA/PA gain code."),
+ ("RMS","Root Mean Square","Average-power measure; an RMS detector reads average power."),
  ("DPD","Digital Predistortion","Wideband PA linearisation used in comms; radar uses static gain/phase LUTs instead."),
  ("VSWR","Voltage Standing-Wave Ratio","Mismatch at the antenna/load; changes the delivered power."),
  ("CW","Continuous Wave","An unmodulated single-frequency tone."),
