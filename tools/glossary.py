@@ -95,6 +95,8 @@ G = [
  ("RFCMOS","RF-capable CMOS","Today's single-chip radar process (e.g. 45/40/28/22 nm)."),
  ("NMOS","N-channel MOS transistor (PMOS = P-channel)",""),
  ("PTAT","Proportional To Absolute Temperature","Voltage or current used by temperature sensors."),
+ ("CTAT","Complementary To Absolute Temperature","Falls with temperature, like a diode voltage VBE."),
+ ("DEM","Dynamic Element Matching","Rotates matched elements so that their mismatch averages out."),
  ("BG","Bandgap reference","Temperature-stable voltage reference (BG1/BG2 = two independent ones)."),
  ("PVT","Process, Voltage, Temperature","Variation corners a design must cover."),
 ]),

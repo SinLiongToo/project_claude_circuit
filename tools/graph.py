@@ -35,6 +35,7 @@ PAGES = {
     'bench': ('radar77-bench-test.html', 'Bench'),
     'mod': ('radar77-module.html', 'Module'),
     'therm': ('radar77-thermal.html', 'Thermal'),
+    'tsens': ('radar77-temp-sensor.html', 'Temperature sensors'),
     'emc': ('radar77-emc-pi.html', 'EMC &amp; PI'),
     'dflow': ('radar77-design-flow.html', 'Design flow'),
     'tcost': ('radar77-test-cost.html', 'Test cost'),
@@ -146,6 +147,8 @@ N = [
     ('ota', 'OTA / chamber test', 't', 'bench#mmw', 'Over-the-air measurement in an anechoic chamber with reflectors and target simulators.', ['OTA', 'anechoic', 'corner reflector', 'target simulator']),
     ('radome', 'Radome / bumper', 'f', 'mod#radome', 'Plastic cover in front of the antennas; its thickness and paint set loss and reflections.', ['radome', 'bumper']),
     ('eolcal', 'Module EOL calibration', 't', 'mod#eol', 'Antenna gain and phase calibration and boresight alignment of the finished module.', ['EOL', 'end-of-line', 'boresight', 'alignment']),
+    ('tsens', 'Temperature sensor', 'c', 'tsens#ckt', 'PTAT / ΔVBE sensors at the Tx, Rx, LO, digital and reference sites, read through one ADC and trimmed at one or two temperatures.', ['temperature sensor', 'temperature sensors', 'thermal sensor']),
+    ('ttab', 'Temperature tables', 'p', 'tsens#tables', 'Codes per temperature point for Tx power and phase, Rx gain and the VCO band, indexed by the sensor reading.', ['temperature table', 'temperature tables', 'temperature compensation']),
     ('tj', 'Junction temperature', 'p', 'therm#path', 'Die temperature set by power and the thermal path; drives RF performance and aging.', ['junction temperature', 'Tj', 'thermal resistance']),
     ('pdn', 'Power delivery / PI', 'c', 'emc#pi', 'Regulators, planes and decoupling; supply noise here becomes LO spurs.', ['PDN', 'power integrity', 'decoupling']),
     ('emctest', 'EMC tests', 't', 'emc#stds', 'CISPR 25 emissions and ISO 11452 immunity tests of the module.', ['CISPR 25', 'ISO 11452', 'EMC']),
@@ -198,6 +201,8 @@ N = [
 ]
 
 E = [
+    ('tsens', 'measures', 'tj'), ('tsens', 'indexes', 'ttab'), ('bg', 'is the reference for', 'tsens'), ('trim', 'calibrates', 'tsens'),
+    ('ttab', 'sets the drive of', 'pa'), ('ttab', 'sets the band of', 'vco'), ('ttab', 'sets the gain of', 'lna'), ('ttab', 'corrects', 'pdet'), ('ttab', 'is stored in', 'efuse'),
     ('fmcw', 'produces', 'beat'), ('beat', 'is sampled by', 'adc'), ('dsp', 'produces', 'rdmap'), ('rdmap', 'feeds', 'cfar'),
     # Rx chain
     ('ant', 'feeds the echo to', 'lna'), ('lna', 'amplifies into', 'mixer'), ('mixer', 'IF output to', 'hpf'),
