@@ -32,6 +32,7 @@ PAGES = [
     ('radar77-signal-chain.html', '<li><a href="#verify">Verification</a></li>'),
     ('radar77-chirp.html', '<li><a href="#chirp">Chirp simulator</a></li>'),
     ('radar77-synthesizer.html', '<li><a href="#pll">Frequency synthesizer</a></li>'),
+    ('radar77-phase-noise.html', '<li><a href="#pn">Phase noise</a></li>'),
     ('radar77-power.html', '<li><a href="#pwr">Power management</a></li>'),
     ('radar77-rf-frontend.html', '<li><a href="#rf">RF front-end circuits</a></li>'),
     ('radar77-if-adc.html', '<li><a href="#ifadc">IF chain &amp; ADC</a></li>'),

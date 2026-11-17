@@ -69,6 +69,7 @@ G = [
  ("PPF","Polyphase Filter","RC-CR network that generates I/Q."),
  ("I/Q","In-phase / Quadrature","Two copies of a signal 90° apart."),
  ("IRR","Image Rejection Ratio","How well an I/Q path suppresses the mirror frequency."),
+ ("RBW","Resolution Bandwidth","Filter width of a spectrum analyser; noise readings are scaled to 1 Hz from it."),
  ("SSB","Single Sideband","A frequency shift in one direction only, e.g. the loopback offset."),
  ("BPSK","Binary Phase-Shift Keying","0/180° switching; produces ±f_m sidebands."),
  ("VM","Vector Modulator","I/Q-weighted phase rotator."),

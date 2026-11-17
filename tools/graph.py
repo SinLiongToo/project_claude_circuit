@@ -13,6 +13,7 @@ GRAPH = 'radar77-knowledge-graph.html'
 PAGES = {
     'sc': ('radar77-signal-chain.html', 'Signal chain'),
     'pll': ('radar77-synthesizer.html', 'Synthesizer'),
+    'pnp': ('radar77-phase-noise.html', 'Phase noise'),
     'pwr': ('radar77-power.html', 'Power'),
     'rf': ('radar77-rf-frontend.html', 'RF front end'),
     'bist': ('radar77-bist-loopback.html', 'BIST & loopback'),
@@ -87,7 +88,7 @@ N = [
     ('iip3', 'IIP3 / P1dB', 'p', 'rf#cascade', 'Linearity of the receive chain; late stages (mixer, VGA) usually limit it.', ['IIP3', 'P1dB', 'linearity']),
     ('pout', 'Tx output power', 'p', 'rf#pa', 'Power at the Tx ball, typically 10–14 dBm per channel.', ['output power', 'Tx power', 'Pout', 'Psat']),
     ('pae', 'PAE', 'p', 'rf#pa', 'Power-added efficiency of the PA; sets heat and supply current.', ['efficiency']),
-    ('pn', 'Phase noise', 'p', 'pll#specs', 'Noise on the LO phase; limits detection of weak targets next to strong ones.', ['phase noise']),
+    ('pn', 'Phase noise', 'p', 'pnp#spec', 'Noise on the LO phase; limits detection of weak targets next to strong ones.', ['phase noise']),
     ('lin', 'Chirp linearity', 'p', 'pll#specs', 'How straight the frequency ramp is; nonlinearity smears range peaks.', ['chirp linearity', 'linearity error']),
     ('lock', 'Lock time / lock detect', 'p', 'pll#lock', 'How fast the PLL settles and how the chip knows it is locked.', ['lock time', 'lock detect', 'locked']),
     ('kvco', 'KVCO / tuning range', 'p', 'pll#vco', 'VCO gain (MHz/V) and the frequency span of each sub-band.', ['KVCO', 'tuning range', 'sub-band']),
@@ -150,6 +151,8 @@ N = [
     ('eolcal', 'Module EOL calibration', 't', 'mod#eol', 'Antenna gain and phase calibration and boresight alignment of the finished module.', ['EOL', 'end-of-line', 'boresight', 'alignment']),
     ('logdet', 'Log detector', 'c', 'pdetp#ckt', 'Successive-detection log amplifier whose output is linear in dBm over 40–60 dB.', ['log detector', 'logarithmic detector']),
     ('refdet', 'Reference detector', 'c', 'pdetp#types', 'Identical detector without RF; V_det minus V_ref cancels offset and most temperature drift.', ['reference detector', 'dummy detector']),
+    ('pnm', 'Phase-noise measurement', 't', 'pnp#measure', 'Signal-source analyser with a W-band harmonic mixer, or a divided test output; production screens it only indirectly.', ['phase-noise measurement', 'signal-source analyser', 'harmonic mixer']),
+    ('rcorr', 'Range correlation', 'p', 'pnp#spec', 'Shared Tx and Rx LO: phase noise is weighted by 4 sin squared of pi times offset times delay, so close echoes cancel it.', ['range correlation']),
     ('tsens', 'Temperature sensor', 'c', 'tsens#ckt', 'PTAT / ΔVBE sensors at the Tx, Rx, LO, digital and reference sites, read through one ADC and trimmed at one or two temperatures.', ['temperature sensor', 'temperature sensors', 'thermal sensor']),
     ('ttab', 'Temperature tables', 'p', 'tsens#tables', 'Codes per temperature point for Tx power and phase, Rx gain and the VCO band, indexed by the sensor reading.', ['temperature table', 'temperature tables', 'temperature compensation']),
     ('tj', 'Junction temperature', 'p', 'therm#path', 'Die temperature set by power and the thermal path; drives RF performance and aging.', ['junction temperature', 'Tj', 'thermal resistance']),
@@ -205,6 +208,7 @@ N = [
 
 E = [
     ('logdet', 'is a wide-range form of', 'pdet'), ('refdet', 'cancels the drift of', 'pdet'), ('tsens', 'corrects the drift of', 'pdet'),
+    ('pnm', 'measures', 'pn'), ('rcorr', 'suppresses close-in', 'pn'),
     ('tsens', 'measures', 'tj'), ('tsens', 'indexes', 'ttab'), ('bg', 'is the reference for', 'tsens'), ('trim', 'calibrates', 'tsens'),
     ('ttab', 'sets the drive of', 'pa'), ('ttab', 'sets the band of', 'vco'), ('ttab', 'sets the gain of', 'lna'), ('ttab', 'corrects', 'pdet'), ('ttab', 'is stored in', 'efuse'),
     ('fmcw', 'produces', 'beat'), ('beat', 'is sampled by', 'adc'), ('dsp', 'produces', 'rdmap'), ('rdmap', 'feeds', 'cfar'),
